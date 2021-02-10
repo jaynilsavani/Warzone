@@ -8,6 +8,7 @@
 **/nbproject/private
 **/www/
 
+/warzone/nb-configuration.xml
 /warzone/target/
 /warzone/tmpl.iml
 
