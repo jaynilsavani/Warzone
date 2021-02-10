@@ -1,10 +1,10 @@
-**/.idea/
-**/.settings/
-**/.project
-**/.classpath
-**/.factorypath
-**/.vscode
-**/.tmp
+/warzone/.idea/
+/warzone/.settings/
+/warzone/.project
+/warzone/.classpath
+/warzone/.factorypath
+/warzone/.vscode
+/warzone/.tmp
 **/nbproject/private
 **/www/
 
