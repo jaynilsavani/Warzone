@@ -1,0 +1,14 @@
+**/.idea/
+**/.settings/
+**/.project
+**/.classpath
+**/.factorypath
+**/.vscode
+**/.tmp
+**/nbproject/private
+**/www/
+
+/warzone/target/
+/warzone/tmpl.iml
+
+/.metadata/
