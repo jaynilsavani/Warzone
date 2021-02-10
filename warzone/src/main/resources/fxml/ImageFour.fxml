@@ -1,0 +1,86 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="702.0" prefWidth="1200.0" style="-fx-background-color: #CDCD14;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <Label layoutX="84.0" layoutY="25.0" prefHeight="20.0" prefWidth="99.0" text="Territory List">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="TerritoryListText" layoutX="42.0" layoutY="58.0" prefHeight="200.0" prefWidth="168.0" wrapText="true" />
+      <Label layoutX="319.0" layoutY="25.0" prefHeight="20.0" prefWidth="177.0" text="Adjacent Owned Territory">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="AdjacentTerritoryListText" layoutX="278.0" layoutY="58.0" prefHeight="200.0" prefWidth="260.0" wrapText="true" />
+      <TextField layoutX="42.0" layoutY="341.0" prefHeight="26.0" prefWidth="168.0" />
+      <TextArea fx:id="ContinentText" layoutX="600.0" layoutY="58.0" prefHeight="200.0" prefWidth="214.0" wrapText="true" />
+      <TextArea fx:id="TerritoryPlayerArmyText" layoutX="872.0" layoutY="58.0" prefHeight="200.0" prefWidth="275.0" wrapText="true" />
+      <Label layoutX="667.0" layoutY="25.0" prefHeight="20.0" prefWidth="84.0" text="Continent">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="937.0" layoutY="25.0" prefHeight="20.0" prefWidth="168.0" text="Territory-Player-Army">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="358.0" layoutY="285.0" prefHeight="20.0" prefWidth="99.0" text="Territory List">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="TerritoryList" layoutX="297.0" layoutY="314.0" prefHeight="26.0" prefWidth="199.0" promptText="Select Territory" />
+      <Label layoutX="313.0" layoutY="367.0" prefHeight="20.0" prefWidth="168.0" text="Adjacent Territory List">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="AdjacentTerritoryList" layoutX="297.0" layoutY="395.0" prefHeight="26.0" prefWidth="199.0" promptText="Select Adjacent Territory" />
+      <Label layoutX="313.0" layoutY="449.0" prefHeight="20.0" prefWidth="178.0" text="Move Number Of Army">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="MoveNumberOfArmiesToFortify" layoutX="297.0" layoutY="477.0" prefHeight="26.0" prefWidth="199.0" promptText="Enter Number of Armies to Fortify" />
+      <Button fx:id="PlaceReinforcement" layoutX="42.0" layoutY="517.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0" text="Place Reinforcement">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="Attack" layoutX="42.0" layoutY="558.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0" text="Attack">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Button>
+      <Button fx:id="EndTurn" layoutX="42.0" layoutY="601.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="168.0" text="End Turn">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Button>
+      <Button fx:id="Fortify" layoutX="297.0" layoutY="530.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="199.0" text="Fortify">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Button>
+      <Button fx:id="ExitGame" layoutX="297.0" layoutY="588.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="199.0" text="Exit Game">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Button>
+      <Label layoutX="791.0" layoutY="285.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="CommandLine" layoutX="609.0" layoutY="314.0" prefHeight="26.0" prefWidth="443.0" promptText="Reinforcement and Fortification Command" />
+      <Button fx:id="FireCommand" layoutX="724.0" layoutY="359.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="199.0" text="Fire Command">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <TextArea fx:id="FireCommandList" layoutX="608.0" layoutY="408.0" prefHeight="207.0" prefWidth="443.0" wrapText="true" />
+   </children>
+</AnchorPane>
