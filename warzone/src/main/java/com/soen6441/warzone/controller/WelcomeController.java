@@ -1,6 +1,7 @@
 package com.soen6441.warzone.controller;
 import com.soen6441.warzone.config.FxmlView;
 import com.soen6441.warzone.config.StageManager;
+import com.soen6441.warzone.service.MapHandlingInterface;
 import java.net.URL;
 import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class WelcomeController implements Initializable {
     @Lazy
     @Autowired
     private StageManager stageManager;
+    
+    @Autowired
+    private MapHandlingInterface mapHandlingInterface;
 
     /**
      * This method takes a user to map creation, where player can create mad and edit it
@@ -34,7 +38,7 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void createMap(ActionEvent event) {
-
+        mapHandlingInterface.validateCommand("editcontinent -add asia 5");
         stageManager.switchScene(FxmlView.MAPMANAGER,null);
     }
 
