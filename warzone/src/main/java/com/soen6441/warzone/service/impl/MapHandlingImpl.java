@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * This is the implementation class of MapHandlingInterface having business
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author <a href="mailto:y_vaghan@encs.concordia.ca">Yashkumar Vaghani</a>
  *
  */
+@Service
 public class MapHandlingImpl implements MapHandlingInterface {
 
     @Autowired
@@ -29,7 +31,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int CountryId = 1;
     private static int NeighbourId = 1;
 
-    public static final String MAP_DEF_PATH = "src/main/resources/maps";
+    public static final String MAP_DEF_PATH = "src/main/resources/maps/";
+
 
     public static final String NAME = "[name]";
     public static final String FILES = "[files]";
@@ -107,7 +110,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
 
-            if (l_commandString.get(l_i).equalsIgnoreCase("--add")) {
+            if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
                 l_continentName = l_commandString.get(l_i + 1);
                 l_continetValue = l_commandString.get(l_i + 2);
                 // match continent name exist or not
@@ -129,7 +132,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     // show error message "Please enter valid continent name or value"
                 }
 
-            } else if (l_commandString.get(l_i).equalsIgnoreCase("--remove")) {
+            } else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
                 if (validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                     if (deleteContinent(l_continentName)) {
