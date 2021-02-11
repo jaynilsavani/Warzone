@@ -1,5 +1,7 @@
 package com.soen6441.warzone.service;
 
+import com.soen6441.warzone.model.WarMap;
+
 /**
  * Implementation of mapping data
  *
@@ -31,4 +33,11 @@ public interface MapHandlingInterface {
      * @return true if string matches with regex
      */
     boolean validateIOString(String p_string, String p_regex);
+    
+    /**
+     *This method will read map file and store data into  WarMap model object
+     *
+     *@return WarMap model
+    */
+    WarMap readMap();
 }
