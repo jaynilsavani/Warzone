@@ -25,9 +25,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
     @Autowired
     private WarMap d_warMap;
 
-    private static int continentId = 1;
-    private static int countryId = 1;
-    private static int neighbourId = 1;
+    private static int ContinentId = 1;
+    private static int CountryId = 1;
+    private static int NeighbourId = 1;
     
     public static final String MAP_DEF_PATH = "src/main/resources/maps";
 
@@ -182,13 +182,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public void saveCommonContinent(String p_continentName, String p_value) {
 
         Continent l_continent = new Continent();
-        l_continent.setD_continentIndex(continentId);
+        l_continent.setD_continentIndex(ContinentId);
         l_continent.setD_continentName(p_continentName);
         l_continent.setD_continentValue(Integer.parseInt(p_value));
         Map<Integer, Continent> l_continentMap = new HashMap();
-        l_continentMap.put(continentId, l_continent);
+        l_continentMap.put(ContinentId, l_continent);
         d_warMap.setD_continents(l_continentMap);
-        continentId++;
+        ContinentId++;
 
 //        loadContinentDetails();
 //        loadCountryDetails();
