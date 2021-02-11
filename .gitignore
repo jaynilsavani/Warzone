@@ -1,4 +1,4 @@
-/warzone/.idea/
+/.idea
 /warzone/.settings/
 /warzone/.project
 /warzone/.classpath
@@ -8,6 +8,7 @@
 **/nbproject/private
 **/www/
 
+/warzone/nb-configuration.xml
 /warzone/target/
 /warzone/tmpl.iml
 
