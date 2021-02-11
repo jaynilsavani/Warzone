@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * This is the implementation class of MapHandlingInterface having business
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author <a href="mailto:y_vaghan@encs.concordia.ca">Yashkumar Vaghani</a>
  *
  */
+@Service
 public class MapHandlingImpl implements MapHandlingInterface {
 
     @Autowired
@@ -28,8 +30,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int ContinentId = 1;
     private static int CountryId = 1;
     private static int NeighbourId = 1;
-    
-    public static final String MAP_DEF_PATH = "src/main/resources/maps";
+
+    public static final String MAP_DEF_PATH = "src/main/resources/maps/";
 
     public static final String NAME = "[name]";
     public static final String FILES = "[files]";
@@ -81,14 +83,14 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 }
 
             } else {
-                    // show error message "Please enter valid command"
-                    l_isValid = false;
+                // show error message "Please enter valid command"
+                l_isValid = false;
 
             }
         } catch (Exception e) {
             e.printStackTrace();
             // show error message "Please enter valid command"
-                    l_isValid = false;
+            l_isValid = false;
         }
         return l_isValid;
     }
@@ -107,7 +109,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
 
-            if (l_commandString.get(l_i).equalsIgnoreCase("--add")) {
+            if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
                 l_continentName = l_commandString.get(l_i + 1);
                 l_continetValue = l_commandString.get(l_i + 2);
                 // match continent name exist or not
@@ -121,7 +123,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         }
                     }
                     if (l_isValidName) {
-                        saveCommonContinent(l_continentName, l_continetValue);
+                        saveContinent(l_continentName, l_continetValue);
                         // show success message "continent saved successfully"
                     }
 
@@ -129,10 +131,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     // show error message "Please enter valid continent name or value"
                 }
 
-            } else if (l_commandString.get(l_i).equalsIgnoreCase("--remove")) {
+            } else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
                 if (validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                    if (deleteCommonContinent(l_continentName)) {
+                    if (deleteContinent(l_continentName)) {
                         // show success message "Continent deleted successfully."
                     } else {
                         // show error message "Continent not found."
@@ -154,7 +156,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_continentName the name of the continent you want to delete
      * @return true if continent successfully deleted
      */
-    public boolean deleteCommonContinent(String p_continentName) {
+    public boolean deleteContinent(String p_continentName) {
         boolean l_result = false;
         int l_continentId;
 
@@ -168,7 +170,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
 
         if (l_result) {
-          // remove country and neighbours of continent
+            // remove country and neighbours of continent
         }
         return l_result;
     }
@@ -179,7 +181,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_continentName name of continent
      * @param p_value value of Continent
      */
-    public void saveCommonContinent(String p_continentName, String p_value) {
+    public void saveContinent(String p_continentName, String p_value) {
 
         Continent l_continent = new Continent();
         l_continent.setD_continentIndex(ContinentId);

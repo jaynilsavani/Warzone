@@ -5,6 +5,7 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 /**
  * WarMap class is the main model for map management. From here the data
@@ -19,6 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Component
 public class WarMap {
 
     /**
