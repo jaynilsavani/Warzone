@@ -189,9 +189,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
         l_continentMap.put(ContinentId, l_continent);
         d_warMap.setD_continents(l_continentMap);
         ContinentId++;
-
-//        loadContinentDetails();
-//        loadCountryDetails();
     }
 
     /**
@@ -203,9 +200,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     public boolean validateIOString(String p_string, String p_regex) {
         if (!p_string.isEmpty()) {
-            Pattern p = Pattern.compile(p_regex);
-            Matcher m = p.matcher(p_string);
-            return m.find() && m.group().equals(p_string);
+            Pattern l_pattern = Pattern.compile(p_regex);
+            Matcher l_matcher = l_pattern.matcher(p_string);
+            return l_matcher.find() && l_matcher.group().equals(p_string);
         } else {
             return false;
         }
