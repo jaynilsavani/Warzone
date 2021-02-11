@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 /**
  * This class represents all the continents in the map and it has a list of territories that continent owned.
@@ -17,6 +18,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Component
 public class Continent {
 
     /**
