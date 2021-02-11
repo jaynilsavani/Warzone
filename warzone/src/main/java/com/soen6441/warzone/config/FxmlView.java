@@ -1,5 +1,6 @@
 package com.soen6441.warzone.config;
 
+
 /**
  * This is views of application
  *

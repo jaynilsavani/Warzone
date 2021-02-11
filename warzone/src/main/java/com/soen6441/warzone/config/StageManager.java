@@ -70,7 +70,7 @@ public class StageManager {
     /**
      * This method will prepare scene (view) before loading
      *
-     * @param rootnode is parent Node of scene
+     * @param p_rootnode is parent Node of scene
      * @return scene
      */
     private Scene prepareScene(Parent p_rootnode) {
