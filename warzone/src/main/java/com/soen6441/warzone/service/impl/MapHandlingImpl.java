@@ -33,7 +33,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     public static final String MAP_DEF_PATH = "src/main/resources/maps/";
 
-
     public static final String NAME = "[name]";
     public static final String FILES = "[files]";
     public static final String CONTINENTS = "[continents]";
@@ -116,13 +115,17 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 // match continent name exist or not
                 if (validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && validateIOString(l_continetValue, "[1-9][0-9]*")) {
                     boolean l_isValidName = true;
-                    for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
-                        if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
-                            // show error message "continent already exists in map file"
-                            l_isValidName = false;
-                            break;
+
+                    if (d_warMap.getD_continents() != null) {
+                        for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
+                            if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
+                                // show error message "continent already exists in map file"
+                                l_isValidName = false;
+                                break;
+                            }
                         }
                     }
+
                     if (l_isValidName) {
                         saveContinent(l_continentName, l_continetValue);
                         // show success message "continent saved successfully"
@@ -188,7 +191,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
         l_continent.setD_continentIndex(ContinentId);
         l_continent.setD_continentName(p_continentName);
         l_continent.setD_continentValue(Integer.parseInt(p_value));
-        d_warMap.getD_continents().put(ContinentId, l_continent);
+        if (d_warMap.getD_continents() == null) {
+            Map<Integer, Continent> l_continentMap = new HashMap();
+            l_continentMap.put(ContinentId, l_continent);
+            d_warMap.setD_continents(l_continentMap);
+        } else {
+            d_warMap.getD_continents().put(ContinentId, l_continent);
+        }
         ContinentId++;
     }
 
@@ -215,28 +224,41 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     ArrayList<Country> l_countryList = new ArrayList<Country>();
                     int l_continentIndex = 1;
                     boolean isValidContinent = false;
-                    for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
-                        // check if continent exists or not
-                        if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
-                            l_continentIndex = l_entry.getKey();
-                            for (Country country : l_entry.getValue().getD_countryList()) {
-                                l_countryList.add(country);
-                            }
-                            isValidContinent = true;
-                            break;
-                        }
-                    }
-
-                    if (isValidContinent) {
-                        for (Country country : l_countryList) {
-                            if (!l_countryName.equalsIgnoreCase(country.getD_countryName())) {
-                                saveCountry(l_countryName, l_continentIndex);
-                                // show success message "country saved successfully" 
-                            } else {
-                                // show error message "Country already exists"
+                    if (d_warMap.getD_continents() != null) {
+                        for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
+                            // check if continent exists or not
+                            if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
+                                l_continentIndex = l_entry.getKey();
+                                l_entry.getValue().getD_countryList().forEach((country) -> {
+                                    l_countryList.add(country);
+                                });
+                                isValidContinent = true;
+                                break;
                             }
                         }
                     } else {
+                        break;
+                        // show error message "Continent not found"
+                    }
+
+                    if (isValidContinent) {
+                        if (!l_countryList.isEmpty()) {
+                            // if continent already have countries
+                            for (Country country : l_countryList) {
+                                if (!l_countryName.equalsIgnoreCase(country.getD_countryName())) {
+                                    saveCountry(l_countryName, l_continentIndex);
+                                    // show success message "country saved successfully" 
+                                } else {
+                                    break;
+                                    // show error message "Country already exists"
+                                }
+                            }
+                        } else {
+                            // if continent doesn't have any country then add it
+                            saveCountry(l_countryName, l_continentIndex);
+                        }
+                    } else {
+                        break;
                         // show error message "Continent is not valid"
                     }
 
@@ -271,9 +293,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
         l_country.setD_continentIndex(p_continentIndex);
         l_country.setD_countryName(p_countryName);
         l_country.setD_countryIndex(CountryId);
-        CountryId++;
         Continent l_continent = d_warMap.getD_continents().get(p_continentIndex);
         l_continent.getD_countryList().add(l_country);
+        CountryId++;
     }
 
     /**
