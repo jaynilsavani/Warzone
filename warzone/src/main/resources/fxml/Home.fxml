@@ -1,24 +1,29 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.shape.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="842.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="com.soen6441.warzone.controller.WelcomeController">
+<AnchorPane fx:id="AnchorMain" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="440.0" prefWidth="660.0" style="-fx-background-color: #CDCD14;"  xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="540.0" layoutX="19.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" width="807.0" />
-      
-      <Button fx:id="btnExit" cancelButton="true" layoutX="554.0" layoutY="161.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="57.0" prefWidth="132.0" text="Exit Game" textFill="#1b0c0c">
+      <Button fx:id="BtnCreateMap" layoutX="35.0" layoutY="128.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Create Map" />
+      <Button fx:id="BtnPlayGame" layoutX="174.0" layoutY="128.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Play Game" />
+      <Label contentDisplay="CENTER" layoutX="218.0" layoutY="32.0" prefHeight="44.0" prefWidth="164.0" text="WARZONE" textAlignment="CENTER" underline="true">
          <font>
-            <Font size="20.0" />
+            <Font name="Bell MT Bold" size="30.0" />
          </font>
-      </Button>
-     
+      </Label>
+      <Button fx:id="BtnExit" layoutX="316.0" layoutY="128.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Exit" />
+      <Button fx:id="BtnHowToPlay" layoutX="458.0" layoutY="128.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="How To Play" />
+      <AnchorPane layoutX="466.0" layoutY="220.0" prefHeight="117.0" prefWidth="164.0">
+         <children>
+            <Label layoutX="3.0" prefHeight="26.0" prefWidth="97.0" text="Developed By:" underline="true" />
+            <Label layoutX="3.0" layoutY="26.0" prefHeight="18.0" prefWidth="135.0" text="Gaurang Dobariya" />
+            <Label layoutY="98.0" prefHeight="18.0" prefWidth="98.0" text=" Yash Vaghani" />
+            <Label layoutX="3.0" layoutY="80.0" prefHeight="18.0" prefWidth="82.0" text="Vicky Patel" />
+            <Label layoutX="3.0" layoutY="44.0" prefHeight="18.0" prefWidth="116.0" text="Jaynil Savani" />
+            <Label layoutX="3.0" layoutY="62.0" prefHeight="18.0" prefWidth="151.0" text="Manthan Moradiya" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
