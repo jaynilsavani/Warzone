@@ -1,5 +1,7 @@
 package com.soen6441.warzone.service;
 
+
+import com.soen6441.warzone.model.WarMap;
 /**
  * Implementation of mapping data
  *
@@ -13,4 +15,11 @@ public interface MapHandlingInterface {
      * @return true if command is valid
      */
     boolean validateCommand();
+    
+    /**
+     *This method will read map file and store data into  WarMap model object
+     *
+     *@return WarMap model
+    */
+    WarMap readMap();
 }
