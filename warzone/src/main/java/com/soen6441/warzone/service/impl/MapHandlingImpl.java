@@ -28,7 +28,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int ContinentId = 1;
     private static int CountryId = 1;
     private static int NeighbourId = 1;
-    
+
     public static final String MAP_DEF_PATH = "src/main/resources/maps";
 
     public static final String NAME = "[name]";
@@ -64,7 +64,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (p_command.startsWith("editcontinent")) {
                     checkCommandEditContinent(p_command);
                 } else if (p_command.startsWith("editcountry")) {
-                    // checkCommandEditCountry(p_command);
+                    checkCommandEditCountry(p_command);
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
                     // checkCommandEditNeighbour(p_command);
                 } else if (p_command.startsWith("showmap")) {
@@ -81,14 +81,14 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 }
 
             } else {
-                    // show error message "Please enter valid command"
-                    l_isValid = false;
+                // show error message "Please enter valid command"
+                l_isValid = false;
 
             }
         } catch (Exception e) {
             e.printStackTrace();
             // show error message "Please enter valid command"
-                    l_isValid = false;
+            l_isValid = false;
         }
         return l_isValid;
     }
@@ -121,7 +121,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         }
                     }
                     if (l_isValidName) {
-                        saveCommonContinent(l_continentName, l_continetValue);
+                        saveContinent(l_continentName, l_continetValue);
                         // show success message "continent saved successfully"
                     }
 
@@ -132,7 +132,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             } else if (l_commandString.get(l_i).equalsIgnoreCase("--remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
                 if (validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                    if (deleteCommonContinent(l_continentName)) {
+                    if (deleteContinent(l_continentName)) {
                         // show success message "Continent deleted successfully."
                     } else {
                         // show error message "Continent not found."
@@ -154,7 +154,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_continentName the name of the continent you want to delete
      * @return true if continent successfully deleted
      */
-    public boolean deleteCommonContinent(String p_continentName) {
+    public boolean deleteContinent(String p_continentName) {
         boolean l_result = false;
         int l_continentId;
 
@@ -168,7 +168,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
 
         if (l_result) {
-          // remove country and neighbours of continent
+            // remove country and neighbours of continent
         }
         return l_result;
     }
@@ -179,16 +179,98 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_continentName name of continent
      * @param p_value value of Continent
      */
-    public void saveCommonContinent(String p_continentName, String p_value) {
+    public void saveContinent(String p_continentName, String p_value) {
 
         Continent l_continent = new Continent();
         l_continent.setD_continentIndex(ContinentId);
         l_continent.setD_continentName(p_continentName);
         l_continent.setD_continentValue(Integer.parseInt(p_value));
-        Map<Integer, Continent> l_continentMap = new HashMap();
-        l_continentMap.put(ContinentId, l_continent);
-        d_warMap.setD_continents(l_continentMap);
+        d_warMap.getD_continents().put(ContinentId, l_continent);
         ContinentId++;
+    }
+
+    /**
+     * This method will check edit Continent command, validate and then call
+     * perform next operation
+     *
+     * @param p_editCountryCommand is edit command sent from user
+     * @return message of result after edit Country command execution
+     */
+    public String checkCommandEditCountry(String p_editCountryCommand) {
+        String l_countryName = "";
+        String l_continentName = "";
+        List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
+
+        for (int i = 0; i < l_editCountryCommandString.size(); i++) {
+            if (l_editCountryCommandString.get(i).equalsIgnoreCase("-add")) {
+                l_countryName = l_editCountryCommandString.get(i + 1);
+                l_continentName = l_editCountryCommandString.get(i + 2);
+                if (validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")
+                        && validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+
+                    // prepare country list of continent entered by user
+                    ArrayList<Country> l_countryList = new ArrayList<Country>();
+                    int l_continentIndex = 1;
+                    boolean isValidContinent = false;
+                    for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
+                        // check if continent exists or not
+                        if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
+                            l_continentIndex = l_entry.getKey();
+                            for (Country country : l_entry.getValue().getD_countryList()) {
+                                l_countryList.add(country);
+                            }
+                            isValidContinent = true;
+                            break;
+                        }
+                    }
+
+                    if (isValidContinent) {
+                        for (Country country : l_countryList) {
+                            if (!l_countryName.equalsIgnoreCase(country.getD_countryName())) {
+                                saveCountry(l_countryName, l_continentIndex);
+                                // show success message "country saved successfully" 
+                            } else {
+                                // show error message "Country already exists"
+                            }
+                        }
+                    } else {
+                        // show error message "Continent is not valid"
+                    }
+
+                } else {
+                    // show error message "Please enter valid country name or continent name"
+                }
+
+            } else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
+                l_countryName = l_editCountryCommandString.get(i + 1);
+
+                if (validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                    // delete country operation
+
+                } else {
+                    // show error message "Please enter valid country Name"
+                }
+            }
+
+        }
+//        return result.toString();
+        return "Edit country command executed successfully";
+    }
+
+    /**
+     * This method will save country given from both GUI and command line
+     *
+     * @param p_countryName name of the country
+     * @param p_continentIndex index of continent
+     */
+    public void saveCountry(String p_countryName, int p_continentIndex) {
+        Country l_country = new Country();
+        l_country.setD_continentIndex(p_continentIndex);
+        l_country.setD_countryName(p_countryName);
+        l_country.setD_countryIndex(CountryId);
+        CountryId++;
+        Continent l_continent = d_warMap.getD_continents().get(p_continentIndex);
+        l_continent.getD_countryList().add(l_country);
     }
 
     /**
