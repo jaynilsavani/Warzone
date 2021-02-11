@@ -13,7 +13,7 @@
             <Font name="Bell MT Bold" size="30.0" />
          </font>
       </Label>
-      <Button fx:id="BtnExit" layoutX="316.0" layoutY="128.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Exit" />
+      <Button fx:id="d_BtnExit" layoutX="316.0" layoutY="128.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Exit" />
       <Button fx:id="BtnHowToPlay" layoutX="458.0" layoutY="128.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="How To Play" />
       <AnchorPane layoutX="466.0" layoutY="220.0" prefHeight="117.0" prefWidth="164.0">
          <children>
