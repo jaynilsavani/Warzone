@@ -39,12 +39,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public static final String COUNTRIES = "[countries]";
     public static final String BORDERS = "[borders]";
 
-    /**
-     * This function is used to check whether string is empty or not
-     *
-     * @param p_str string passed by user
-     * @return true if string is not null
-     */
+    @Override
     public boolean isNullOrEmpty(String p_str) {
         if (p_str != null && !p_str.isEmpty()) {
             return false;
@@ -53,12 +48,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    /**
-     * This method will validate all command entered by user
-     *
-     * @param p_command contains command string entered by user
-     * @return true if command is valid
-     */
     public boolean validateCommand(String p_command) {
         boolean l_isValid = false;
         try {
@@ -298,13 +287,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         CountryId++;
     }
 
-    /**
-     * This method will validate the I/O given from GUI or terminal
-     *
-     * @param p_string string you want to validate
-     * @param p_regex regex for validation
-     * @return true if string matches with regex
-     */
+    @Override
     public boolean validateIOString(String p_string, String p_regex) {
         if (!p_string.isEmpty()) {
             Pattern l_pattern = Pattern.compile(p_regex);
@@ -315,10 +298,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
     }
 
-    /**
-     *
-     * @return WarMap object
-     */
     @Override
     public WarMap readMap() {
 

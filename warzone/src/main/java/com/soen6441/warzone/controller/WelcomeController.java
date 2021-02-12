@@ -27,10 +27,10 @@ public class WelcomeController implements Initializable {
 
     @Lazy
     @Autowired
-    private StageManager stageManager;
+    private StageManager d_stageManager;
     
     @Autowired
-    private MapHandlingInterface mapHandlingInterface;
+    private MapHandlingInterface d_mapHandlingInterface;
 
     /**
      * This method takes a user to map creation, where player can create mad and edit it
@@ -38,9 +38,9 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void createMap(ActionEvent event) {
-        mapHandlingInterface.validateCommand("editcontinent -add asia 5");
-        mapHandlingInterface.validateCommand("editcountry -add india asia -add srilanka asia");
-        stageManager.switchScene(FxmlView.MAPMANAGER,null);
+        d_mapHandlingInterface.validateCommand("editcontinent -add asia 5");
+        d_mapHandlingInterface.validateCommand("editcountry -add india asia -add srilanka asia");
+        d_stageManager.switchScene(FxmlView.MAPMANAGER,null);
     }
 
     /**
@@ -50,7 +50,7 @@ public class WelcomeController implements Initializable {
     @FXML
     void playGame(ActionEvent event) {
 
-        stageManager.switchScene(FxmlView.GAMECONFIG,null);
+        d_stageManager.switchScene(FxmlView.GAMECONFIG,null);
     }
 
 
