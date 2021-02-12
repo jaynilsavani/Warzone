@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -161,9 +162,58 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 break;
             }
         }
+        return l_result;
+    }
 
-        if (l_result) {
-            // remove country and neighbours of continent
+    /**
+     * This method will return true and break if country got removed and this
+     * method is used for removal of country
+     *
+     * @param p_countryIndex Id of the country you want to delete for
+     * @return false if not possible to delete
+     */
+    public boolean deleteCountry(int p_countryIndex) {
+        boolean l_result = false;
+
+        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+            List<Country> l_countryList = l_continent.getValue().getD_countryList();
+            List<Country> l_removedCountry = l_countryList.stream().filter(countrty -> p_countryIndex == countrty.getD_countryIndex())
+                    .collect(Collectors.toList());
+            //to remove and set updated countries to map 
+            if (!l_removedCountry.isEmpty()) {
+                l_countryList.removeAll(l_removedCountry);
+                l_continent.getValue().setD_countryList(l_countryList);
+                l_result = true;
+            }
+        }
+        return l_result;
+    }
+
+    /**
+     * This method will return true and break if neighbor got removed and this
+     * method is used for removal of country's neighbor
+     *
+     * @param p_countryIndex id of the country you want to delete for
+     * @param p_neighborIndex id of the neighbor you want to delete
+     *
+     * @return false if not possible to delete or does not exist
+     */
+    public boolean deleteNeighbour(int p_countryIndex, int p_neighborIndex) {
+        boolean l_result = false;
+        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+            for (Country l_country : l_continent.getValue().getD_countryList()) {
+                if (p_countryIndex == l_country.getD_countryIndex()) {
+                    //Get neighbour name of user input
+                    String l_neighbourNameToRemove = getNeighbourNamebyIndex(d_warMap.getD_continents(), p_neighborIndex);
+                    //get neighour that matches neighbour given by user
+                    List<String> l_neighborToRemove = l_country.getD_neighbourCountries().stream().filter(l_neighborName -> (l_neighborName == null ? l_neighbourNameToRemove == null : l_neighborName.equalsIgnoreCase(l_neighbourNameToRemove))).collect(Collectors.toList());
+                    //if neighbour found then remove for list of neighbour
+                    if (!l_neighborToRemove.isEmpty()) {
+                        l_country.getD_neighbourCountries().removeAll(l_neighborToRemove);
+                        l_result = true;
+                    }
+                }
+            }
         }
         return l_result;
     }
