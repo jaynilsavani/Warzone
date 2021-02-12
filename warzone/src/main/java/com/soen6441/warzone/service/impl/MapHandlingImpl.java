@@ -5,11 +5,13 @@ import java.io.FileReader;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.model.*;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Autowired
     private WarMap d_warMap;
+    
+    @Autowired
+    private CommandResponse commandResponse;
 
     private static int ContinentId = 1;
     private static int CountryId = 1;
@@ -55,12 +61,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    public boolean validateCommand(String p_command) {
+    public CommandResponse validateCommand(String p_command) {
         boolean l_isValid = false;
         try {
             if (!isNullOrEmpty(p_command)) {
                 if (p_command.startsWith("editcontinent")) {
-                    checkCommandEditContinent(p_command);
+                   return checkCommandEditContinent(p_command);
                 } else if (p_command.startsWith("editcountry")) {
                     checkCommandEditCountry(p_command);
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
@@ -70,7 +76,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (p_command.startsWith("savemap")) {
                     // save map
                 } else if (p_command.startsWith("editmap")) {
-                    // edit map
+                    checkCommandEditMap(p_command);
                 } else if (p_command.startsWith("validatemap")) {
                     //  
 
@@ -88,7 +94,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
             // show error message "Please enter valid command"
             l_isValid = false;
         }
-        return l_isValid;
+//        return l_isValid;
+return commandResponse;
     }
 
     /**
@@ -98,7 +105,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_editContinentCommand is edit continent command sent from user
      * @return message of result after edit Continent operation
      */
-    public String checkCommandEditContinent(String p_editContinentCommand) {
+    public CommandResponse checkCommandEditContinent(String p_editContinentCommand) {
         String l_continentName = "";
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
@@ -124,7 +131,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                     if (l_isValidName) {
                         saveContinent(l_continentName, l_continetValue);
-                        // show success message "continent saved successfully"
+                        commandResponse.setD_isValid(true);
+                        commandResponse.setD_responseString("Continent saved successfully");
+                        return commandResponse;
                     }
 
                 } else {
@@ -146,7 +155,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
 
 //        return l_result.toString();
-        return "Continent changes successfully executed.";
+//        return "Continent changes successfully executed.";
+          return commandResponse; 
     }
 
     /**
@@ -348,7 +358,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         if (!p_string.isEmpty()) {
             Pattern l_pattern = Pattern.compile(p_regex);
             Matcher l_matcher = l_pattern.matcher(p_string);
-            return l_matcher.find() && l_matcher.group().equals(p_string);
+            return l_matcher.find();
         } else {
             return false;
         }
@@ -378,10 +388,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (l_fileLine.startsWith(";")) {
                         continue;
                     }
-                    if (l_fileLine.startsWith(NAME)) {
-                        String l_name = l_fileLine.substring(5);
-                        l_warMap.setD_mapName(l_name);
-                    }
+
+                    l_warMap.setD_mapName(p_fileName);
+                    l_warMap.setD_status(true);
                     if (l_fileLine.equalsIgnoreCase(FILES)) {
                         l_isFiles = true;
                         continue;
@@ -606,5 +615,77 @@ public class MapHandlingImpl implements MapHandlingInterface {
             }
         }
         return l_countryIndex;
+    }
+    
+    /**
+     * This method will check edit map command and if file is already exist then
+     * read the data of existing map file otherwise it will create new map file
+     *
+     * @param p_editMapCommand
+     */
+    public void checkCommandEditMap(String p_editMapCommand) {
+        String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
+
+        if (validateIOString(l_fileName, "[a-zA-Z]+.?[a-zA-Z]+")) {
+            List<String> l_mapFileNameList = getAvailableMapFiles();
+            String l_fullName;
+            int index = l_fileName.lastIndexOf('.');
+            l_fullName = index > 0
+                    ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
+
+            // Set status and map file name 
+            d_warMap.setD_status(true);
+            d_warMap.setD_mapName(l_fullName);
+
+            if (l_mapFileNameList.contains(l_fullName)) {
+                try {
+                    d_warMap = readMap(l_fullName);
+                    // show message "Map loaded successfully! Do not forget to save map file after editing";
+                } catch (Exception e) {
+                    // "Exception in EditMap : Invalid Map Please correct Map";
+                    // show error message e.printStackTrace();
+                }
+            } else {
+                //show message "Map not found in system, new map is created. Pleaase do not forget to save map file after editing"
+            }
+        } else {
+            // show error message "Please enter valid file name for editMap command"
+        }
+    }
+
+    /**
+     * This method is will used to get all available map files
+     *
+     * @return it will return list of map file
+     */
+    public List<String> getAvailableMapFiles() {
+        List<String> l_maps = new ArrayList<>();
+        try {
+            l_maps = getListOfAllFiles(Paths.get(MAP_DEF_PATH), ".map");
+        } catch (IOException ex) {
+            System.out.println("exception");
+            // show error message ex.printStackTrace()
+        }
+
+        return l_maps;
+    }
+
+    /**
+     * List all files from this given path and extension
+     *
+     * @param p_path directory path of files
+     * @param p_fileExtension extension of file to be searched
+     * @return list of files
+     */
+    public List<String> getListOfAllFiles(Path p_path, String p_fileExtension)
+            throws IOException {
+        List<String> l_files;
+        try (Stream<Path> l_walk = Files.walk(p_path)) {
+            l_files = l_walk.map(filePath -> filePath.toFile().getName())
+                    .filter(fileName -> fileName.endsWith(p_fileExtension))
+                    .collect(Collectors.toList());
+        }
+
+        return l_files;
     }
 }

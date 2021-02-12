@@ -14,8 +14,9 @@ import org.springframework.stereotype.Component;
  * structure started. This Map is having Map of continents and continent will
  * have countries and those countries will have their adjacent countries.
  *
- * Three annotations (Getter, Setter, toString), you can see on the top of the class are
- * lombok dependencies to automatically generate getter, setter and tostring method in the code.
+ * Three annotations (Getter, Setter, toString), you can see on the top of the
+ * class are lombok dependencies to automatically generate getter, setter and
+ * tostring method in the code.
  *
  * @author <a href="mailto:y_vaghan@encs.concordia.ca">yashkumar vaghani</a>
  */
@@ -37,7 +38,12 @@ public class WarMap {
     private Map<Integer, Continent> d_continents;
 
     /**
-     * It'll represent the status of the map whether it is valid or not.
+     * It will represent the status of map object.
      */
-    private String d_status;  
+    private boolean d_status;
+
+    /**
+     * It will represent the status of the map whether it is valid or not.
+     */
+    private boolean d_isValid;
 }
