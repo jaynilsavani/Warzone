@@ -347,7 +347,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         if (!p_string.isEmpty()) {
             Pattern l_pattern = Pattern.compile(p_regex);
             Matcher l_matcher = l_pattern.matcher(p_string);
-            return l_matcher.find() && l_matcher.group().equals(p_string);
+            return l_matcher.find();
         } else {
             return false;
         }
@@ -528,16 +528,20 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public void checkCommandEditMap(String p_editMapCommand) {
         String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
 
-        if (validateIOString(l_fileName, "[a-zA-Z]+")) {
+        if (validateIOString(l_fileName, "[a-zA-Z]+.?[a-zA-Z]+")) {
             List<String> l_mapFileNameList = getAvailableMapFiles();
+            String l_fullName;
+            int index = l_fileName.lastIndexOf('.');
+            l_fullName = index > 0
+                    ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
 
             // Set status and map file name 
             d_warMap.setD_status(true);
-            d_warMap.setD_mapName(l_fileName.toLowerCase() + ".map");
+            d_warMap.setD_mapName(l_fullName);
 
-            if (l_mapFileNameList.contains(l_fileName.toLowerCase() + ".map")) {
+            if (l_mapFileNameList.contains(l_fullName)) {
                 try {
-                    d_warMap = readMap(l_fileName.toLowerCase() + ".map");
+                    d_warMap = readMap(l_fullName);
                     // show message "Map loaded successfully! Do not forget to save map file after editing";
                 } catch (Exception e) {
                     // "Exception in EditMap : Invalid Map Please correct Map";
