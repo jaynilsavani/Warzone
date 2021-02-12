@@ -129,7 +129,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (d_warMap.getD_continents() != null) {
                         for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
                             if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
-                                // show error message "continent already exists in map file"
+                                prepareResponse(false, "Continent already exists in map file");
                                 l_isValidName = false;
                                 break;
                             }
@@ -144,25 +144,23 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     }
 
                 } else {
-                    // show error message "Please enter valid continent name or value"
+                    prepareResponse(false, "Please enter valid continent name or value");
                 }
 
             } else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
                 if (validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                     if (deleteContinent(l_continentName)) {
-                        // show success message "Continent deleted successfully."
+                        prepareResponse(true, "Continent deleted successfully");
                     } else {
-                        // show error message "Continent not found."
+                        prepareResponse(true, "Continent not found");
                     }
                 } else {
-                    // show error message "Please enter valid continent name."
+                    prepareResponse(true, "Please enter valid continent name");
                 }
             }
         }
 
-//        return l_result.toString();
-//        return "Continent changes successfully executed.";
         return commandResponse;
     }
 
@@ -289,11 +287,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (d_warMap.getD_continents() != null) {
                         for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
                             // check if continent exists or not
-                            if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
+                            if (l_entry.getValue() != null) {
                                 l_continentIndex = l_entry.getKey();
-                                l_entry.getValue().getD_countryList().forEach((country) -> {
-                                    l_countryList.add(country);
-                                });
+                                if (l_entry.getValue().getD_countryList() != null) {
+                                    l_entry.getValue().getD_countryList().forEach((country) -> {
+                                        l_countryList.add(country);
+                                    });
+                                }
                                 isValidContinent = true;
                                 break;
                             }
@@ -301,7 +301,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     } else {
                         prepareResponse(false, "Continent not found");
                         break;
-
                     }
 
                     if (isValidContinent) {
@@ -319,6 +318,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         } else {
                             // if continent doesn't have any country then add it
                             saveCountry(l_countryName, l_continentIndex);
+                            prepareResponse(true, "Country saved successfully");
                         }
                     } else {
                         prepareResponse(false, "Continent is not valid");
@@ -357,7 +357,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
         l_country.setD_countryName(p_countryName);
         l_country.setD_countryIndex(CountryId);
         Continent l_continent = d_warMap.getD_continents().get(p_continentIndex);
-        l_continent.getD_countryList().add(l_country);
+        if (l_continent.getD_countryList() != null) {
+            l_continent.getD_countryList().add(l_country);
+        } else {
+            List<Country> l_countryList = new ArrayList();
+            l_countryList.add(l_country);
+            l_continent.setD_countryList(l_countryList);
+        }
         CountryId++;
     }
 
@@ -548,25 +554,31 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
 
         if (validateIOString(l_fileName, "[a-zA-Z]+.?[a-zA-Z]+")) {
-            List<String> l_mapFileNameList = getAvailableMapFiles();
-            String l_fullName;
-            int index = l_fileName.lastIndexOf('.');
-            l_fullName = index > 0
-                    ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
+            List<String> l_mapFileNameList;
+            try {
+                l_mapFileNameList = getAvailableMapFiles();
 
-            // Set status and map file name 
-            d_warMap.setD_status(true);
-            d_warMap.setD_mapName(l_fullName);
+                String l_fullName;
+                int index = l_fileName.lastIndexOf('.');
+                l_fullName = index > 0
+                        ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
 
-            if (l_mapFileNameList.contains(l_fullName)) {
-                try {
-                    d_warMap = readMap(l_fullName);
-                    prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
-                } catch (Exception e) {
-                    prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
+                // Set status and map file name 
+                d_warMap.setD_status(true);
+                d_warMap.setD_mapName(l_fullName);
+
+                if (l_mapFileNameList.contains(l_fullName)) {
+                    try {
+                        d_warMap = readMap(l_fullName);
+                        prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
+                    } catch (Exception e) {
+                        prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
+                    }
+                } else {
+                    prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
                 }
-            } else {
-                prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
+            } catch (IOException ex) {
+                prepareResponse(false, "Exception in editmap");
             }
         } else {
             prepareResponse(false, "Please enter valid file name for editMap command");
