@@ -40,4 +40,12 @@ public interface MapHandlingInterface {
      *@return WarMap model
     */
     WarMap readMap(String p_fileName);
+    
+    /**
+     * This method will store WarMap model into file
+     * 
+     * @param p_warMap is the object of WarMap model
+     * @return true if map is successfully write to the file
+     */
+    boolean writeMapToFile(WarMap p_warMap);
 }

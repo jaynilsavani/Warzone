@@ -4,6 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.model.*;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -376,7 +382,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     }
                     //this if condition read neighbors of each country and set into neighborlist of coutey model
                     if (l_isBorders) {
-                        
+
                         String[] l_neighbourArray = l_fileLine.split(" ");
 
                         Continent l_currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
@@ -384,9 +390,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         List<String> l_neighbourName = new ArrayList<String>();
                         for (int i = 1; i < l_neighbourArray.length; i++) {
                             l_neighbourName
-                                    .add(getNeighbourNamebyIndex(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
+                                    .add(getCountryNamebyCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
                         }
-                        
+
                         for (int i = 0; i < l_currentContinent.getD_countryList().size(); i++) {
                             Country currentcountry = l_currentContinent.getD_countryList().get(i);
                             if (currentcountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
@@ -399,8 +405,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 }
             }
             l_warMap.setD_continents(l_continentMap);
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return l_warMap;
@@ -424,7 +429,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                 if (country != null) {
 
-                    if (country.getD_countryIndex()== p_countryIndex) {
+                    if (country.getD_countryIndex() == p_countryIndex) {
 
                         return continent;
                     }
@@ -438,11 +443,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method will return neighbor name by given Index
      *
-     * @param p_continentMap is a amp of continents
+     * @param p_continentMap is a map of continents
      * @param p_countryIndex is neighbor index
      * @return neighbor name
      */
-    private String getNeighbourNamebyIndex(Map<Integer, Continent> p_continentMap, int p_countryIndex) {
+    private String getCountryNamebyCountryId(Map<Integer, Continent> p_continentMap, int p_countryIndex) {
 
         String neighbourName = "";
 
@@ -464,5 +469,87 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
         return neighbourName;
 
+    }
+
+    @Override
+    public boolean writeMapToFile(WarMap p_warMap) {
+        boolean status;
+        try {
+            StringBuilder l_continentStringBuilder = new StringBuilder(CONTINENTS).append(System.lineSeparator());
+            StringBuilder l_countryStringBuilder = new StringBuilder(COUNTRIES).append(System.lineSeparator());
+            StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
+
+            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(MAP_DEF_PATH + p_warMap.getD_mapName() + ".map"), "utf-8")));) {
+
+                Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
+
+                for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
+                    Continent l_currentContinent = l_entry.getValue();
+                    
+                    //here all continets will store into the l_continentStringBuilder
+                    l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
+                    List<Country> l_countryList = l_currentContinent.getD_countryList();
+                    for (Country l_country : l_countryList) {
+                        
+                        //here all countries will store into the l_countryStringBuilder
+                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 " + "0")
+                                .append(System.lineSeparator());
+
+                        List<String> l_neighborList = l_country.getD_neighbourCountries();
+                        if (!l_neighborList.isEmpty() && l_neighborList != null) {
+                            l_neighborStringBuilder.append(l_country.getD_countryIndex());
+                            for (String l_neighborName : l_neighborList) {
+                                
+                                //here all neighbors will store into the l_neighborStringBuilder
+                                l_neighborStringBuilder.append(" " + getCountryIndexByCountrName(p_warMap, l_neighborName));
+                            }
+                            l_neighborStringBuilder.append(System.lineSeparator());
+                        }
+                    }
+                }
+                //writer.println("extra lines of map file");
+                writer.println("name " + p_warMap.getD_mapName());
+                writer.println();
+                writer.println(FILES);
+                writer.println("pic risk_pic.png");
+                //writer.println("file names");
+                writer.println();
+                writer.println(l_continentStringBuilder.toString());
+                writer.println(l_countryStringBuilder.toString());
+                writer.println(l_neighborStringBuilder.toString());
+                status = true;
+            }
+        } catch (Exception e) {
+            status = false;
+        }
+        return status;
+    }
+
+    /**
+     * This method will return country index from country name
+     *
+     * @param p_warMap is object of WarMap model
+     * @param p_countryName is the name of country
+     * @return index of country
+     */
+    private int getCountryIndexByCountrName(WarMap p_warMap, String p_countryName) {
+        int l_countryIndex = 0;
+        Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
+
+        for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
+            Continent l_currentContinent = l_entry.getValue();
+
+            List<Country> l_countryList = l_currentContinent.getD_countryList();
+            for (Country l_country : l_countryList) {
+                if (l_country != null) {
+                    if (l_country.getD_countryName() == p_countryName) {
+                        l_countryIndex = l_country.getD_countryIndex();
+                        break;
+                    }
+                }
+            }
+        }
+        return l_countryIndex;
     }
 }
