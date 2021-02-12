@@ -39,5 +39,5 @@ public interface MapHandlingInterface {
      *
      *@return WarMap model
     */
-    WarMap readMap();
+    WarMap readMap(String p_fileName);
 }

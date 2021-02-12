@@ -1,4 +1,5 @@
 package com.soen6441.warzone.controller;
+
 import com.soen6441.warzone.config.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.service.MapHandlingInterface;
@@ -24,42 +25,40 @@ public class WelcomeController implements Initializable {
     @FXML
     private Button d_BtnExit;
 
-
     @Lazy
     @Autowired
     private StageManager d_stageManager;
-    
+
     @Autowired
     private MapHandlingInterface d_mapHandlingInterface;
 
     /**
-     * This method takes a user to map creation, where player can create mad and edit it
+     * This method takes a user to map creation, where player can create mad and
+     * edit it
+     *
      * @param event will represents value sent from view
      */
     @FXML
     void createMap(ActionEvent event) {
-        d_stageManager.switchScene(FxmlView.MAPMANAGER,null);
+        d_stageManager.switchScene(FxmlView.MAPMANAGER, null);
     }
 
     /**
      * This method is used to approach a start up phase of game for a player
+     *
      * @param event will represents value sent from view
      */
     @FXML
     void playGame(ActionEvent event) {
 
-        d_stageManager.switchScene(FxmlView.GAMECONFIG,null);
+        d_stageManager.switchScene(FxmlView.GAMECONFIG, null);
     }
-
-
 
     /**
      * This method will exit the game and close the stage
      *
      * @param event will represents value sent from view
      */
-
-
     @FXML
     void exitGame(ActionEvent event) {
         Stage stage = (Stage) d_BtnExit.getScene().getWindow();
