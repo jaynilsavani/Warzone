@@ -299,7 +299,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    public WarMap readMap() {
+    public WarMap readMap(String p_fileName) {
 
         String l_fileLine = "";
         boolean l_isFiles = false;
@@ -308,7 +308,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         boolean l_isBorders = false;
         WarMap l_warMap = new WarMap();
 
-        try (BufferedReader l_bufferedreader = new BufferedReader(new FileReader(MAP_DEF_PATH + "asia.map"))) {
+        try (BufferedReader l_bufferedreader = new BufferedReader(new FileReader(MAP_DEF_PATH + p_fileName))) {
 
             Map<Integer, Continent> l_continentMap = new HashMap();
             Continent l_continent = null;
@@ -356,14 +356,14 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     //this if condtion read all the countries from file and set into country model
                     if (l_isCountries && !l_fileLine.equalsIgnoreCase(BORDERS)) {
 
-                        String[] l_countryArray = l_fileLine.split(" ");
+                        String[] l_countries = l_fileLine.split(" ");
 
-                        int l_continentIndex = Integer.parseInt(l_countryArray[2]);
+                        int l_continentIndex = Integer.parseInt(l_countries[2]);
                         Continent l_currentcontinent = l_continentMap.get(l_continentIndex);
 
                         l_country = new Country();
-                        l_country.setD_countryName(l_countryArray[1]);
-                        l_country.setD_countryIndex(Integer.parseInt(l_countryArray[0]));
+                        l_country.setD_countryName(l_countries[1]);
+                        l_country.setD_countryIndex(Integer.parseInt(l_countries[0]));
                         l_country.setD_continentIndex(l_continentIndex);
 
                         l_currentcontinent.getD_countryList().add(l_country);
