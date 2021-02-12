@@ -38,7 +38,7 @@ public class Continent {
     /**
      * List of countries represents all the countries of this continent
      */
-    private List<Country> d_countryList = new ArrayList<>();
+    private List<Country> d_countryList;
 
 }
 
