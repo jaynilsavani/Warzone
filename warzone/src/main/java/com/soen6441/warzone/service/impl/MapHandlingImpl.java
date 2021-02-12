@@ -27,6 +27,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Autowired
     private WarMap d_warMap;
+    
+    @Autowired
+    private CommandResponse commandResponse;
 
     private static int ContinentId = 1;
     private static int CountryId = 1;
@@ -49,12 +52,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    public boolean validateCommand(String p_command) {
+    public CommandResponse validateCommand(String p_command) {
         boolean l_isValid = false;
         try {
             if (!isNullOrEmpty(p_command)) {
                 if (p_command.startsWith("editcontinent")) {
-                    checkCommandEditContinent(p_command);
+                   return checkCommandEditContinent(p_command);
                 } else if (p_command.startsWith("editcountry")) {
                     checkCommandEditCountry(p_command);
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
@@ -82,7 +85,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
             // show error message "Please enter valid command"
             l_isValid = false;
         }
-        return l_isValid;
+//        return l_isValid;
+return commandResponse;
     }
 
     /**
@@ -92,7 +96,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_editContinentCommand is edit continent command sent from user
      * @return message of result after edit Continent operation
      */
-    public String checkCommandEditContinent(String p_editContinentCommand) {
+    public CommandResponse checkCommandEditContinent(String p_editContinentCommand) {
         String l_continentName = "";
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
@@ -118,7 +122,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                     if (l_isValidName) {
                         saveContinent(l_continentName, l_continetValue);
-                        // show success message "continent saved successfully"
+                        commandResponse.setD_isValid(true);
+                        commandResponse.setD_responseString("Continent saved successfully");
+                        return commandResponse;
                     }
 
                 } else {
@@ -140,7 +146,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
 
 //        return l_result.toString();
-        return "Continent changes successfully executed.";
+//        return "Continent changes successfully executed.";
+          return commandResponse; 
     }
 
     /**

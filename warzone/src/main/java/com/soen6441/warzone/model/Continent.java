@@ -1,5 +1,4 @@
 package com.soen6441.warzone.model;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
