@@ -6,14 +6,13 @@ import com.soen6441.warzone.service.MapHandlingInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.scene.control.*;
 
 
 @Controller
@@ -36,7 +35,7 @@ public class MapController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
-    ;
+
 
     /**
      * This method will redirect user to Home page
