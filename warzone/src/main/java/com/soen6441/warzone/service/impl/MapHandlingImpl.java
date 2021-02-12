@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.model.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +69,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (p_command.startsWith("savemap")) {
                     // save map
                 } else if (p_command.startsWith("editmap")) {
-                    // edit map
+                    checkCommandEditMap(p_command);
                 } else if (p_command.startsWith("validatemap")) {
                     //  
 
@@ -322,10 +328,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (l_fileLine.startsWith(";")) {
                         continue;
                     }
-                    if (l_fileLine.startsWith(NAME)) {
-                        String l_name = l_fileLine.substring(5);
-                        l_warMap.setD_mapName(l_name);
-                    }
+
+                    l_warMap.setD_mapName(p_fileName);
+                    l_warMap.setD_status(true);
                     if (l_fileLine.equalsIgnoreCase(FILES)) {
                         l_isFiles = true;
                         continue;
@@ -376,7 +381,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     }
                     //this if condition read neighbors of each country and set into neighborlist of coutey model
                     if (l_isBorders) {
-                        
+
                         String[] l_neighbourArray = l_fileLine.split(" ");
 
                         Continent l_currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
@@ -386,7 +391,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                             l_neighbourName
                                     .add(getNeighbourNamebyIndex(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
                         }
-                        
+
                         for (int i = 0; i < l_currentContinent.getD_countryList().size(); i++) {
                             Country currentcountry = l_currentContinent.getD_countryList().get(i);
                             if (currentcountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
@@ -399,8 +404,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 }
             }
             l_warMap.setD_continents(l_continentMap);
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return l_warMap;
@@ -424,7 +428,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                 if (country != null) {
 
-                    if (country.getD_countryIndex()== p_countryIndex) {
+                    if (country.getD_countryIndex() == p_countryIndex) {
 
                         return continent;
                     }
@@ -464,5 +468,73 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
         return neighbourName;
 
+    }
+
+    /**
+     * This method will check edit map command and if file is already exist then
+     * read the data of existing map file otherwise it will create new map file
+     *
+     * @param p_editMapCommand
+     */
+    public void checkCommandEditMap(String p_editMapCommand) {
+        String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
+
+        if (validateIOString(l_fileName, "[a-zA-Z]+")) {
+            List<String> l_mapFileNameList = getAvailableMapFiles();
+
+            // Set status and map file name 
+            d_warMap.setD_status(true);
+            d_warMap.setD_mapName(l_fileName.toLowerCase() + ".map");
+
+            if (l_mapFileNameList.contains(l_fileName.toLowerCase() + ".map")) {
+                try {
+                    d_warMap = readMap(l_fileName.toLowerCase() + ".map");
+                    // show message "Map loaded successfully! Do not forget to save map file after editing";
+                } catch (Exception e) {
+                    // "Exception in EditMap : Invalid Map Please correct Map";
+                    // show error message e.printStackTrace();
+                }
+            } else {
+                //show message "Map not found in system, new map is created. Pleaase do not forget to save map file after editing"
+            }
+        } else {
+            // show error message "Please enter valid file name for editMap command"
+        }
+    }
+
+    /**
+     * This method is will used to get all available map files
+     *
+     * @return it will return list of map file
+     */
+    public List<String> getAvailableMapFiles() {
+        List<String> l_maps = new ArrayList<>();
+        try {
+            l_maps = getListOfAllFiles(Paths.get(MAP_DEF_PATH), ".map");
+        } catch (IOException ex) {
+            System.out.println("exception");
+            // show error message ex.printStackTrace()
+        }
+
+        return l_maps;
+    }
+
+    /**
+     * List all files from this given path and extension
+     *
+     * @param p_path directory path of files
+     * @param p_fileExtension extension of file to be searched
+     * @return list of files
+     */
+    public List<String> getListOfAllFiles(Path p_path, String p_fileExtension)
+            throws IOException {
+        List<String> l_files;
+        try (Stream<Path> l_walk = Files.walk(p_path)) {
+            l_files = l_walk.map(filePath -> filePath.toFile().getName())
+                    .filter(fileName -> fileName.endsWith(p_fileExtension))
+                    .collect(Collectors.toList());
+        }
+
+        return l_files;
     }
 }
