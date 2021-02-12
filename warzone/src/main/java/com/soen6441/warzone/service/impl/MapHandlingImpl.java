@@ -32,7 +32,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Autowired
     private WarMap d_warMap;
-    
+
     @Autowired
     private CommandResponse commandResponse;
 
@@ -62,9 +62,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
         try {
             if (!isNullOrEmpty(p_command)) {
                 if (p_command.startsWith("editcontinent")) {
-                   return checkCommandEditContinent(p_command);
+                    return checkCommandEditContinent(p_command);
                 } else if (p_command.startsWith("editcountry")) {
-                    checkCommandEditCountry(p_command);
+                    return checkCommandEditCountry(p_command);
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
                     // checkCommandEditNeighbour(p_command);
                 } else if (p_command.startsWith("showmap")) {
@@ -72,7 +72,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (p_command.startsWith("savemap")) {
                     // save map
                 } else if (p_command.startsWith("editmap")) {
-                    checkCommandEditMap(p_command);
+                    return checkCommandEditMap(p_command);
                 } else if (p_command.startsWith("validatemap")) {
                     //  
 
@@ -81,17 +81,28 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 }
 
             } else {
-                // show error message "Please enter valid command"
+                prepareResponse(false, "Please enter valid command");
                 l_isValid = false;
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // show error message "Please enter valid command"
+            prepareResponse(false, "Please enter valid command");
             l_isValid = false;
         }
-//        return l_isValid;
-return commandResponse;
+
+        return commandResponse;
+    }
+
+    /**
+     * This method will prepare response of command entered by user
+     *
+     * @param p_isValid to check command is successfully executed or not
+     * @param p_responeMessage response message of command
+     */
+    public void prepareResponse(boolean p_isValid, String p_responeMessage) {
+        this.commandResponse.setD_isValid(p_isValid);
+        this.commandResponse.setD_responseString(p_responeMessage);
     }
 
     /**
@@ -152,7 +163,7 @@ return commandResponse;
 
 //        return l_result.toString();
 //        return "Continent changes successfully executed.";
-          return commandResponse; 
+        return commandResponse;
     }
 
     /**
@@ -259,7 +270,7 @@ return commandResponse;
      * @param p_editCountryCommand is edit command sent from user
      * @return message of result after edit Country command execution
      */
-    public String checkCommandEditCountry(String p_editCountryCommand) {
+    public CommandResponse checkCommandEditCountry(String p_editCountryCommand) {
         String l_countryName = "";
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
@@ -288,8 +299,9 @@ return commandResponse;
                             }
                         }
                     } else {
+                        prepareResponse(false, "Continent not found");
                         break;
-                        // show error message "Continent not found"
+
                     }
 
                     if (isValidContinent) {
@@ -298,10 +310,10 @@ return commandResponse;
                             for (Country country : l_countryList) {
                                 if (!l_countryName.equalsIgnoreCase(country.getD_countryName())) {
                                     saveCountry(l_countryName, l_continentIndex);
-                                    // show success message "country saved successfully" 
+                                    prepareResponse(true, "Country saved successfully");
                                 } else {
+                                    prepareResponse(false, "Country already exists");
                                     break;
-                                    // show error message "Country already exists"
                                 }
                             }
                         } else {
@@ -309,12 +321,12 @@ return commandResponse;
                             saveCountry(l_countryName, l_continentIndex);
                         }
                     } else {
+                        prepareResponse(false, "Continent is not valid");
                         break;
-                        // show error message "Continent is not valid"
                     }
 
                 } else {
-                    // show error message "Please enter valid country name or continent name"
+                    prepareResponse(false, "Please enter valid country name or continent name");
                 }
 
             } else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
@@ -324,13 +336,13 @@ return commandResponse;
                     // delete country operation
 
                 } else {
-                    // show error message "Please enter valid country Name"
+                    prepareResponse(false, "Please enter valid country Name");
                 }
             }
 
         }
-//        return result.toString();
-        return "Edit country command executed successfully";
+
+        return commandResponse;
     }
 
     /**
@@ -532,7 +544,7 @@ return commandResponse;
      *
      * @param p_editMapCommand
      */
-    public void checkCommandEditMap(String p_editMapCommand) {
+    public CommandResponse checkCommandEditMap(String p_editMapCommand) {
         String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
 
         if (validateIOString(l_fileName, "[a-zA-Z]+.?[a-zA-Z]+")) {
@@ -549,32 +561,30 @@ return commandResponse;
             if (l_mapFileNameList.contains(l_fullName)) {
                 try {
                     d_warMap = readMap(l_fullName);
-                    // show message "Map loaded successfully! Do not forget to save map file after editing";
+                    prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
                 } catch (Exception e) {
-                    // "Exception in EditMap : Invalid Map Please correct Map";
-                    // show error message e.printStackTrace();
+                    prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                 }
             } else {
-                //show message "Map not found in system, new map is created. Pleaase do not forget to save map file after editing"
+                prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
             }
         } else {
-            // show error message "Please enter valid file name for editMap command"
+            prepareResponse(false, "Please enter valid file name for editMap command");
         }
+
+        return commandResponse;
     }
 
     /**
      * This method is will used to get all available map files
      *
      * @return it will return list of map file
+     * @throws java.io.IOException throws IO Exception
      */
-    public List<String> getAvailableMapFiles() {
+    public List<String> getAvailableMapFiles() throws IOException {
         List<String> l_maps = new ArrayList<>();
-        try {
-            l_maps = getListOfAllFiles(Paths.get(MAP_DEF_PATH), ".map");
-        } catch (IOException ex) {
-            System.out.println("exception");
-            // show error message ex.printStackTrace()
-        }
+
+        l_maps = getListOfAllFiles(Paths.get(MAP_DEF_PATH), ".map");
 
         return l_maps;
     }
