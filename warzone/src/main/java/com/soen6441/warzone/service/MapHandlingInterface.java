@@ -1,5 +1,6 @@
 package com.soen6441.warzone.service;
 
+import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.WarMap;
 
 /**
@@ -15,7 +16,7 @@ public interface MapHandlingInterface {
      * @param p_command contains command string entered by user
      * @return true if command is valid
      */
-    boolean validateCommand(String p_command);
+    public CommandResponse validateCommand(String p_command);
 
     /**
      * This function is used to check whether string is empty or not
@@ -23,7 +24,7 @@ public interface MapHandlingInterface {
      * @param p_str string passed by user
      * @return true if string is not null
      */
-    boolean isNullOrEmpty(String p_str);
+    public boolean isNullOrEmpty(String p_str);
 
     /**
      * This method will validate the I/O given from GUI or terminal
@@ -32,12 +33,22 @@ public interface MapHandlingInterface {
      * @param p_regex regex for validation
      * @return true if string matches with regex
      */
-    boolean validateIOString(String p_string, String p_regex);
+    public boolean validateIOString(String p_string, String p_regex);
     
     /**
+     * This method will store WarMap model into file
+     * 
+     * @param p_warMap is the object of WarMap model
+     * @return true if map is successfully write to the file
+     */
+    boolean writeMapToFile(WarMap p_warMap);
+
+     /**
      *This method will read map file and store data into  WarMap model object
      *
+     *@param p_fileName fileName to read Map
+     * 
      *@return WarMap model
     */
-    WarMap readMap(String p_fileName);
+    public WarMap readMap(String p_fileName);
 }

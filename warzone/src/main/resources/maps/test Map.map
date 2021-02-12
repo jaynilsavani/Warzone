@@ -1,0 +1,16 @@
+name test Map
+
+[files]
+pic risk_pic.png
+
+[continents]
+abc 5
+
+[countries]
+1 aa 10 0
+2 bb 10 0
+
+[borders]
+1 2
+2 1
+

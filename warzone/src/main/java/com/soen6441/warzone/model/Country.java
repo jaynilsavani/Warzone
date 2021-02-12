@@ -1,6 +1,7 @@
 package com.soen6441.warzone.model;
 
 import java.util.List;
+import lombok.EqualsAndHashCode;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 @Component
+@EqualsAndHashCode
 public class Country {
 
     /**

@@ -2,6 +2,7 @@ package com.soen6441.warzone.controller;
 
 import com.soen6441.warzone.config.FxmlView;
 import com.soen6441.warzone.config.StageManager;
+import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +18,15 @@ import java.util.ResourceBundle;
 
 @Controller
 public class MapController implements Initializable {
+
+
+
+
+    @FXML
+    private TextField d_ExecuteCommand;
+    
+    @FXML
+    private TextArea d_commandResponse;
 
 
     @Lazy
@@ -60,8 +70,14 @@ public class MapController implements Initializable {
     void getData(ActionEvent event) {
         //just for testing
         String s = d_ExecuteCommand.getText();
+
         System.out.println( s );
         d_maphandlinginterface.validateCommand( s );
+
+        System.out.println(s);
+        CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(s);
+
         d_ExecuteCommand.clear();
+        d_commandResponse.setText(l_commandRespose.toString());
     }
 }
