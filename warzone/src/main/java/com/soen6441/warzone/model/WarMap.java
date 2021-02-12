@@ -1,6 +1,8 @@
 package com.soen6441.warzone.model;
 
 import java.util.Map;
+import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 @Component
+@EqualsAndHashCode
 public class WarMap {
 
     /**
