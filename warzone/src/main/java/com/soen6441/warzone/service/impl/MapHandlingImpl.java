@@ -27,7 +27,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Autowired
     private WarMap d_warMap;
-    
+
     @Autowired
     private CommandResponse commandResponse;
 
@@ -57,9 +57,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
         try {
             if (!isNullOrEmpty(p_command)) {
                 if (p_command.startsWith("editcontinent")) {
-                   return checkCommandEditContinent(p_command);
+                    return checkCommandEditContinent(p_command);
                 } else if (p_command.startsWith("editcountry")) {
-                    checkCommandEditCountry(p_command);
+                    return checkCommandEditCountry(p_command);
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
                     // checkCommandEditNeighbour(p_command);
                 } else if (p_command.startsWith("showmap")) {
@@ -86,7 +86,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             l_isValid = false;
         }
 //        return l_isValid;
-return commandResponse;
+        return commandResponse;
     }
 
     /**
@@ -147,7 +147,7 @@ return commandResponse;
 
 //        return l_result.toString();
 //        return "Continent changes successfully executed.";
-          return commandResponse; 
+        return commandResponse;
     }
 
     /**
@@ -160,13 +160,14 @@ return commandResponse;
     public boolean deleteContinent(String p_continentName) {
         boolean l_result = false;
         int l_continentId;
-
-        for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
-            if (l_entry.getValue() != null && p_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
-                l_continentId = l_entry.getKey();
-                d_warMap.getD_continents().remove(l_entry.getKey());
-                l_result = true;
-                break;
+        if (d_warMap.getD_continents() != null) {
+            for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
+                if (l_entry.getValue() != null && p_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
+                    l_continentId = l_entry.getKey();
+                    d_warMap.getD_continents().remove(l_entry.getKey());
+                    l_result = true;
+                    break;
+                }
             }
         }
         return l_result;
@@ -176,53 +177,80 @@ return commandResponse;
      * This method will return true and break if country got removed and this
      * method is used for removal of country
      *
-     * @param p_countryIndex Id of the country you want to delete for
+     * @param p_countryName Name of the country you want to delete for
      * @return false if not possible to delete
      */
-    public boolean deleteCountry(int p_countryIndex) {
+    public CommandResponse deleteCountry(String p_countryName) {
         boolean l_result = false;
-
-        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
-            List<Country> l_countryList = l_continent.getValue().getD_countryList();
-            List<Country> l_removedCountry = l_countryList.stream().filter(countrty -> p_countryIndex == countrty.getD_countryIndex())
-                    .collect(Collectors.toList());
-            //to remove and set updated countries to map 
-            if (!l_removedCountry.isEmpty()) {
-                l_countryList.removeAll(l_removedCountry);
-                l_continent.getValue().setD_countryList(l_countryList);
-                l_result = true;
+        CommandResponse l_dCountryResponse = new CommandResponse();
+        //Check whether continent exist or not
+        if (d_warMap.getD_continents() != null) {
+            for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+                List<Country> l_countryList = l_continent.getValue().getD_countryList();
+                if (l_countryList != null) {
+                    List<Country> l_removedCountry = l_countryList.stream().filter(countrty -> p_countryName.equalsIgnoreCase(countrty.getD_countryName()))
+                            .collect(Collectors.toList());
+                    //to remove and set updated countries to map 
+                    if (!l_removedCountry.isEmpty()) {
+                        l_countryList.removeAll(l_removedCountry);
+                        l_continent.getValue().setD_countryList(l_countryList);
+                        l_result = true;
+                        l_dCountryResponse.setD_responseString("Country Deleted Sucessfully");
+                    }
+                }
             }
+            l_dCountryResponse.setD_isValid(true);
+            if (!l_result) {
+                l_dCountryResponse.setD_responseString("Country Does Not Exist!!");
+            }
+        } else {
+            l_dCountryResponse.setD_isValid(true);
+            l_dCountryResponse.setD_responseString("No Continent Exist");
         }
-        return l_result;
+        System.out.println(d_warMap.toString());
+        return l_dCountryResponse;
     }
 
     /**
      * This method will return true and break if neighbor got removed and this
      * method is used for removal of country's neighbor
      *
-     * @param p_countryIndex id of the country you want to delete for
-     * @param p_neighborIndex id of the neighbor you want to delete
+     * @param p_countryName name of the country you want to delete for
+     * @param p_neighborCountryName name of the neighbor you want to delete
      *
      * @return false if not possible to delete or does not exist
      */
-    public boolean deleteNeighbour(int p_countryIndex, int p_neighborIndex) {
+    public CommandResponse deleteNeighbour(String p_countryName, String p_neighborCountryName) {
         boolean l_result = false;
-        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
-            for (Country l_country : l_continent.getValue().getD_countryList()) {
-                if (p_countryIndex == l_country.getD_countryIndex()) {
-                    //Get neighbour name of user input
-                    String l_neighbourNameToRemove = getNeighbourNamebyIndex(d_warMap.getD_continents(), p_neighborIndex);
-                    //get neighour that matches neighbour given by user
-                    List<String> l_neighborToRemove = l_country.getD_neighbourCountries().stream().filter(l_neighborName -> (l_neighborName == null ? l_neighbourNameToRemove == null : l_neighborName.equalsIgnoreCase(l_neighbourNameToRemove))).collect(Collectors.toList());
-                    //if neighbour found then remove for list of neighbour
-                    if (!l_neighborToRemove.isEmpty()) {
-                        l_country.getD_neighbourCountries().removeAll(l_neighborToRemove);
-                        l_result = true;
+        CommandResponse l_dCountryResponse = new CommandResponse();
+
+        //Check whether continent exist or not
+        if (d_warMap.getD_continents() != null) {
+            for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+                if (l_continent.getValue().getD_countryList() != null) {
+                    for (Country l_country : l_continent.getValue().getD_countryList()) {
+                        if (p_countryName.equalsIgnoreCase(l_country.getD_countryName())) {
+                            //get neighour that matches neighbour given by user
+                            List<String> l_neighborToRemove = l_country.getD_neighbourCountries().stream().filter(l_neighborName -> (l_neighborName.equalsIgnoreCase(p_neighborCountryName))).collect(Collectors.toList());
+                            //if neighbour found then remove for list of neighbour
+                            if (!l_neighborToRemove.isEmpty()) {
+                                l_country.getD_neighbourCountries().removeAll(l_neighborToRemove);
+                                l_result = true;
+                                l_dCountryResponse.setD_responseString("NeighbourCountry Deleted Sucessfully");
+                            }
+                        }
                     }
                 }
             }
+            l_dCountryResponse.setD_isValid(true);
+            if (!l_result) {
+                l_dCountryResponse.setD_responseString("NeighbourCountry Does Not Exist!!");
+            }
+        } else {
+            l_dCountryResponse.setD_isValid(true);
+            l_dCountryResponse.setD_responseString("No Continent Exist");
         }
-        return l_result;
+        return l_dCountryResponse;
     }
 
     /**
@@ -254,7 +282,7 @@ return commandResponse;
      * @param p_editCountryCommand is edit command sent from user
      * @return message of result after edit Country command execution
      */
-    public String checkCommandEditCountry(String p_editCountryCommand) {
+    public CommandResponse checkCommandEditCountry(String p_editCountryCommand) {
         String l_countryName = "";
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
@@ -316,16 +344,18 @@ return commandResponse;
                 l_countryName = l_editCountryCommandString.get(i + 1);
 
                 if (validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                    // delete country operation
+                    return deleteCountry(l_countryName);
 
                 } else {
-                    // show error message "Please enter valid country Name"
+                    CommandResponse l_responseFor_inValid = new CommandResponse();
+                    l_responseFor_inValid.setD_isValid(false);
+                    l_responseFor_inValid.setD_responseString("Please enter valid Country Index");
+                    return l_responseFor_inValid;
                 }
             }
 
         }
-//        return result.toString();
-        return "Edit country command executed successfully";
+        return commandResponse;
     }
 
     /**
@@ -433,7 +463,7 @@ return commandResponse;
                     }
                     //this if condition read neighbors of each country and set into neighborlist of coutey model
                     if (l_isBorders) {
-                        
+
                         String[] l_neighbourArray = l_fileLine.split(" ");
 
                         Continent l_currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
@@ -443,7 +473,7 @@ return commandResponse;
                             l_neighbourName
                                     .add(getNeighbourNamebyIndex(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
                         }
-                        
+
                         for (int i = 0; i < l_currentContinent.getD_countryList().size(); i++) {
                             Country currentcountry = l_currentContinent.getD_countryList().get(i);
                             if (currentcountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
@@ -456,8 +486,7 @@ return commandResponse;
                 }
             }
             l_warMap.setD_continents(l_continentMap);
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return l_warMap;
@@ -481,7 +510,7 @@ return commandResponse;
 
                 if (country != null) {
 
-                    if (country.getD_countryIndex()== p_countryIndex) {
+                    if (country.getD_countryIndex() == p_countryIndex) {
 
                         return continent;
                     }
