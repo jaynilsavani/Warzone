@@ -36,6 +36,15 @@ public class GameConfigController implements Initializable {
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
+    /**
+     * This is the initialization method of this controller
+     *
+     * @param location  of the FXML file
+     * @param resources is properties information
+     * @see javafx.fxml.Initializable#initialize(java.net.URL,
+     * java.util.ResourceBundle)
+     */
+
     public void initialize(URL location, ResourceBundle resources) {
 
     }
@@ -54,6 +63,7 @@ public class GameConfigController implements Initializable {
 
     /**
      * This method will redirect user Game Start Screen
+     *
      * @param event represent value send from view
      */
     @FXML
@@ -64,14 +74,15 @@ public class GameConfigController implements Initializable {
 
     /**
      * This method is used to get fire command from user and put it as a parameter in validation
+     *
      * @param event
      */
 
     public void getData(ActionEvent event) {
 
         String s = d_CommandLine.getText();
-        System.out.println(s);
-        d_maphandlinginterface.validateCommand(s);
+        System.out.println( s );
+        d_maphandlinginterface.validateCommand( s );
         d_CommandLine.clear();
     }
 

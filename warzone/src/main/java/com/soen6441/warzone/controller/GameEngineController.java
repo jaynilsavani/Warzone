@@ -29,13 +29,10 @@ public class GameEngineController implements Initializable {
     public TextArea d_TerritoryListText;
     public TextArea d_ContinentText;
     public TextArea d_TerritoryPlayerArmyText;
-
-    @FXML
-    private TextField d_CommandLine;
-
     @FXML
     Button d_BtnExit;
-
+    @FXML
+    private TextField d_CommandLine;
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
@@ -51,6 +48,15 @@ public class GameEngineController implements Initializable {
         stage.close();
     }
 
+    /**
+     * This is the initialization method of this controller
+     *
+     * @param location  of the FXML file
+     * @param resources is properties information
+     * @see javafx.fxml.Initializable#initialize(java.net.URL,
+     * java.util.ResourceBundle)
+     */
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -58,6 +64,7 @@ public class GameEngineController implements Initializable {
 
     /**
      * This method is used to get fire command from user and put it as a parameter in validation
+     *
      * @param event
      */
 
