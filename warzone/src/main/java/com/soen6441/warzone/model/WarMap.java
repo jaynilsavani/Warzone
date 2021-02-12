@@ -1,6 +1,8 @@
 package com.soen6441.warzone.model;
 
 import java.util.Map;
+import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 @Component
+@EqualsAndHashCode
 public class WarMap {
 
     /**
@@ -36,5 +39,5 @@ public class WarMap {
     /**
      * It'll represent the status of the map whether it is valid or not.
      */
-    private String d_status;
+    private String d_status;  
 }

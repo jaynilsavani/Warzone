@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -167,9 +168,58 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 break;
             }
         }
+        return l_result;
+    }
 
-        if (l_result) {
-            // remove country and neighbours of continent
+    /**
+     * This method will return true and break if country got removed and this
+     * method is used for removal of country
+     *
+     * @param p_countryIndex Id of the country you want to delete for
+     * @return false if not possible to delete
+     */
+    public boolean deleteCountry(int p_countryIndex) {
+        boolean l_result = false;
+
+        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+            List<Country> l_countryList = l_continent.getValue().getD_countryList();
+            List<Country> l_removedCountry = l_countryList.stream().filter(countrty -> p_countryIndex == countrty.getD_countryIndex())
+                    .collect(Collectors.toList());
+            //to remove and set updated countries to map 
+            if (!l_removedCountry.isEmpty()) {
+                l_countryList.removeAll(l_removedCountry);
+                l_continent.getValue().setD_countryList(l_countryList);
+                l_result = true;
+            }
+        }
+        return l_result;
+    }
+
+    /**
+     * This method will return true and break if neighbor got removed and this
+     * method is used for removal of country's neighbor
+     *
+     * @param p_countryIndex id of the country you want to delete for
+     * @param p_neighborIndex id of the neighbor you want to delete
+     *
+     * @return false if not possible to delete or does not exist
+     */
+    public boolean deleteNeighbour(int p_countryIndex, int p_neighborIndex) {
+        boolean l_result = false;
+        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+            for (Country l_country : l_continent.getValue().getD_countryList()) {
+                if (p_countryIndex == l_country.getD_countryIndex()) {
+                    //Get neighbour name of user input
+                    String l_neighbourNameToRemove = getCountryNamebyCountryId(d_warMap.getD_continents(), p_neighborIndex);
+                    //get neighour that matches neighbour given by user
+                    List<String> l_neighborToRemove = l_country.getD_neighbourCountries().stream().filter(l_neighborName -> (l_neighborName == null ? l_neighbourNameToRemove == null : l_neighborName.equalsIgnoreCase(l_neighbourNameToRemove))).collect(Collectors.toList());
+                    //if neighbour found then remove for list of neighbour
+                    if (!l_neighborToRemove.isEmpty()) {
+                        l_country.getD_neighbourCountries().removeAll(l_neighborToRemove);
+                        l_result = true;
+                    }
+                }
+            }
         }
         return l_result;
     }
@@ -366,13 +416,18 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                         int l_continentIndex = Integer.parseInt(l_countries[2]);
                         Continent l_currentcontinent = l_continentMap.get(l_continentIndex);
-
+                        
                         l_country = new Country();
                         l_country.setD_countryName(l_countries[1]);
                         l_country.setD_countryIndex(Integer.parseInt(l_countries[0]));
                         l_country.setD_continentIndex(l_continentIndex);
-
-                        l_currentcontinent.getD_countryList().add(l_country);
+                        if (l_currentcontinent.getD_countryList() == null) {
+                            List<Country> l_countryList = new ArrayList();
+                            l_countryList.add(l_country);
+                            l_currentcontinent.setD_countryList(l_countryList);
+                        } else {
+                            l_currentcontinent.getD_countryList().add(l_country);
+                        }
                         l_continentMap.put(l_continentIndex, l_currentcontinent);
                     }
                     if (l_fileLine.equalsIgnoreCase(BORDERS)) {
@@ -486,12 +541,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                 for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
                     Continent l_currentContinent = l_entry.getValue();
-                    
+
                     //here all continets will store into the l_continentStringBuilder
                     l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
                     List<Country> l_countryList = l_currentContinent.getD_countryList();
                     for (Country l_country : l_countryList) {
-                        
+
                         //here all countries will store into the l_countryStringBuilder
                         l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 " + "0")
                                 .append(System.lineSeparator());
@@ -500,7 +555,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         if (!l_neighborList.isEmpty() && l_neighborList != null) {
                             l_neighborStringBuilder.append(l_country.getD_countryIndex());
                             for (String l_neighborName : l_neighborList) {
-                                
+
                                 //here all neighbors will store into the l_neighborStringBuilder
                                 l_neighborStringBuilder.append(" " + getCountryIndexByCountrName(p_warMap, l_neighborName));
                             }
