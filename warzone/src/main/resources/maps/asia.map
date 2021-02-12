@@ -2,8 +2,11 @@
 ; map made with the map maker
 ; yura.net Risk 1.0.9.5
 
-[files]
+name asia Map
 
+[files]
+pic risk_pic.png
+map risk_map.gif
 
 [continents]
 europe 5
@@ -21,3 +24,5 @@ noth 6
 1 2 3
 2 1 3
 3 1 2
+4 1 3 2
+5 2 4 3

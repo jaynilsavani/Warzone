@@ -33,7 +33,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     public static final String MAP_DEF_PATH = "src/main/resources/maps/";
 
-    public static final String NAME = "[name]";
+    public static final String NAME = "name";
     public static final String FILES = "[files]";
     public static final String CONTINENTS = "[continents]";
     public static final String COUNTRIES = "[countries]";
@@ -218,98 +218,108 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public WarMap readMap() {
 
         String l_fileLine = "";
+        boolean l_isFiles = false;
         boolean l_isContinents = false;
         boolean l_isCountries = false;
         boolean l_isBorders = false;
-        WarMap warMap = new WarMap();
+        WarMap l_warMap = new WarMap();
 
         try (BufferedReader l_bufferedreader = new BufferedReader(new FileReader(MAP_DEF_PATH + "asia.map"))) {
 
             Map<Integer, Continent> l_continentMap = new HashMap();
-            Continent continent = null;
-            Country country = null;
+            Continent l_continent = null;
+            Country l_country = null;
             int l_continentCounter = 1;
 
             //while loop read each line from file and process accordingly
             while ((l_fileLine = l_bufferedreader.readLine()) != null) {
+                if (l_fileLine != null && !l_fileLine.isEmpty()) {
 
-                if (l_fileLine.startsWith(";")) {
-                    continue;
-                }
-                if (l_fileLine.startsWith(NAME)) {
-                    String l_name = l_fileLine.substring(5);
-                    warMap.setD_mapName(l_name);
-                }
-                if (l_fileLine.equalsIgnoreCase(CONTINENTS)) {
-                    l_isContinents = true;
-                    continue;
-                }
-                //this if condition read all the contients from file and set into continent model
-                if (l_isContinents && !l_fileLine.equalsIgnoreCase(COUNTRIES)) {
-                    continent = new Continent();
-                    String[] l_continentArray = l_fileLine.split(" ");
-                    continent.setD_continentName(l_continentArray[0]);
-                    continent.setD_continentValue(Integer.parseInt(l_continentArray[1]));
-                    continent.setD_continentIndex(l_continentCounter);
-                    l_continentMap.put(l_continentCounter, continent);
-                    l_continentCounter++;
-                }
-                if (l_fileLine.equalsIgnoreCase(COUNTRIES)) {
-                    l_isContinents = false;
-                    l_isCountries = true;
-                    continue;
-                }
-                //this if condtion read all the countries from file and set into country model
-                if (l_isCountries && !l_fileLine.equalsIgnoreCase(BORDERS)) {
-
-                    String[] l_countryArray = l_fileLine.split(" ");
-
-                    int l_continentIndex = Integer.parseInt(l_countryArray[2]);
-                    Continent currentcontinent = l_continentMap.get(l_continentIndex);
-
-                    country = new Country();
-                    country.setD_countryName(l_countryArray[1]);
-                    country.setD_countryIndex(Integer.parseInt(l_countryArray[0]));
-                    country.setD_continentIndex(l_continentIndex);
-
-                    currentcontinent.getD_countryList().add(country);
-                    l_continentMap.put(l_continentIndex, currentcontinent);
-                }
-                if (l_fileLine.equalsIgnoreCase(BORDERS)) {
-                    l_isCountries = false;
-                    l_isBorders = true;
-                    continue;
-                }
-                //this if condition read neighbors of each country and set into neighborlist of coutey model
-                if (l_isBorders) {
-
-                    String[] l_neighbourArray = l_fileLine.split(" ");
-
-                    Continent currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
-
-                    List<String> l_neighbourName = new ArrayList<String>();
-                    for (int i = 1; i < l_neighbourArray.length; i++) {
-                        l_neighbourName
-                                .add(getNeighbourNamebyIndex(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
+                    if (l_fileLine.startsWith(";")) {
+                        continue;
                     }
+                    if (l_fileLine.startsWith(NAME)) {
+                        String l_name = l_fileLine.substring(5);
+                        l_warMap.setD_mapName(l_name);
+                    }
+                    if (l_fileLine.equalsIgnoreCase(FILES)) {
+                        l_isFiles = true;
+                        continue;
+                    }
+                    if (l_isFiles) {
+                        //files of map
+                    }
+                    if (l_fileLine.equalsIgnoreCase(CONTINENTS)) {
+                        l_isFiles = false;
+                        l_isContinents = true;
+                        continue;
+                    }
+                    //this if condition read all the contients from file and set into continent model
+                    if (l_isContinents && !l_fileLine.equalsIgnoreCase(COUNTRIES)) {
+                        l_continent = new Continent();
+                        String[] l_continentArray = l_fileLine.split(" ");
+                        l_continent.setD_continentName(l_continentArray[0]);
+                        l_continent.setD_continentValue(Integer.parseInt(l_continentArray[1]));
+                        l_continent.setD_continentIndex(l_continentCounter);
+                        l_continentMap.put(l_continentCounter, l_continent);
+                        l_continentCounter++;
+                    }
+                    if (l_fileLine.equalsIgnoreCase(COUNTRIES)) {
+                        l_isContinents = false;
+                        l_isCountries = true;
+                        continue;
+                    }
+                    //this if condtion read all the countries from file and set into country model
+                    if (l_isCountries && !l_fileLine.equalsIgnoreCase(BORDERS)) {
 
-                    for (int i = 0; i < currentContinent.getD_countryList().size(); i++) {
-                        Country currentcountry = currentContinent.getD_countryList().get(i);
-                        if (currentcountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
-                            currentcountry.setD_neighbourCountries(l_neighbourName);
-                            currentContinent.getD_countryList().set(i, currentcountry);
+                        String[] l_countryArray = l_fileLine.split(" ");
+
+                        int l_continentIndex = Integer.parseInt(l_countryArray[2]);
+                        Continent l_currentcontinent = l_continentMap.get(l_continentIndex);
+
+                        l_country = new Country();
+                        l_country.setD_countryName(l_countryArray[1]);
+                        l_country.setD_countryIndex(Integer.parseInt(l_countryArray[0]));
+                        l_country.setD_continentIndex(l_continentIndex);
+
+                        l_currentcontinent.getD_countryList().add(l_country);
+                        l_continentMap.put(l_continentIndex, l_currentcontinent);
+                    }
+                    if (l_fileLine.equalsIgnoreCase(BORDERS)) {
+                        l_isCountries = false;
+                        l_isBorders = true;
+                        continue;
+                    }
+                    //this if condition read neighbors of each country and set into neighborlist of coutey model
+                    if (l_isBorders) {
+                        
+                        String[] l_neighbourArray = l_fileLine.split(" ");
+
+                        Continent l_currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
+
+                        List<String> l_neighbourName = new ArrayList<String>();
+                        for (int i = 1; i < l_neighbourArray.length; i++) {
+                            l_neighbourName
+                                    .add(getNeighbourNamebyIndex(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
                         }
+                        
+                        for (int i = 0; i < l_currentContinent.getD_countryList().size(); i++) {
+                            Country currentcountry = l_currentContinent.getD_countryList().get(i);
+                            if (currentcountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
+                                currentcountry.setD_neighbourCountries(l_neighbourName);
+                                l_currentContinent.getD_countryList().set(i, currentcountry);
+                            }
+                        }
+                        l_continentMap.put(l_currentContinent.getD_continentIndex(), l_currentContinent);
                     }
-                    l_continentMap.put(currentContinent.getD_continentIndex(), currentContinent);
                 }
             }
-            warMap.setD_continents(l_continentMap);
-
-        } catch (Exception e) {
+            l_warMap.setD_continents(l_continentMap);
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
-
-        return warMap;
+        return l_warMap;
     }
 
     /**
@@ -330,7 +340,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                 if (country != null) {
 
-                    if (country.getD_continentIndex() == p_countryIndex) {
+                    if (country.getD_countryIndex()== p_countryIndex) {
 
                         return continent;
                     }

@@ -38,7 +38,7 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void createMap(ActionEvent event) {
-        mapHandlingInterface.validateCommand("editcontinent -add asia 5");
+        
         stageManager.switchScene(FxmlView.MAPMANAGER,null);
     }
 
