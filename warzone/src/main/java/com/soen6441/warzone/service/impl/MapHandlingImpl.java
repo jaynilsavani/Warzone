@@ -377,7 +377,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return
      */
     public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
-        
         String l_countryName = "";
         String l_neighbourCountryName = "";
         boolean l_result=false;
@@ -386,7 +385,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
             prepareResponse(false,"Invalid Coommand");
             return commandResponse;
         }
-
         for (int l_i = 0; l_i < (l_commandString.size()-2); l_i++) {
             l_countryName = l_commandString.get(l_i + 1);
             l_neighbourCountryName = l_commandString.get(l_i + 2);
@@ -399,11 +397,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     }
                     if(l_result) {
                         prepareResponse(true,"Neighbour is added successfully");
-                        return commandResponse;
                     }
                     else {
                         prepareResponse(false,"neighbour is not added successfully");
-                            return commandResponse;
                     }
                 }
                 else if (l_commandString.get(l_i).equalsIgnoreCase("-remove"))
@@ -428,7 +424,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return
      */
     public boolean saveNeighbour(int p_countryId, int p_neighbour) {
-
         if(p_countryId==p_neighbour)
         {
             return false;
@@ -441,7 +436,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (p_countryId == l_country.getD_countryIndex()) {
 
                         String l_neighbourNameToAdd = getCountryNamebyCountryId(d_warMap.getD_continents(),p_neighbour);
-                        System.out.println("how "+l_neighbourNameToAdd);
                         if(l_country.getD_neighbourCountries() == null )
                         {
                             List<String> addToNeighbourList=new ArrayList<String>();
@@ -461,6 +455,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                                 break;
                             }
                         }
+
                     }
                 }
             }
@@ -525,8 +520,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (l_i == 0 && l_j == 0) {
                     showmap_matrix[l_i][l_j] = " ";
                     continue;
-                } else if (l_i == l_j && l_i != 0) {
-                    showmap_matrix[l_i][l_j] = "in";
                 } else if (l_i == 0 && l_j != 0) {
                     showmap_matrix[l_i][l_j] = l_countries.get(l_j - 1).getD_countryName();
                     if (l_maxLength < showmap_matrix[l_i][l_j].length()) {
@@ -537,7 +530,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else {
                     if (l_countries.get(l_i - 1).getD_neighbourCountries() != null) {
                         if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(showmap_matrix[0][l_j])) {
-                            showmap_matrix[l_i][l_j] = "in";
+                            showmap_matrix[l_i][l_j] = "1";
                         } else {
                             showmap_matrix[l_i][l_j] = "0";
                         }
@@ -555,7 +548,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 String l_stringFrmat = String.format("%1$" + l_maxLength + "s", showmap_matrix[l_i][l_j]);
                 l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
             }
-            l_showMapIn2D = l_showMapIn2D + "\n";
+            l_showMapIn2D = l_showMapIn2D + "\n\t\t";
         }
         prepareResponse(true,l_showMapIn2D);
 
