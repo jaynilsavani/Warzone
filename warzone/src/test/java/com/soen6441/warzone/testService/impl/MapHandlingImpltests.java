@@ -58,7 +58,8 @@ public class MapHandlingImpltests {
         l_continent.setD_continentValue(5);
         l_continent.setD_countryList(l_countryList);
         
-        d_warMap.setD_mapName("test Map");
+        d_warMap.setD_mapName("test.map");
+        d_warMap.setD_status(true);
         Map<Integer, Continent> l_continentMap = new HashMap<Integer,Continent>();
         l_continentMap.put(1,l_continent);
         d_warMap.setD_continents(l_continentMap);
