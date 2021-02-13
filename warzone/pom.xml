@@ -43,7 +43,8 @@
 	  <groupId>com.soen6441</groupId>
 	  <artifactId>warzone</artifactId>
 	  <version>0.0.1-SNAPSHOT</version>
-         <type>jar</type>
+	 	<scope>test</scope>
+         	<type>jar</type>
 	 </dependency>
 	</dependencies>
 
