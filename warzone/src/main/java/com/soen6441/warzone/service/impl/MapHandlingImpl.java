@@ -480,62 +480,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return
      */
     public boolean saveNeighbour(int p_countryId, int p_neighbour) {
-        WarMap d_warMap=new WarMap();
-        List<String> n1=new ArrayList<String>();
-        n1.add("pakistan");
-        n1.add("srilanka");
-        List<String> n2=new ArrayList<String>();
-        n2.add("srilanka");
-        List<String> n3=new ArrayList<String>();
-        n3.add("india");
-        n3.add("srilanka");
-        List<String> n4=new ArrayList<String>();
-        n4.add("pakistan");
-
-        List<Country> co1=new ArrayList<Country>();
-        List<Country> co2=new ArrayList<Country>();
-        Country c1=new Country();
-        Country c2=new Country();
-        Country c3=new Country();
-        Country c4=new Country();
-        c4.setD_neighbourCountries(n4);
-        co2.add(c4);
-        co1.add(c1);  co1.add(c2); co1.add(c3);
-        Continent con1=new Continent();
-        d_warMap.setD_mapName("Test");
-        Map<Integer,Continent> conn=new HashMap<Integer,Continent>();
-        Continent coon =new Continent();
-        conn.put(1,con1);
-        conn.put(2,coon);
-        d_warMap.setD_continents(conn);
-
-        //Map<Integer,Continent> conn1=new HashMap<Integer,Continent>();
-        //conn1.put(1,coon);
-        //d_warMap.setD_continents(conn1);
-        coon.setD_continentName("africa");
-        coon.setD_continentValue(6);
-        coon.setD_continentIndex(2);
-        coon.setD_countryList(co2);
-
-        con1.setD_continentName("asia");
-        con1.setD_continentIndex(1);
-        con1.setD_countryList(co1);
-        con1.setD_continentValue(4);
-        c1.setD_continentIndex(1);
-        c2.setD_continentIndex(1);
-        c3.setD_continentIndex(1);
-        c1.setD_countryName("india");
-        c2.setD_countryName("pakistan");
-        c3.setD_countryName("srilanka");
-        c1.setD_countryIndex(1);
-        c2.setD_countryIndex(2);
-        c3.setD_countryIndex(3);
-        c1.setD_neighbourCountries(n1);
-        c2.setD_neighbourCountries(n2);
-        c4.setD_countryName("brazil");
-        c4.setD_countryIndex(4);
-        c4.setD_continentIndex(2);
-        c4.setD_neighbourCountries(n3);
         if(p_countryId==p_neighbour)
         {
             return false;
@@ -614,62 +558,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Override
     public CommandResponse showmap() {
-        WarMap d_warMap=new WarMap();
-        List<String> n1=new ArrayList<String>();
-        n1.add("pakistan");
-        n1.add("srilanka");
-        List<String> n2=new ArrayList<String>();
-        n2.add("srilanka");
-        List<String> n3=new ArrayList<String>();
-        n3.add("india");
-        n3.add("srilanka");
-        List<String> n4=new ArrayList<String>();
-        n4.add("pakistan");
-
-        List<Country> co1=new ArrayList<Country>();
-        List<Country> co2=new ArrayList<Country>();
-        Country c1=new Country();
-        Country c2=new Country();
-        Country c3=new Country();
-        Country c4=new Country();
-        c4.setD_neighbourCountries(n4);
-        co2.add(c4);
-        co1.add(c1);  co1.add(c2); co1.add(c3);
-        Continent con1=new Continent();
-        d_warMap.setD_mapName("Test");
-        Map<Integer,Continent> conn=new HashMap<Integer,Continent>();
-        Continent coon =new Continent();
-        conn.put(1,con1);
-        conn.put(2,coon);
-        d_warMap.setD_continents(conn);
-
-        //Map<Integer,Continent> conn1=new HashMap<Integer,Continent>();
-        //conn1.put(1,coon);
-        //d_warMap.setD_continents(conn1);
-        coon.setD_continentName("africa");
-        coon.setD_continentValue(6);
-        coon.setD_continentIndex(2);
-        coon.setD_countryList(co2);
-
-        con1.setD_continentName("asia");
-        con1.setD_continentIndex(1);
-        con1.setD_countryList(co1);
-        con1.setD_continentValue(4);
-        c1.setD_continentIndex(1);
-        c2.setD_continentIndex(1);
-        c3.setD_continentIndex(1);
-        c1.setD_countryName("india");
-        c2.setD_countryName("pakistan");
-        c3.setD_countryName("srilanka");
-        c1.setD_countryIndex(1);
-        c2.setD_countryIndex(2);
-        c3.setD_countryIndex(3);
-        c1.setD_neighbourCountries(n1);
-        c2.setD_neighbourCountries(n2);
-        c4.setD_countryName("brazil");
-        c4.setD_countryIndex(4);
-        c4.setD_continentIndex(2);
-        c4.setD_neighbourCountries(n3);
         if (d_warMap == null) {
             commandResponse.setD_isValid(false);
             commandResponse.setD_responseString("Map is Null");
