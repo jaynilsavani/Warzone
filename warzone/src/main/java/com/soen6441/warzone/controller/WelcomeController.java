@@ -40,7 +40,7 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void createMap(ActionEvent event) {
-        d_stageManager.switchScene(FxmlView.MAPMANAGER, null);
+        d_stageManager.switchScene(FxmlView.MAPMANAGER, null);     
     }
 
     /**
