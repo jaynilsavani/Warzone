@@ -53,7 +53,7 @@ public interface MapHandlingInterface {
     public WarMap readMap(String p_fileName);
 
     /**
-     * This method is used to show the map in 2D matrix containging Countrys as x-y axis
+     * This method is used to show the map in 2D matrix containing Countries as x-y axis
      * @return
      */
     public CommandResponse showMap();

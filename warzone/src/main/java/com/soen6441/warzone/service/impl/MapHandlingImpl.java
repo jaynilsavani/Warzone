@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -512,50 +513,60 @@ public class MapHandlingImpl implements MapHandlingInterface {
             return commandResponse;
         }
         String l_showMapIn2D = "";
-        int l_maxLength = 0;
-        List<Country> l_countries = new ArrayList<Country>();
-        l_countries = getAvailableCountries(d_warMap);
+        List<Country> l_countries = getAvailableCountries(d_warMap);
         int l_countrySize = l_countries.size();
         int l_i, l_j;
         l_countrySize++;
-        String[][] showmap_matrix = new String[l_countrySize][l_countrySize];
+        Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
+        int l_maxLength = pair.getKey();
+        String[][] l_mapMetrices = pair.getValue();
+        for (l_i = 0; l_i < l_countrySize; l_i++) {
+            for (l_j = 0; l_j < l_countrySize; l_j++) {
+                String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
+                l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
+            }
+            l_showMapIn2D = l_showMapIn2D + "\n\t\t";
+        }
+        prepareResponse(true, l_showMapIn2D);
+
+        return commandResponse;
+    }
+    
+    public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries)
+    {
+        int l_maxLength = 0;
+        int l_countrySize = l_countries.size();
+        int l_i, l_j;
+        l_countrySize++;
+        String[][] l_mapMetrices = new String[l_countrySize][l_countrySize];
         for (l_i = 0; l_i < l_countrySize; l_i++) {
             for (l_j = 0; l_j < l_countrySize; l_j++) {
                 if (l_i == 0 && l_j == 0) {
-                    showmap_matrix[l_i][l_j] = " ";
+                    l_mapMetrices[l_i][l_j] = " ";
                     continue;
                 } else if (l_i == 0 && l_j != 0) {
-                    showmap_matrix[l_i][l_j] = l_countries.get(l_j - 1).getD_countryName();
-                    if (l_maxLength < showmap_matrix[l_i][l_j].length()) {
-                        l_maxLength = showmap_matrix[l_i][l_j].length();
+                    l_mapMetrices[l_i][l_j] = l_countries.get(l_j - 1).getD_countryName();
+                    if (l_maxLength < l_mapMetrices[l_i][l_j].length()) {
+                        l_maxLength = l_mapMetrices[l_i][l_j].length();
                     }
                 } else if (l_j == 0 && l_i != 0) {
-                    showmap_matrix[l_i][l_j] = l_countries.get(l_i - 1).getD_countryName();
+                    l_mapMetrices[l_i][l_j] = l_countries.get(l_i - 1).getD_countryName();
                 } else {
                     if (l_countries.get(l_i - 1).getD_neighbourCountries() != null) {
-                        if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(showmap_matrix[0][l_j])) {
-                            showmap_matrix[l_i][l_j] = "1";
+                        if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(l_mapMetrices[0][l_j])) {
+                            l_mapMetrices[l_i][l_j] = "1";
                         } else {
-                            showmap_matrix[l_i][l_j] = "0";
+                            l_mapMetrices[l_i][l_j] = "0";
                         }
                     } else {
-                        showmap_matrix[l_i][l_j] = "0";
+                        l_mapMetrices[l_i][l_j] = "0";
 
                     }
                 }
             }
         }
-        for (l_i = 0; l_i < l_countrySize; l_i++) {
-            for (l_j = 0; l_j < l_countrySize; l_j++) {
-                String l_stringFrmat = String.format("%1$" + l_maxLength + "s", showmap_matrix[l_i][l_j]);
-                l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
-            }
-            l_showMapIn2D = l_showMapIn2D + "\n\t\t";
-        }
-        prepareResponse(true,l_showMapIn2D);
-
-
-        return commandResponse;
+        
+        return new Pair<Integer, String[][]>(l_maxLength, l_mapMetrices);
     }
 
     /**
@@ -927,32 +938,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
-                    String[][] l_mapMetrix = new String[l_countrySize][l_countrySize];
-                    for (l_i = 0; l_i < l_countrySize; l_i++) {
-                        for (l_j = 0; l_j < l_countrySize; l_j++) {
-                            if (l_i == 0 && l_j == 0) {
-                                l_mapMetrix[l_i][l_j] = " ";
-                                continue;
-                            } else if (l_i == 0 && l_j != 0) {
-                                l_mapMetrix[l_i][l_j] = l_countries.get(l_j - 1).getD_countryName();
-                                if (l_maxLength < l_mapMetrix[l_i][l_j].length()) {
-                                    l_maxLength = l_mapMetrix[l_i][l_j].length();
-                                }
-                            } else if (l_j == 0 && l_i != 0) {
-                                l_mapMetrix[l_i][l_j] = l_countries.get(l_i - 1).getD_countryName();
-                            } else {
-                                if (l_countries.get(l_i - 1).getD_neighbourCountries() != null) {
-                                    if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(l_mapMetrix[0][l_j])) {
-                                        l_mapMetrix[l_i][l_j] = "1";
-                                    } else {
-                                        l_mapMetrix[l_i][l_j] = "0";
-                                    }
-                                } else {
-                                    l_mapMetrix[l_i][l_j] = "0";
-                                }
-                            }
-                        }
-                    }
+                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
+                    String[][] l_mapMetrix = pair.getValue();
 
                     int[][] l_intMetric = new int[l_countrySize-1][l_countrySize-1];
                       for (l_i = 0; l_i < l_countrySize; l_i++) {
