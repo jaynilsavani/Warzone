@@ -72,14 +72,18 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
                     checkCommandEditNeighbours(p_command);
                 } else if (p_command.startsWith("showmap")) {
-                      return showmap();
+                    return showmap();
                 } else if (p_command.startsWith("savemap")) {
                     // save map
                 } else if (p_command.startsWith("editmap")) {
                     return checkCommandEditMap(p_command);
                 } else if (p_command.startsWith("validatemap")) {
-                    //  
+                    if (validateMap(d_warMap)) {
+                        prepareResponse(true, "Map is valid");
 
+                    } else {
+                        prepareResponse(false, "Map is invalid");
+                    }
                 } else {
                     l_isValid = false;
                 }
@@ -468,9 +472,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
         return l_result;
     }
 
-
     /**
      * This method is used for getting country index by country name
+     *
      * @param p_continentMap
      * @param p_countryName
      * @return CountryIndex
@@ -908,5 +912,33 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
 
         return l_files;
+    }
+
+    /**
+     * This function will validate map file
+     *
+     * @param p_warMap use to validate
+     * @return return true if map is valid
+     */
+    public boolean validateMap(WarMap p_warMap) {
+        boolean l_result = true;
+        try {
+            // check one or more continent is available in map
+            if (p_warMap.getD_continents() != null && p_warMap.getD_continents().size() > 0) {
+                ArrayList<Country> l_countries = getAvailableCountries(p_warMap);
+                
+                // check one or more country is available in map
+                if (!l_countries.isEmpty()) {
+
+                    // check graph is connected or not
+                }
+            } else {
+                l_result = false;
+            }
+        } catch (Exception e) {
+            l_result = false;
+        }
+
+        return l_result;
     }
 }
