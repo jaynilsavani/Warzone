@@ -933,7 +933,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (!l_countries.isEmpty()) {
 
                     // check graph is connected or not
-                    int l_maxLength = 0;
                     l_countries = getAvailableCountries(d_warMap);
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
