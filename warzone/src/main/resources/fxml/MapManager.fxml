@@ -4,18 +4,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="835.0" prefWidth="872.0" style="-fx-background-color: #CDCD14;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.MapController">
+<AnchorPane prefHeight="600.0" prefWidth="872.0" style="-fx-background-color: #CDCD14;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.MapController">
    <children>
-      <Button fx:id="Back" layoutX="385.0" layoutY="450.0" onAction="#backToWelcome" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Back" />
-      <Button fx:id="Execute" layoutX="387.0" layoutY="558.0"  onAction="#getData" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Execute" />
+      <Button fx:id="Back" layoutX="381.0" layoutY="158.0" mnemonicParsing="false" onAction="#backToWelcome" prefHeight="26.0" prefWidth="102.0" text="Back" />
+      <Button fx:id="Execute" layoutX="268.0" layoutY="253.0" mnemonicParsing="false" onAction="#getData" prefHeight="26.0" prefWidth="329.0" text="Execute" />
       <Label layoutX="387.0" layoutY="14.0" prefHeight="18.0" prefWidth="85.0" text="User Guide">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="d_ExecuteCommand" alignment="CENTER" layoutX="106.0" layoutY="505.0" prefHeight="35.0" prefWidth="660.0" promptText="Execute Your Command" />
-      <TextArea fx:id="d_commandResponse" layoutX="107.0" layoutY="612.0" prefHeight="209.0" prefWidth="660.0" />
-      <TextArea fx:id="UserGuide" layoutX="106.0" layoutY="43.0" prefHeight="392.0" prefWidth="660.0" text="Map editor commans:&#10;To Create/Delete Continent, Country and connectivity between countries:&#10;1) editcontinent -add continentID continent value -remove continentID&#10;2) editcountry -add countryID continentID -remove countryID&#10;3) editneighbour -add countryID neighbourIcountryID -remove countryID neighbourIcountryID&#10;&#10;To Display Map: &#10;showmap&#10;&#10;To save map:&#10;savemap filename&#10;&#10;To load map from existing maps or to create map:&#10;editmap filename&#10;&#10;To verify the correctness of map:&#10;validatemap">
+      <TextField fx:id="d_ExecuteCommand" alignment="CENTER" layoutX="100.0" layoutY="201.0" prefHeight="35.0" prefWidth="660.0" promptText="Execute Your Command" />
+      <TextArea fx:id="d_commandResponse" layoutX="99.0" layoutY="296.0" prefHeight="282.0" prefWidth="660.0" />
+      <TextArea fx:id="UserGuide" layoutX="102.0" layoutY="39.0" prefHeight="98.0" prefWidth="660.0" text="Map editor commans:&#10;To Create/Delete Continent, Country and connectivity between countries:&#10;1) editcontinent -add continentID continent value -remove continentID&#10;2) editcountry -add countryID continentID -remove countryID&#10;3) editneighbour -add countryID neighbourIcountryID -remove countryID neighbourIcountryID&#10;&#10;To Display Map: &#10;showmap&#10;&#10;To save map:&#10;savemap filename&#10;&#10;To load map from existing maps or to create map:&#10;editmap filename&#10;&#10;To verify the correctness of map:&#10;validatemap">
          <font>
             <Font name="System Italic" size="12.0" />
          </font></TextArea>
