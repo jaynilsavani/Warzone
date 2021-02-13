@@ -80,8 +80,8 @@ public class GameConfigController implements Initializable {
 
     public void getData(ActionEvent event) {
 
-        String s = d_CommandLine.getText();
-        System.out.println( s );
+        String toTestConsole = d_CommandLine.getText();
+        System.out.println( toTestConsole );  // Just Testing Purpose
         d_maphandlinginterface.validateCommand( s );
         d_CommandLine.clear();
     }
