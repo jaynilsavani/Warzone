@@ -71,7 +71,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (p_command.startsWith("editcountry")) {
                     return checkCommandEditCountry(p_command);
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
-                    checkCommandEditNeighbours(p_command);
+                    return checkCommandEditNeighbours(p_command);
                 } else if (p_command.startsWith("showmap")) {
                     return showMap();
                 } else if (p_command.startsWith("savemap")) {
@@ -85,6 +85,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         prepareResponse(false, "Map is invalid");
                     }
                 } else {
+                    prepareResponse(false, "Please enter valid command");
                     l_isValid = false;
                 }
 
@@ -775,7 +776,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     for (Country l_country : l_countryList) {
 
                         //here all countries will store into the l_countryStringBuilder
-                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 " + "0")
+                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 0")
                                 .append(System.lineSeparator());
 
                         List<String> l_neighborList = l_country.getD_neighbourCountries();
@@ -936,8 +937,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
             if (validateIOString(p_fileName, "[a-zA-Z]+.?[a-zA-Z]+") && l_fileExtension) {
 
                 List<String> l_mapFileList = getAvailableMapFiles();
-                if (p_fileName.equalsIgnoreCase((l_mapFileList) + ".map")) {
-
+                if (!p_fileName.equalsIgnoreCase((l_mapFileList) + ".map")) {
+                    if (validateMap(d_warMap)) {
+                        writeMapToFile(d_warMap);
+                        prepareResponse(true, "Map file succesfully saved");
+                    } else {
+                        prepareResponse(false, "Map is not valid");
+                    }
                     //call validate function and writeMapToFile function    
                 } else {
                     prepareResponse(false, "Map name is already exist please enter another name");
