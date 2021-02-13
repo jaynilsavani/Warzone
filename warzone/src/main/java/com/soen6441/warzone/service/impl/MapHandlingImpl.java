@@ -72,7 +72,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
                     checkCommandEditNeighbours(p_command);
                 } else if (p_command.startsWith("showmap")) {
-                    return showmap();
+                    return showMap();
                 } else if (p_command.startsWith("savemap")) {
                     // save map
                 } else if (p_command.startsWith("editmap")) {
@@ -505,7 +505,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    public CommandResponse showmap() {
+    public CommandResponse showMap() {
         if (d_warMap == null) {
             commandResponse.setD_isValid(false);
             commandResponse.setD_responseString("Map is Null");
@@ -543,8 +543,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                     }
                 }
-
-
             }
         }
         for (l_i = 0; l_i < l_countrySize; l_i++) {
@@ -914,16 +912,66 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return return true if map is valid
      */
     public boolean validateMap(WarMap p_warMap) {
-        boolean l_result = true;
+        boolean l_result = false;
         try {
             // check one or more continent is available in map
             if (p_warMap.getD_continents() != null && p_warMap.getD_continents().size() > 0) {
                 ArrayList<Country> l_countries = getAvailableCountries(p_warMap);
-                
+
                 // check one or more country is available in map
                 if (!l_countries.isEmpty()) {
 
                     // check graph is connected or not
+                    int l_maxLength = 0;
+                    l_countries = getAvailableCountries(d_warMap);
+                    int l_countrySize = l_countries.size();
+                    int l_i, l_j;
+                    l_countrySize++;
+                    String[][] l_mapMetrix = new String[l_countrySize][l_countrySize];
+                    for (l_i = 0; l_i < l_countrySize; l_i++) {
+                        for (l_j = 0; l_j < l_countrySize; l_j++) {
+                            if (l_i == 0 && l_j == 0) {
+                                l_mapMetrix[l_i][l_j] = " ";
+                                continue;
+                            } else if (l_i == 0 && l_j != 0) {
+                                l_mapMetrix[l_i][l_j] = l_countries.get(l_j - 1).getD_countryName();
+                                if (l_maxLength < l_mapMetrix[l_i][l_j].length()) {
+                                    l_maxLength = l_mapMetrix[l_i][l_j].length();
+                                }
+                            } else if (l_j == 0 && l_i != 0) {
+                                l_mapMetrix[l_i][l_j] = l_countries.get(l_i - 1).getD_countryName();
+                            } else {
+                                if (l_countries.get(l_i - 1).getD_neighbourCountries() != null) {
+                                    if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(l_mapMetrix[0][l_j])) {
+                                        l_mapMetrix[l_i][l_j] = "1";
+                                    } else {
+                                        l_mapMetrix[l_i][l_j] = "0";
+                                    }
+                                } else {
+                                    l_mapMetrix[l_i][l_j] = "0";
+                                }
+                            }
+                        }
+                    }
+
+                    int[][] l_intMetric = new int[l_countrySize-1][l_countrySize-1];
+                      for (l_i = 0; l_i < l_countrySize; l_i++) {
+                        for (l_j = 0; l_j < l_countrySize; l_j++) {
+                            if (l_i == 0 && l_j == 0) {
+                                continue;
+                            }else if (l_i == 0 && l_j != 0) {
+                               continue;
+                            } else if (l_j == 0 && l_i != 0) {
+                                continue;
+                            }else{
+                                l_intMetric[l_i-1][l_j-1] = Integer.parseInt(l_mapMetrix[l_i][l_j]);
+                            }
+                        }
+                      }
+                    
+                    if (isConnected(l_intMetric, l_countrySize-1)) {
+                        l_result = true;
+                    }
                 }
             } else {
                 l_result = false;
@@ -933,5 +981,52 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
 
         return l_result;
+    }
+  
+    /**
+     * This method is used to check map is connected or not
+     * 
+     * @param p_metricesOfMap metric of map
+     * @param p_noOfCountries total number of map
+     * @return returns true if map is connected
+     */
+    public boolean isConnected(int[][] p_metricesOfMap, int p_noOfCountries) {
+        //created visited array
+        boolean[] l_visited = new boolean[p_noOfCountries];
+
+        //check if all the vertices are visited, if yes then graph is connected
+        for (int l_i = 0; l_i < p_noOfCountries; l_i++) {
+            for (int l_j = 0; l_j < p_noOfCountries; l_j++) {
+                l_visited[l_j] = false;
+            }
+            traverse(l_i, l_visited, p_noOfCountries, p_metricesOfMap);
+            for (int l_x = 0; l_x < p_noOfCountries; l_x++) {
+                if (!l_visited[l_x]) //if there is a node, not visited by traversal, graph is not connected
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+ 
+    /**
+     * This method is used to traverse metric
+     * 
+     * @param p_source
+     * @param p_visited
+     * @param p_noOfCountries
+     * @param p_metricesOfMap 
+     */
+    public void traverse(int p_source, boolean[] p_visited, int p_noOfCountries, int[][] p_metricesOfMap) {
+        p_visited[p_source] = true; //mark v as visited
+        for (int l_i = 0; l_i < p_noOfCountries; l_i++) {
+            if (p_metricesOfMap[p_source][l_i] == 1) {
+                if (!p_visited[l_i]) {
+                    traverse(l_i, p_visited, p_noOfCountries, p_metricesOfMap);
+                }
+            }
+        }
     }
 }

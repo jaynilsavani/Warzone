@@ -56,5 +56,5 @@ public interface MapHandlingInterface {
      * This method is used to show the map in 2D matrix containging Countrys as x-y axis
      * @return
      */
-    public CommandResponse showmap();
+    public CommandResponse showMap();
 }
