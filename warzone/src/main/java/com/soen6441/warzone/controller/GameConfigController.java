@@ -82,7 +82,7 @@ public class GameConfigController implements Initializable {
 
         String toTestConsole = d_CommandLine.getText();
         System.out.println( toTestConsole );  // Just Testing Purpose
-        d_maphandlinginterface.validateCommand( s );
+        d_maphandlinginterface.validateCommand( toTestConsole );
         d_CommandLine.clear();
     }
 
