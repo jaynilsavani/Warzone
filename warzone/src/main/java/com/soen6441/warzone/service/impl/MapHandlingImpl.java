@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.model.*;
+import com.soen6441.warzone.service.GeneralUtil;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -17,8 +18,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.util.Pair;
@@ -39,8 +38,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private WarMap d_warMap;
 
     @Autowired
-    private CommandResponse d_commandResponse;
+    private GeneralUtil d_generalUtil;
 
+//    @Autowired
+//    private CommandResponse d_commandResponse;
     private static int ContinentId = 1;
     private static int CountryId = 1;
     private static int NeighbourId = 1;
@@ -54,18 +55,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public static final String BORDERS = "[borders]";
 
     @Override
-    public boolean isNullOrEmpty(String p_str) {
-        if (p_str != null && !p_str.isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public CommandResponse validateCommand(String p_command) {
         boolean l_isValid = false;
         try {
-            if (!isNullOrEmpty(p_command)) {
+            if (!d_generalUtil.isNullOrEmpty(p_command)) {
                 if (p_command.startsWith("editcontinent")) {
                     return checkCommandEditContinent(p_command);
                 } else if (p_command.startsWith("editcountry")) {
@@ -80,38 +73,27 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     return checkCommandEditMap(p_command);
                 } else if (p_command.startsWith("validatemap")) {
                     if (validateMap(d_warMap)) {
-                        prepareResponse(true, "Map is valid");
+                        d_generalUtil.prepareResponse(true, "Map is valid");
                     } else {
-                        prepareResponse(false, "Map is invalid");
+                        d_generalUtil.prepareResponse(false, "Map is invalid");
                     }
                 } else {
-                    prepareResponse(false, "Please enter valid command");
+                    d_generalUtil.prepareResponse(false, "Please enter valid command");
                     l_isValid = false;
                 }
 
             } else {
-                prepareResponse(false, "Please enter valid command");
+                d_generalUtil.prepareResponse(false, "Please enter valid command");
                 l_isValid = false;
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            prepareResponse(false, "Please enter valid command");
+            d_generalUtil.prepareResponse(false, "Please enter valid command");
             l_isValid = false;
         }
 
-        return d_commandResponse;
-    }
-
-    /**
-     * This method will prepare response of command entered by user
-     *
-     * @param p_isValid to check command is successfully executed or not
-     * @param p_responeMessage response message of command
-     */
-    public void prepareResponse(boolean p_isValid, String p_responeMessage) {
-        this.d_commandResponse.setD_isValid(p_isValid);
-        this.d_commandResponse.setD_responseString(p_responeMessage);
+        return d_generalUtil.getResponse();
     }
 
     /**
@@ -132,13 +114,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_continentName = l_commandString.get(l_i + 1);
                 l_continetValue = l_commandString.get(l_i + 2);
                 // match continent name exist or not
-                if (validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && validateIOString(l_continetValue, "[1-9][0-9]*")) {
+                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && d_generalUtil.validateIOString(l_continetValue, "[1-9][0-9]*")) {
                     boolean l_isValidName = true;
 
                     if (d_warMap.getD_continents() != null) {
                         for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
                             if (l_entry.getValue() != null && l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
-                                prepareResponse(false, "Continent already exists in map file");
+                                d_generalUtil.prepareResponse(false, "Continent already exists in map file");
                                 l_isValidName = false;
                                 break;
                             }
@@ -147,32 +129,331 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                     if (l_isValidName) {
                         saveContinent(l_continentName, l_continetValue);
-                        d_commandResponse.setD_isValid(true);
-                        d_commandResponse.setD_responseString("Continent saved successfully");
-                        return d_commandResponse;
+                        d_generalUtil.prepareResponse(true, "Continent saved successfully");
+                        return d_generalUtil.getResponse();
                     }
 
                 } else {
-                    prepareResponse(false, "Please enter valid continent name or value");
+                    d_generalUtil.prepareResponse(false, "Please enter valid continent name or value");
                 }
 
             } else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
-                if (validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                     if (deleteContinent(l_continentName)) {
-                        prepareResponse(true, "Continent deleted successfully");
+                        d_generalUtil.prepareResponse(true, "Continent deleted successfully");
                     } else {
-                        prepareResponse(true, "Continent not found");
+                        d_generalUtil.prepareResponse(true, "Continent not found");
                     }
                 } else {
-                    prepareResponse(true, "Please enter valid continent name");
+                    d_generalUtil.prepareResponse(true, "Please enter valid continent name");
                 }
             }
         }
 
-        return d_commandResponse;
+        return d_generalUtil.getResponse();
     }
 
+    /**
+     * This method will check edit Continent command, validate and then call
+     * perform next operation
+     *
+     * @param p_editCountryCommand is edit command sent from user
+     * @return message of result after edit Country command execution
+     */
+    public CommandResponse checkCommandEditCountry(String p_editCountryCommand) {
+        String l_countryName = "";
+        String l_continentName = "";
+        List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
+
+        for (int i = 0; i < l_editCountryCommandString.size(); i++) {
+            if (l_editCountryCommandString.get(i).equalsIgnoreCase("-add")) {
+                l_countryName = l_editCountryCommandString.get(i + 1);
+                l_continentName = l_editCountryCommandString.get(i + 2);
+                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")
+                        && d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+
+                    // prepare country list of continent entered by user
+                    ArrayList<Country> l_countryList = new ArrayList<Country>();
+                    int l_continentIndex = 1;
+                    boolean isValidContinent = false;
+                    if (d_warMap.getD_continents() != null) {
+                        for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
+                            // check if continent exists or not
+                            if (l_entry.getValue() != null) {
+                                l_continentIndex = l_entry.getKey();
+                                if (l_entry.getValue().getD_countryList() != null) {
+                                    l_entry.getValue().getD_countryList().forEach((country) -> {
+                                        l_countryList.add(country);
+                                    });
+                                }
+                                isValidContinent = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Continent not found");
+                        break;
+                    }
+
+                    if (isValidContinent) {
+                        if (!l_countryList.isEmpty()) {
+                            // if continent already have countries
+                            for (Country country : l_countryList) {
+                                if (!l_countryName.equalsIgnoreCase(country.getD_countryName())) {
+                                    saveCountry(l_countryName, l_continentIndex);
+                                    d_generalUtil.prepareResponse(true, "Country saved successfully");
+                                } else {
+                                    d_generalUtil.prepareResponse(false, "Country already exists");
+                                    break;
+                                }
+                            }
+                        } else {
+                            // if continent doesn't have any country then add it
+                            saveCountry(l_countryName, l_continentIndex);
+                            d_generalUtil.prepareResponse(true, "Country saved successfully");
+                        }
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Continent is not valid");
+                        break;
+                    }
+
+                } else {
+                    d_generalUtil.prepareResponse(false, "Please enter valid country name or continent name");
+                }
+
+            } else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
+                l_countryName = l_editCountryCommandString.get(i + 1);
+
+                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                    return deleteCountry(l_countryName);
+
+                } else {
+                    d_generalUtil.prepareResponse(false, "Please enter valid country Name");
+                }
+            }
+
+        }
+
+        return d_generalUtil.getResponse();
+    }
+
+    /**
+     * This method is used to validate the neighbour command and calls add or
+     * remove as per the user command
+     *
+     * @param p_neighbour
+     * @return
+     */
+    public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
+        String l_countryName = "";
+        String l_neighbourCountryName = "";
+        boolean l_result = false;
+        List<String> l_commandString = Arrays.asList(p_neighbour.split(" "));
+        if (l_commandString.size() == 1 || (l_commandString.size() % 3) != 1) {
+            d_generalUtil.prepareResponse(false, "Invalid Coommand");
+            return d_generalUtil.getResponse();
+        }
+        for (int l_i = 0; l_i < (l_commandString.size() - 2); l_i++) {
+            l_countryName = l_commandString.get(l_i + 1);
+            l_neighbourCountryName = l_commandString.get(l_i + 2);
+            if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && d_generalUtil.validateIOString(l_neighbourCountryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
+                    if (d_warMap.getD_continents() != null) {
+                        int l_countryId = getCountryIndexByCountryName(d_warMap.getD_continents(), l_countryName);
+                        int l_neighbourCountryId = getCountryIndexByCountryName(d_warMap.getD_continents(), l_neighbourCountryName);
+                        l_result = saveNeighbour(l_countryId, l_neighbourCountryId);
+                    }
+                    if (l_result) {
+                        d_generalUtil.prepareResponse(true, "Neighbour is added successfully");
+                    } else {
+                        d_generalUtil.prepareResponse(false, "neighbour is not added successfully");
+                    }
+                } else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
+                }
+            } else {
+                d_generalUtil.prepareResponse(false, "Invalid Command!!");
+                return d_generalUtil.getResponse();
+            }
+        }
+
+        return d_generalUtil.getResponse();
+    }
+
+    /**
+     * This method will check edit map command and if file is already exist then
+     * read the data of existing map file otherwise it will create new map file
+     *
+     * @param p_editMapCommand
+     * @return Response of execution of command
+     */
+    public CommandResponse checkCommandEditMap(String p_editMapCommand) {
+        String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
+
+        if (d_generalUtil.validateIOString(l_fileName, "[a-zA-Z]+.?[a-zA-Z]+")) {
+            List<String> l_mapFileNameList;
+            try {
+                l_mapFileNameList = d_generalUtil.getAvailableMapFiles();
+
+                String l_fullName;
+                int index = l_fileName.lastIndexOf('.');
+                l_fullName = index > 0
+                        ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
+
+                // Set status and map file name 
+                d_warMap.setD_status(true);
+                d_warMap.setD_mapName(l_fullName);
+
+                if (l_mapFileNameList.contains(l_fullName)) {
+                    try {
+                        d_warMap = readMap(l_fullName);
+                        d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
+                    } catch (Exception e) {
+                        d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
+                    }
+                } else {
+                    d_generalUtil.prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
+                }
+            } catch (IOException ex) {
+                d_generalUtil.prepareResponse(false, "Exception in editmap");
+            }
+        } else {
+            d_generalUtil.prepareResponse(false, "Please enter valid file name for editMap command");
+        }
+
+        return d_generalUtil.getResponse();
+    }
+
+    /**
+     * This method will check savemap command and if it is valid then save map
+     * to file
+     *
+     * @param p_fileName name of file that player want to store
+     * @return object of commandResponse
+     */
+    public CommandResponse checkCommandSaveMap(String p_fileName) {
+        boolean l_fileExtension = false;
+        if (p_fileName.contains(".")) {
+            String l_fileName = p_fileName.split("\\.")[1];
+
+            if (l_fileName.equals("map")) {
+                l_fileExtension = true;
+            } else {
+                l_fileExtension = false;
+            }
+        } else {
+            p_fileName.concat(".map");
+            l_fileExtension = true;
+        }
+        try {
+            if (d_generalUtil.validateIOString(p_fileName, "[a-zA-Z]+.?[a-zA-Z]+") && l_fileExtension) {
+
+                List<String> l_mapFileList = d_generalUtil.getAvailableMapFiles();
+                if (!p_fileName.equalsIgnoreCase((l_mapFileList) + ".map")) {
+                    if (validateMap(d_warMap)) {
+                        writeMapToFile(d_warMap);
+                        d_generalUtil.prepareResponse(true, "Map file succesfully saved");
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Map is not valid");
+                    }
+                    //call validate function and writeMapToFile function    
+                } else {
+                    d_generalUtil.prepareResponse(false, "Map name is already exist please enter another name");
+                }
+
+            } else {
+                d_generalUtil.prepareResponse(false, "Please enter valid file name");
+            }
+
+        } catch (Exception e) {
+            d_generalUtil.prepareResponse(false, "Exception in savemap");
+            e.printStackTrace();
+        }
+
+        return d_generalUtil.getResponse();
+    }
+
+    @Override
+    public CommandResponse showMap() {
+        if (d_warMap == null) {
+            d_generalUtil.prepareResponse(false, "Map is Null");
+            return d_generalUtil.getResponse();
+        }
+        String l_showMapIn2D = "";
+        List<Country> l_countries = getAvailableCountries(d_warMap);
+        int l_countrySize = l_countries.size();
+        int l_i, l_j;
+        l_countrySize++;
+        Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
+        int l_maxLength = pair.getKey();
+        String[][] l_mapMetrices = pair.getValue();
+        for (l_i = 0; l_i < l_countrySize; l_i++) {
+            for (l_j = 0; l_j < l_countrySize; l_j++) {
+                String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
+                l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
+            }
+            l_showMapIn2D = l_showMapIn2D + "\n\t\t";
+        }
+        d_generalUtil.prepareResponse(true, l_showMapIn2D);
+
+        return d_generalUtil.getResponse();
+    }
+
+    /**
+     * This function will validate map file
+     *
+     * @param p_warMap use to validate
+     * @return return true if map is valid
+     */
+    public boolean validateMap(WarMap p_warMap) {
+        boolean l_result = false;
+        try {
+            // check one or more continent is available in map
+            if (p_warMap.getD_continents() != null && p_warMap.getD_continents().size() > 0) {
+                ArrayList<Country> l_countries = getAvailableCountries(p_warMap);
+
+                // check one or more country is available in map
+                if (!l_countries.isEmpty()) {
+
+                    // check graph is connected or not
+                    l_countries = getAvailableCountries(d_warMap);
+                    int l_countrySize = l_countries.size();
+                    int l_i, l_j;
+                    l_countrySize++;
+                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
+                    String[][] l_mapMetrix = pair.getValue();
+
+                    int[][] l_intMetric = new int[l_countrySize - 1][l_countrySize - 1];
+                    for (l_i = 0; l_i < l_countrySize; l_i++) {
+                        for (l_j = 0; l_j < l_countrySize; l_j++) {
+                            if (l_i == 0 && l_j == 0) {
+                                continue;
+                            } else if (l_i == 0 && l_j != 0) {
+                                continue;
+                            } else if (l_j == 0 && l_i != 0) {
+                                continue;
+                            } else {
+                                l_intMetric[l_i - 1][l_j - 1] = Integer.parseInt(l_mapMetrix[l_i][l_j]);
+                            }
+                        }
+                    }
+
+                    if (d_generalUtil.isConnected(l_intMetric, l_countrySize - 1)) {
+                        l_result = true;
+                    }
+                }
+            } else {
+                l_result = false;
+            }
+        } catch (Exception e) {
+            l_result = false;
+        }
+
+        return l_result;
+    }
+    //Below Functions are utility function for above commands
+
+    // // Delete commands Function
     /**
      * This method will return true and break if continent is deleted and this
      * method is common for both terminal and GUI
@@ -275,6 +556,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         return l_dCountryResponse;
     }
 
+    // //Add Commands Function
     /**
      * This method will save continent for both terminal and GUI
      *
@@ -298,90 +580,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method will check edit Continent command, validate and then call
-     * perform next operation
-     *
-     * @param p_editCountryCommand is edit command sent from user
-     * @return message of result after edit Country command execution
-     */
-    public CommandResponse checkCommandEditCountry(String p_editCountryCommand) {
-        String l_countryName = "";
-        String l_continentName = "";
-        List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
-
-        for (int i = 0; i < l_editCountryCommandString.size(); i++) {
-            if (l_editCountryCommandString.get(i).equalsIgnoreCase("-add")) {
-                l_countryName = l_editCountryCommandString.get(i + 1);
-                l_continentName = l_editCountryCommandString.get(i + 2);
-                if (validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")
-                        && validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-
-                    // prepare country list of continent entered by user
-                    ArrayList<Country> l_countryList = new ArrayList<Country>();
-                    int l_continentIndex = 1;
-                    boolean isValidContinent = false;
-                    if (d_warMap.getD_continents() != null) {
-                        for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
-                            // check if continent exists or not
-                            if (l_entry.getValue() != null) {
-                                l_continentIndex = l_entry.getKey();
-                                if (l_entry.getValue().getD_countryList() != null) {
-                                    l_entry.getValue().getD_countryList().forEach((country) -> {
-                                        l_countryList.add(country);
-                                    });
-                                }
-                                isValidContinent = true;
-                                break;
-                            }
-                        }
-                    } else {
-                        prepareResponse(false, "Continent not found");
-                        break;
-                    }
-
-                    if (isValidContinent) {
-                        if (!l_countryList.isEmpty()) {
-                            // if continent already have countries
-                            for (Country country : l_countryList) {
-                                if (!l_countryName.equalsIgnoreCase(country.getD_countryName())) {
-                                    saveCountry(l_countryName, l_continentIndex);
-                                    prepareResponse(true, "Country saved successfully");
-                                } else {
-                                    prepareResponse(false, "Country already exists");
-                                    break;
-                                }
-                            }
-                        } else {
-                            // if continent doesn't have any country then add it
-                            saveCountry(l_countryName, l_continentIndex);
-                            prepareResponse(true, "Country saved successfully");
-                        }
-                    } else {
-                        prepareResponse(false, "Continent is not valid");
-                        break;
-                    }
-
-                } else {
-                    prepareResponse(false, "Please enter valid country name or continent name");
-                }
-
-            } else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
-                l_countryName = l_editCountryCommandString.get(i + 1);
-
-                if (validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                    return deleteCountry(l_countryName);
-
-                } else {
-                    prepareResponse(false, "Please enter valid country Name");
-                }
-            }
-
-        }
-
-        return d_commandResponse;
-    }
-
-    /**
      * This method will save country given from both GUI and command line
      *
      * @param p_countryName name of the country
@@ -401,48 +599,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
             l_continent.setD_countryList(l_countryList);
         }
         CountryId++;
-    }
-
-    /**
-     * This method is used to validate the neighbour command and calls add or
-     * remove as per the user command
-     *
-     * @param p_neighbour
-     * @return
-     */
-    public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
-        String l_countryName = "";
-        String l_neighbourCountryName = "";
-        boolean l_result = false;
-        List<String> l_commandString = Arrays.asList(p_neighbour.split(" "));
-        if (l_commandString.size() == 1 || (l_commandString.size() % 3) != 1) {
-            prepareResponse(false, "Invalid Coommand");
-            return d_commandResponse;
-        }
-        for (int l_i = 0; l_i < (l_commandString.size() - 2); l_i++) {
-            l_countryName = l_commandString.get(l_i + 1);
-            l_neighbourCountryName = l_commandString.get(l_i + 2);
-            if (validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && validateIOString(l_neighbourCountryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
-                    if (d_warMap.getD_continents() != null) {
-                        int l_countryId = getCountryIndexByCountryName(d_warMap.getD_continents(), l_countryName);
-                        int l_neighbourCountryId = getCountryIndexByCountryName(d_warMap.getD_continents(), l_neighbourCountryName);
-                        l_result = saveNeighbour(l_countryId, l_neighbourCountryId);
-                    }
-                    if (l_result) {
-                        prepareResponse(true, "Neighbour is added successfully");
-                    } else {
-                        prepareResponse(false, "neighbour is not added successfully");
-                    }
-                } else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
-                }
-            } else {
-                prepareResponse(false, "Invalid Command!!");
-                return d_commandResponse;
-            }
-        }
-
-        return d_commandResponse;
     }
 
     /**
@@ -487,70 +643,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         return l_result;
     }
 
-    /**
-     * This method is used for getting country index by country name
-     *
-     * @param p_continentMap
-     * @param p_countryName
-     * @return CountryIndex
-     */
-    private int getCountryIndexByCountryName(Map<Integer, Continent> p_continentMap, String p_countryName) {
-        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
-            Continent continent = entry.getValue();
-
-            List<Country> l_countryList = continent.getD_countryList();
-
-            for (Country country : l_countryList) {
-
-                if (country != null) {
-
-                    if (p_countryName.equalsIgnoreCase(country.getD_countryName())) {
-                        return country.getD_countryIndex();
-                    }
-                }
-            }
-        }
-        return 0;
-    }
-
-    @Override
-    public boolean validateIOString(String p_string, String p_regex) {
-        if (!p_string.isEmpty()) {
-            Pattern l_pattern = Pattern.compile(p_regex);
-            Matcher l_matcher = l_pattern.matcher(p_string);
-            return l_matcher.find();
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public CommandResponse showMap() {
-        if (d_warMap == null) {
-            d_commandResponse.setD_isValid(false);
-            d_commandResponse.setD_responseString("Map is Null");
-            return d_commandResponse;
-        }
-        String l_showMapIn2D = "";
-        List<Country> l_countries = getAvailableCountries(d_warMap);
-        int l_countrySize = l_countries.size();
-        int l_i, l_j;
-        l_countrySize++;
-        Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
-        int l_maxLength = pair.getKey();
-        String[][] l_mapMetrices = pair.getValue();
-        for (l_i = 0; l_i < l_countrySize; l_i++) {
-            for (l_j = 0; l_j < l_countrySize; l_j++) {
-                String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
-                l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
-            }
-            l_showMapIn2D = l_showMapIn2D + "\n\t\t";
-        }
-        prepareResponse(true, l_showMapIn2D);
-
-        return d_commandResponse;
-    }
-
+    //General Util functions for Map commands
     /**
      * This method is used to convert map object to metric
      *
@@ -592,22 +685,59 @@ public class MapHandlingImpl implements MapHandlingInterface {
         return new Pair<Integer, String[][]>(l_maxLength, l_mapMetrices);
     }
 
-    /**
-     * used to get all countries available in the map
-     *
-     * @param p_continentMap
-     * @return arraylist of the country
-     */
-    public ArrayList<Country> getAvailableCountries(WarMap p_continentMap) {
+    @Override
+    public boolean writeMapToFile(WarMap p_warMap) {
+        boolean status;
+        try {
+            StringBuilder l_continentStringBuilder = new StringBuilder(CONTINENTS).append(System.lineSeparator());
+            StringBuilder l_countryStringBuilder = new StringBuilder(COUNTRIES).append(System.lineSeparator());
+            StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
 
-        List<Country> l_countries = new ArrayList<Country>();
-        l_countries.clear();
-        for (Map.Entry<Integer, Continent> l_entry : p_continentMap.getD_continents().entrySet()) {
-            for (Country l_country : l_entry.getValue().getD_countryList()) {
-                l_countries.add(l_country);
+            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(MAP_DEF_PATH + p_warMap.getD_mapName() + ".map"), "utf-8")));) {
+
+                Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
+
+                for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
+                    Continent l_currentContinent = l_entry.getValue();
+
+                    //here all continets will store into the l_continentStringBuilder
+                    l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
+                    List<Country> l_countryList = l_currentContinent.getD_countryList();
+                    for (Country l_country : l_countryList) {
+
+                        //here all countries will store into the l_countryStringBuilder
+                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 0")
+                                .append(System.lineSeparator());
+
+                        List<String> l_neighborList = l_country.getD_neighbourCountries();
+                        if (!l_neighborList.isEmpty() && l_neighborList != null) {
+                            l_neighborStringBuilder.append(l_country.getD_countryIndex());
+                            for (String l_neighborName : l_neighborList) {
+
+                                //here all neighbors will store into the l_neighborStringBuilder
+                                l_neighborStringBuilder.append(" " + getCountryIndexByCountrName(p_warMap, l_neighborName));
+                            }
+                            l_neighborStringBuilder.append(System.lineSeparator());
+                        }
+                    }
+                }
+                //writer.println("extra lines of map file");
+                writer.println("name " + p_warMap.getD_mapName());
+                writer.println();
+                writer.println(FILES);
+                writer.println("pic risk_pic.png");
+                //writer.println("file names");
+                writer.println();
+                writer.println(l_continentStringBuilder.toString());
+                writer.println(l_countryStringBuilder.toString());
+                writer.println(l_neighborStringBuilder.toString());
+                status = true;
             }
+        } catch (Exception e) {
+            status = false;
         }
-        return (ArrayList<Country>) l_countries;
+        return status;
     }
 
     @Override
@@ -781,61 +911,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
         return neighbourName;
     }
 
-    @Override
-    public boolean writeMapToFile(WarMap p_warMap) {
-        boolean status;
-        try {
-            StringBuilder l_continentStringBuilder = new StringBuilder(CONTINENTS).append(System.lineSeparator());
-            StringBuilder l_countryStringBuilder = new StringBuilder(COUNTRIES).append(System.lineSeparator());
-            StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
-
-            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(MAP_DEF_PATH + p_warMap.getD_mapName() + ".map"), "utf-8")));) {
-
-                Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
-
-                for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
-                    Continent l_currentContinent = l_entry.getValue();
-
-                    //here all continets will store into the l_continentStringBuilder
-                    l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
-                    List<Country> l_countryList = l_currentContinent.getD_countryList();
-                    for (Country l_country : l_countryList) {
-
-                        //here all countries will store into the l_countryStringBuilder
-                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 0")
-                                .append(System.lineSeparator());
-
-                        List<String> l_neighborList = l_country.getD_neighbourCountries();
-                        if (!l_neighborList.isEmpty() && l_neighborList != null) {
-                            l_neighborStringBuilder.append(l_country.getD_countryIndex());
-                            for (String l_neighborName : l_neighborList) {
-
-                                //here all neighbors will store into the l_neighborStringBuilder
-                                l_neighborStringBuilder.append(" " + getCountryIndexByCountrName(p_warMap, l_neighborName));
-                            }
-                            l_neighborStringBuilder.append(System.lineSeparator());
-                        }
-                    }
-                }
-                //writer.println("extra lines of map file");
-                writer.println("name " + p_warMap.getD_mapName());
-                writer.println();
-                writer.println(FILES);
-                writer.println("pic risk_pic.png");
-                //writer.println("file names");
-                writer.println();
-                writer.println(l_continentStringBuilder.toString());
-                writer.println(l_countryStringBuilder.toString());
-                writer.println(l_neighborStringBuilder.toString());
-                status = true;
-            }
-        } catch (Exception e) {
-            status = false;
-        }
-        return status;
-    }
-
     /**
      * This method will return country index from country name
      *
@@ -864,227 +939,46 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method will check edit map command and if file is already exist then
-     * read the data of existing map file otherwise it will create new map file
+     * This method is used for getting country index by country name
      *
-     * @param p_editMapCommand
+     * @param p_continentMap
+     * @param p_countryName
+     * @return CountryIndex
      */
-    public CommandResponse checkCommandEditMap(String p_editMapCommand) {
-        String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
+    private int getCountryIndexByCountryName(Map<Integer, Continent> p_continentMap, String p_countryName) {
+        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
+            Continent continent = entry.getValue();
 
-        if (validateIOString(l_fileName, "[a-zA-Z]+.?[a-zA-Z]+")) {
-            List<String> l_mapFileNameList;
-            try {
-                l_mapFileNameList = getAvailableMapFiles();
+            List<Country> l_countryList = continent.getD_countryList();
 
-                String l_fullName;
-                int index = l_fileName.lastIndexOf('.');
-                l_fullName = index > 0
-                        ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
+            for (Country country : l_countryList) {
 
-                // Set status and map file name 
-                d_warMap.setD_status(true);
-                d_warMap.setD_mapName(l_fullName);
+                if (country != null) {
 
-                if (l_mapFileNameList.contains(l_fullName)) {
-                    try {
-                        d_warMap = readMap(l_fullName);
-                        prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
-                    } catch (Exception e) {
-                        prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
-                    }
-                } else {
-                    prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
-                }
-            } catch (IOException ex) {
-                prepareResponse(false, "Exception in editmap");
-            }
-        } else {
-            prepareResponse(false, "Please enter valid file name for editMap command");
-        }
-
-        return d_commandResponse;
-    }
-
-    /**
-     * This method is will used to get all available map files
-     *
-     * @return it will return list of map file
-     * @throws java.io.IOException throws IO Exception
-     */
-    public List<String> getAvailableMapFiles() throws IOException {
-        List<String> l_maps = new ArrayList<>();
-
-        l_maps = getListOfAllFiles(Paths.get(MAP_DEF_PATH), ".map");
-
-        return l_maps;
-    }
-
-    /**
-     * List all files from this given path and extension
-     *
-     * @param p_path directory path of files
-     * @param p_fileExtension extension of file to be searched
-     * @return list of files
-     */
-    public List<String> getListOfAllFiles(Path p_path, String p_fileExtension)
-            throws IOException {
-        List<String> l_files;
-        try (Stream<Path> l_walk = Files.walk(p_path)) {
-            l_files = l_walk.map(filePath -> filePath.toFile().getName())
-                    .filter(fileName -> fileName.endsWith(p_fileExtension))
-                    .collect(Collectors.toList());
-        }
-
-        return l_files;
-    }
-
-    /**
-     * This method will check savemap command and if it is valid then save map
-     * to file
-     *
-     * @param p_fileName name of file that player want to store
-     * @return object of commandResponse
-     */
-    public CommandResponse checkCommandSaveMap(String p_fileName) {
-        boolean l_fileExtension = false;
-        if (p_fileName.contains(".")) {
-            String l_fileName = p_fileName.split("\\.")[1];
-
-            if (l_fileName.equals("map")) {
-                l_fileExtension = true;
-            } else {
-                l_fileExtension = false;
-            }
-        } else {
-            p_fileName.concat(".map");
-            l_fileExtension = true;
-        }
-        try {
-            if (validateIOString(p_fileName, "[a-zA-Z]+.?[a-zA-Z]+") && l_fileExtension) {
-
-                List<String> l_mapFileList = getAvailableMapFiles();
-                if (!p_fileName.equalsIgnoreCase((l_mapFileList) + ".map")) {
-                    if (validateMap(d_warMap)) {
-                        writeMapToFile(d_warMap);
-                        prepareResponse(true, "Map file succesfully saved");
-                    } else {
-                        prepareResponse(false, "Map is not valid");
-                    }
-                    //call validate function and writeMapToFile function    
-                } else {
-                    prepareResponse(false, "Map name is already exist please enter another name");
-                }
-
-            } else {
-                prepareResponse(false, "Please enter valid file name");
-            }
-
-        } catch (Exception e) {
-            prepareResponse(false, "Exception in savemap");
-            e.printStackTrace();
-        }
-
-        return d_commandResponse;
-    }
-
-    /**
-     * This function will validate map file
-     *
-     * @param p_warMap use to validate
-     * @return return true if map is valid
-     */
-    public boolean validateMap(WarMap p_warMap) {
-        boolean l_result = false;
-        try {
-            // check one or more continent is available in map
-            if (p_warMap.getD_continents() != null && p_warMap.getD_continents().size() > 0) {
-                ArrayList<Country> l_countries = getAvailableCountries(p_warMap);
-
-                // check one or more country is available in map
-                if (!l_countries.isEmpty()) {
-
-                    // check graph is connected or not
-                    l_countries = getAvailableCountries(d_warMap);
-                    int l_countrySize = l_countries.size();
-                    int l_i, l_j;
-                    l_countrySize++;
-                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
-                    String[][] l_mapMetrix = pair.getValue();
-
-                    int[][] l_intMetric = new int[l_countrySize - 1][l_countrySize - 1];
-                    for (l_i = 0; l_i < l_countrySize; l_i++) {
-                        for (l_j = 0; l_j < l_countrySize; l_j++) {
-                            if (l_i == 0 && l_j == 0) {
-                                continue;
-                            } else if (l_i == 0 && l_j != 0) {
-                                continue;
-                            } else if (l_j == 0 && l_i != 0) {
-                                continue;
-                            } else {
-                                l_intMetric[l_i - 1][l_j - 1] = Integer.parseInt(l_mapMetrix[l_i][l_j]);
-                            }
-                        }
-                    }
-
-                    if (isConnected(l_intMetric, l_countrySize - 1)) {
-                        l_result = true;
+                    if (p_countryName.equalsIgnoreCase(country.getD_countryName())) {
+                        return country.getD_countryIndex();
                     }
                 }
-            } else {
-                l_result = false;
             }
-        } catch (Exception e) {
-            l_result = false;
         }
-
-        return l_result;
+        return 0;
     }
 
     /**
-     * This method is used to check map is connected or not
+     * used to get all countries available in the map
      *
-     * @param p_metricesOfMap metric of map
-     * @param p_noOfCountries total number of map
-     * @return returns true if map is connected
+     * @param p_continentMap
+     * @return arraylist of the country
      */
-    public boolean isConnected(int[][] p_metricesOfMap, int p_noOfCountries) {
-        //created visited array
-        boolean[] l_visited = new boolean[p_noOfCountries];
+    public ArrayList<Country> getAvailableCountries(WarMap p_continentMap) {
 
-        //check if all the vertices are visited, if yes then graph is connected
-        for (int l_i = 0; l_i < p_noOfCountries; l_i++) {
-            for (int l_j = 0; l_j < p_noOfCountries; l_j++) {
-                l_visited[l_j] = false;
-            }
-            traverse(l_i, l_visited, p_noOfCountries, p_metricesOfMap);
-            for (int l_x = 0; l_x < p_noOfCountries; l_x++) {
-                if (!l_visited[l_x]) //if there is a node, not visited by traversal, graph is not connected
-                {
-                    return false;
-                }
+        List<Country> l_countries = new ArrayList<Country>();
+        l_countries.clear();
+        for (Map.Entry<Integer, Continent> l_entry : p_continentMap.getD_continents().entrySet()) {
+            for (Country l_country : l_entry.getValue().getD_countryList()) {
+                l_countries.add(l_country);
             }
         }
-
-        return true;
-    }
-
-    /**
-     * This method is used to traverse metric
-     *
-     * @param p_source
-     * @param p_visited
-     * @param p_noOfCountries
-     * @param p_metricesOfMap
-     */
-    public void traverse(int p_source, boolean[] p_visited, int p_noOfCountries, int[][] p_metricesOfMap) {
-        p_visited[p_source] = true; //mark v as visited
-        for (int l_i = 0; l_i < p_noOfCountries; l_i++) {
-            if (p_metricesOfMap[p_source][l_i] == 1) {
-                if (!p_visited[l_i]) {
-                    traverse(l_i, p_visited, p_noOfCountries, p_metricesOfMap);
-                }
-            }
-        }
+        return (ArrayList<Country>) l_countries;
     }
 }
