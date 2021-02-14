@@ -230,7 +230,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
             l_dCountryResponse.setD_isValid(true);
             l_dCountryResponse.setD_responseString("No Continent Exist");
         }
-        System.out.println(d_warMap.toString());
         return l_dCountryResponse;
     }
 
