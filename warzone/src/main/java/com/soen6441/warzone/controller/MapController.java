@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.control.TextArea;
 
 
 @Controller
@@ -32,8 +33,7 @@ public class MapController implements Initializable {
     @Lazy
     @Autowired
     StageManager d_stageManager;
-    @FXML
-    private TextField d_ExecuteCommand;
+    
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
