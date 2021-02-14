@@ -3,8 +3,10 @@ package com.soen6441.warzone.controller;
 import com.soen6441.warzone.config.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.service.MapHandlingInterface;
+
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
@@ -40,7 +42,7 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void createMap(ActionEvent event) {
-        d_stageManager.switchScene(FxmlView.MAPMANAGER, null);     
+        d_stageManager.switchScene( FxmlView.MAPMANAGER, null );
     }
 
     /**
@@ -51,7 +53,7 @@ public class WelcomeController implements Initializable {
     @FXML
     void playGame(ActionEvent event) {
 
-        d_stageManager.switchScene(FxmlView.GAMECONFIG, null);
+        d_stageManager.switchScene( FxmlView.GAMECONFIG, null );
     }
 
     /**
@@ -68,7 +70,7 @@ public class WelcomeController implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param location of the FXML file
+     * @param location  of the FXML file
      * @param resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)

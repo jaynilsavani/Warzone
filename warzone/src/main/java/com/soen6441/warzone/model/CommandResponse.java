@@ -7,7 +7,6 @@ package com.soen6441.warzone.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,6 +40,9 @@ public class CommandResponse {
             l_validity = "Command Executed Sucessfully";
         }else{
             l_validity ="Command Execution failed";
+        }
+        if(d_responseString == null){
+            d_responseString = "Command Fails For some reason";
         }
         return "Validity :: " + l_validity + "\n" + "Message :: " + d_responseString + "\n";
     }

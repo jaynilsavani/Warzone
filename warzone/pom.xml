@@ -44,7 +44,7 @@
 	  <artifactId>warzone</artifactId>
 	  <version>0.0.1-SNAPSHOT</version>
 	  <scope>test</scope>
-	  <type>jar</type>
+          <type>jar</type>
 	 </dependency>
 	</dependencies>
 
