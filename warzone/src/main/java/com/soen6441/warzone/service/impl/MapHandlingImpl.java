@@ -10,16 +10,12 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -270,6 +266,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         d_generalUtil.prepareResponse(false, "neighbour is not added successfully");
                     }
                 } else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
+                    CommandResponse l_deleteNeighbour = deleteNeighbour(l_countryName, l_neighbourCountryName);
+                    d_generalUtil.prepareResponse(l_deleteNeighbour.isD_isValid(), l_deleteNeighbour.getD_responseString());
                 }
             } else {
                 d_generalUtil.prepareResponse(false, "Invalid Command!!");
@@ -451,7 +449,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         return l_result;
     }
-    //Below Functions are utility function for above commands
+    
+    
+    //-----------------Below Functions are utility function for above commands----------//
 
     // // Delete commands Function
     /**
@@ -726,7 +726,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 writer.println("name " + p_warMap.getD_mapName());
                 writer.println();
                 writer.println(FILES);
-                writer.println("pic risk_pic.png");
+                writer.println("pic warzone_pic.png");
                 //writer.println("file names");
                 writer.println();
                 writer.println(l_continentStringBuilder.toString());
