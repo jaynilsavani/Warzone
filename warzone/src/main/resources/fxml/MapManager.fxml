@@ -20,7 +20,7 @@
          </font>
       </Label>
       <TextField fx:id="d_ExecuteCommand" alignment="CENTER" layoutX="75.0" layoutY="450.0" prefHeight="35.0" prefWidth="523.0" promptText="Execute Your Command" />
-      <TextArea fx:id="d_CommandResponse" layoutX="78.0" layoutY="555.0" prefHeight="156.0" prefWidth="523.0" />
+      <TextArea fx:id="d_commandResponse" layoutX="78.0" layoutY="555.0" prefHeight="156.0" prefWidth="523.0" />
       <TextArea fx:id="d_UserGuide" layoutX="72.0" layoutY="97.0" prefHeight="327.0" prefWidth="523.0" text="Map editor commans:&#10;To Create/Delete Continent, Country and connectivity between countries:&#10;1) editcontinent -add continentID continent value -remove continentID&#10;2) editcountry -add countryID continentID -remove countryID&#10;3) editneighbour -add countryID neighbourIcountryID -remove countryID neighbourIcountryID&#10;&#10;To Display Map: &#10;showmap&#10;&#10;To save map:&#10;savemap filename&#10;&#10;To load map from existing maps or to create map:&#10;editmap filename&#10;&#10;To verify the correctness of map:&#10;validatemap">
          <font>
             <Font name="System Italic" size="12.0" />
