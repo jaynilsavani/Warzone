@@ -1,20 +1,16 @@
-; map: test.map
-; map made with the map maker
-; yura.net Risk 1.0.9.5
-
-name test Map
+name test.map
 
 [files]
-pic risk_pic.png
-map risk_map.gif
+pic warzone_pic.png
 
 [continents]
-abc 5
+asia 5
 
 [countries]
-1 aa 1 10 10
-2 bb 1 11 11
+1 india 10 0
+2 japan 10 0
 
 [borders]
-1 2 
+1 2
 2 1
+

@@ -79,9 +79,9 @@ public class MapHandlingImplTest {
         Country l_country = new Country();
         l_country.setD_continentIndex(1);
         l_country.setD_countryIndex(1);
-        l_country.setD_countryName("aa");
+        l_country.setD_countryName("india");
         List<String> l_neighborList = new ArrayList();
-        l_neighborList.add("bb");
+        l_neighborList.add("japan");
 
         l_country.setD_neighbourCountries(l_neighborList);
         l_countryList.add(l_country);
@@ -89,16 +89,16 @@ public class MapHandlingImplTest {
         Country l_country1 = new Country();
         l_country1.setD_continentIndex(1);
         l_country1.setD_countryIndex(2);
-        l_country1.setD_countryName("bb");
+        l_country1.setD_countryName("japan");
         List<String> l_neighborList1 = new ArrayList();
-        l_neighborList1.add("aa");
+        l_neighborList1.add("india");
 
         l_country1.setD_neighbourCountries(l_neighborList1);
         l_countryList.add(l_country1);
 
         Continent l_continent = new Continent();
         l_continent.setD_continentIndex(1);
-        l_continent.setD_continentName("abc");
+        l_continent.setD_continentName("asia");
         l_continent.setD_continentValue(5);
         l_continent.setD_countryList(l_countryList);
 
