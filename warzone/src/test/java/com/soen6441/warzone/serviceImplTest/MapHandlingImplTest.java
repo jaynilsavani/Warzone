@@ -81,7 +81,7 @@ public class MapHandlingImplTest {
         l_country.setD_countryIndex(1);
         l_country.setD_countryName("india");
         List<String> l_neighborList = new ArrayList();
-        l_neighborList.add("japan");
+        l_neighborList.add("china");
 
         l_country.setD_neighbourCountries(l_neighborList);
         l_countryList.add(l_country);
@@ -89,7 +89,7 @@ public class MapHandlingImplTest {
         Country l_country1 = new Country();
         l_country1.setD_continentIndex(1);
         l_country1.setD_countryIndex(2);
-        l_country1.setD_countryName("japan");
+        l_country1.setD_countryName("china");
         List<String> l_neighborList1 = new ArrayList();
         l_neighborList1.add("india");
 
@@ -109,7 +109,8 @@ public class MapHandlingImplTest {
         d_warMap.setD_continents(l_continentMap);
         WarMap obj = new WarMap();
         obj = d_mapHandlingImpl.readMap("test.map");
-
+        System.out.println(d_warMap);
+        System.out.println(obj);
         assertThat(d_warMap.equals(d_mapHandlingImpl.readMap("test.map"))).isTrue();
     }
 

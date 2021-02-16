@@ -687,12 +687,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Override
     public boolean writeMapToFile(WarMap p_warMap) {
-        String l_fileName = p_warMap.getD_mapName();
-        if (l_fileName.contains(".")) {
-            String l_fileNameSplit = l_fileName.split("\\.")[1];
-            if (!l_fileNameSplit.equals("map")) {
-                l_fileName =l_fileName + ".map";
-            }
+            String l_fileName = p_warMap.getD_mapName();
+        if (!l_fileName.contains(".map")) {
+           l_fileName.concat(".map");
         }
         boolean status;
         try {
