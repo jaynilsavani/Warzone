@@ -1,6 +1,7 @@
 package com.soen6441.warzone.service.impl;
 
 import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.model.GamePlay;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.model.WarMap;
 import com.soen6441.warzone.service.GameConfigService;
@@ -34,7 +35,18 @@ public class GameConfigServiceImpl implements GameConfigService {
      * {@inheritDoc }
      */
     @Override
-    public WarMap loadMap(String p_fileName) throws IOException{
+    public WarMap loadMap(String p_fileName) throws IOException {
         return d_mapHandlingImpl.readMap(p_fileName);
     }
+
+    /**
+     * This function is used to update layer list
+     * @param p_currentGamePlay
+     * @return Current Updated Gameplay
+     */
+    @Override
+    public GamePlay updatePlayer(GamePlay p_currentGamePlay,String p_command){
+        return new GamePlay();
+    }
+
 }

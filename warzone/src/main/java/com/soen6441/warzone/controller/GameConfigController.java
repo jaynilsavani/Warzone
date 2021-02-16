@@ -3,6 +3,7 @@ package com.soen6441.warzone.controller;
 import com.soen6441.warzone.config.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.model.GamePlay;
 import com.soen6441.warzone.model.WarMap;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
@@ -38,7 +39,6 @@ public class GameConfigController implements Initializable {
     @FXML
     private TextField d_CommandLine;
 
-
     @Autowired
     private WarMap d_warMap;
 
@@ -48,10 +48,13 @@ public class GameConfigController implements Initializable {
     @Autowired
     private GeneralUtil d_generalUtil;
 
+    @Autowired
+    private GamePlay d_gamePlay;
+    
     @Lazy
     @Autowired
     private StageManager d_stageManager;
-
+    
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
@@ -98,6 +101,7 @@ public class GameConfigController implements Initializable {
      */
     public void getData(ActionEvent event) {
         String l_command = d_CommandLine.getText();
+        List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
         System.out.println(l_command);
         if (l_command.toLowerCase().startsWith(SHOW_MAP)) {
@@ -109,7 +113,6 @@ public class GameConfigController implements Initializable {
             }
         } else if (l_command.toLowerCase().startsWith(LOAD_MAP)) {
 
-            List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
             String l_fileName = (l_commandSegments != null && l_commandSegments.size() == 2) ? l_commandSegments.get(1) : null;
             if (l_fileName != null) {
                 if (d_generalUtil.validateIOString(l_fileName, "^[a-zA-Z]+.?[a-zA-Z]+") || d_generalUtil.validateIOString(l_fileName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
@@ -124,18 +127,26 @@ public class GameConfigController implements Initializable {
             }
 
         } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {
+            if ((l_commandSegments.size() - 1) % 2 == 0) {
+
+            } else {
+                d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
+                l_gmConfigRes = d_generalUtil.getResponse();
+            }
 
         } else {
             d_generalUtil.prepareResponse(false, "Please enter valid command");
             l_gmConfigRes = d_generalUtil.getResponse();
 
         }
+
         d_CommandLine.setText(l_gmConfigRes.toString());
 //        d_CommandLine.clear();
     }
 
     //Utility functions For above Command execution 
     /**
+     * This is used as Sub function for Loading map
      *
      * @param p_fileName : File Name to load file
      * @return CommandResponse of the loadMap Command
@@ -150,15 +161,18 @@ public class GameConfigController implements Initializable {
             int index = p_fileName.lastIndexOf('.');
             l_fullName = index > 0
                     ? p_fileName.toLowerCase() : p_fileName.toLowerCase() + ".map";
-
-            // Set status and map file name 
-            d_warMap.setD_status(true);
-            d_warMap.setD_mapName(l_fullName);
-
+            //check whether file is present or not
             if (l_mapFileNameList.contains(l_fullName)) {
                 try {
+
                     d_warMap = d_gameConfigService.loadMap(l_fullName);
+                    // Set status and map file name 
+                    d_warMap.setD_status(true);
+                    d_warMap.setD_mapName(l_fullName);
                     d_generalUtil.prepareResponse(true, "Map loaded successfully!");
+                    //set loaded map in the Game play object
+                    d_gamePlay.setD_warMap(d_warMap);
+                    d_warMap.setD_mapName(l_fullName);
                 } catch (IOException e) {
                     d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                 }
