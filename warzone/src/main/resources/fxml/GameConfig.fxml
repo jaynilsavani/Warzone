@@ -6,11 +6,11 @@
 
 <AnchorPane prefHeight="560.0" prefWidth="602.0" style="-fx-background-color: #CDCD14;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.GameConfigController">
    <children>
-      <Button fx:id="StartGame" layoutX="24.0" layoutY="29.0" mnemonicParsing="false" onAction="#toStartGame" prefHeight="30.0" prefWidth="127.0" text="Start Game">
+      <Button fx:id="d_StartGame" layoutX="24.0" layoutY="29.0" mnemonicParsing="false" onAction="#toStartGame" prefHeight="30.0" prefWidth="127.0" text="Start Game">
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
-      <Button fx:id="Back" layoutX="451.0" layoutY="29.0" mnemonicParsing="false" onAction="#backToWelcome" prefHeight="30.0" prefWidth="127.0" text="Back">
+      <Button fx:id="d_Back" layoutX="451.0" layoutY="29.0" mnemonicParsing="false" onAction="#backToWelcome" prefHeight="30.0" prefWidth="127.0" text="Back">
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
@@ -20,7 +20,7 @@
          </font>
       </Label>
       <TextField fx:id="d_CommandLine" layoutX="110.0" layoutY="192.0" prefHeight="26.0" prefWidth="440.0" promptText="Please Enter Command for Gameplay and Startup Phase" />
-      <Button fx:id="FireCommand" layoutX="240.0" layoutY="234.0" mnemonicParsing="false" onAction="#getData" prefHeight="26.0" prefWidth="146.0" text="Execute Command" />
+      <Button fx:id="d_FireCommand" layoutX="240.0" layoutY="234.0" mnemonicParsing="false" onAction="#getData" prefHeight="26.0" prefWidth="146.0" text="Execute Command" />
       <TextArea layoutX="110.0" layoutY="300.0" prefHeight="112.0" prefWidth="440.0" />
    </children>
 </AnchorPane>
