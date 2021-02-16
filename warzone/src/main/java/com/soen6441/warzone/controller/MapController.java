@@ -71,9 +71,6 @@ public class MapController implements Initializable {
         //just for testing
         String s = d_ExecuteCommand.getText();
 
-        System.out.println( s );
-        d_maphandlinginterface.validateCommand( s );
-
         System.out.println(s);
         CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(s);
 
