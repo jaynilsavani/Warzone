@@ -390,7 +390,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
                 l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
             }
-            l_showMapIn2D = l_showMapIn2D + "\n\t\t";
+            l_showMapIn2D = l_showMapIn2D + "\n\t";
         }
         d_generalUtil.prepareResponse(true, l_showMapIn2D);
 
@@ -651,6 +651,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return return no of countries and metric
      */
     public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries) {
+        
         int l_maxLength = 0;
         int l_countrySize = l_countries.size();
         int l_i, l_j;
@@ -667,7 +668,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         l_maxLength = l_mapMetrices[l_i][l_j].length();
                     }
                 } else if (l_j == 0 && l_i != 0) {
-                    l_mapMetrices[l_i][l_j] = l_countries.get(l_i - 1).getD_countryName();
+                    int l_conintentIndex=l_countries.get(l_i-1).getD_continentIndex();
+                    String l_continentName=getContinentNameByContinentId(d_warMap.getD_continents(),l_conintentIndex);
+                    l_mapMetrices[l_i][l_j] ="("+l_continentName+") "+ l_countries.get(l_i - 1).getD_countryName();
                 } else {
                     if (l_countries.get(l_i - 1).getD_neighbourCountries() != null) {
                         if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(l_mapMetrices[0][l_j])) {
@@ -980,5 +983,33 @@ public class MapHandlingImpl implements MapHandlingInterface {
             }
         }
         return (ArrayList<Country>) l_countries;
+    }
+
+
+
+    /**
+     * This method will return the continent name by continent id if finding the continent from country model
+     *
+     * @param p_continentMap is a map of continents
+     * @param p_continentIndex is neighbor index
+     * @return neighbor name
+     */
+    private String getContinentNameByContinentId(Map<Integer, Continent> p_continentMap, int p_continentIndex) {
+
+        String l_continentName = "";
+
+        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
+
+            Continent continent = entry.getValue();
+
+            int l_conName = continent.getD_continentIndex();
+
+            if (l_conName == p_continentIndex) {
+                l_continentName=continent.getD_continentName();
+                break;
+            }
+
+        }
+        return  l_continentName;
     }
 }
