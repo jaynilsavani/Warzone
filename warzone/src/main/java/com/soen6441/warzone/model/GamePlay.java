@@ -46,9 +46,6 @@ public class GamePlay {
      */
     private int maxNumberOfTurns;
     /**
-     * Winner player name
-     */
-    /**
      * index of the current player who is playing the game
      */
     private int currentPlayerId;
