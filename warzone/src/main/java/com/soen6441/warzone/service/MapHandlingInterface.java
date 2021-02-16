@@ -2,6 +2,7 @@ package com.soen6441.warzone.service;
 
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.WarMap;
+import java.io.IOException;
 
 /**
  * Implementation of mapping data
@@ -32,8 +33,9 @@ public interface MapHandlingInterface {
      * @param p_fileName fileName to read Map
      *
      * @return WarMap model
+     * @throws java.io.IOException
      */
-    public WarMap readMap(String p_fileName);
+    public WarMap readMap(String p_fileName) throws IOException;
 
     /**
      * This method is used to show the map in 2D matrix containing Countries as

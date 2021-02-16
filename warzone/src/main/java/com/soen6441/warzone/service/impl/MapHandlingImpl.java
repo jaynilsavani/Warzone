@@ -744,7 +744,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    public WarMap readMap(String p_fileName) {
+    public WarMap readMap(String p_fileName) throws IOException{
 
         String l_fileLine = "";
         boolean l_isFiles = false;
@@ -848,8 +848,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 }
             }
             l_warMap.setD_continents(l_continentMap);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+           throw e;
         }
         return l_warMap;
     }
