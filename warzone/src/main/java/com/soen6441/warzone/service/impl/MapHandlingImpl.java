@@ -62,7 +62,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
                     return checkCommandEditNeighbours(p_command);
                 } else if (p_command.startsWith("showmap")) {
-                    return showMap();
+                    return showMap(d_warMap);
                 } else if (p_command.startsWith("savemap")) {
                     return checkCommandSaveMap(Arrays.asList(p_command.split(" ")).get(1));
                 } else if (p_command.startsWith("editmap")) {
@@ -372,7 +372,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    public CommandResponse showMap() {
+    public CommandResponse showMap(WarMap d_warMap) {
         if (d_warMap == null) {
             d_generalUtil.prepareResponse(false, "Map is Null");
             return d_generalUtil.getResponse();
@@ -382,7 +382,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         int l_countrySize = l_countries.size();
         int l_i, l_j;
         l_countrySize++;
-        Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
+        Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
         int l_maxLength = pair.getKey();
         String[][] l_mapMetrices = pair.getValue();
         for (l_i = 0; l_i < l_countrySize; l_i++) {
@@ -418,7 +418,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
-                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries);
+                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
                     String[][] l_mapMetrix = pair.getValue();
 
                     int[][] l_intMetric = new int[l_countrySize - 1][l_countrySize - 1];
@@ -650,7 +650,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param l_countries list of countries
      * @return return no of countries and metric
      */
-    public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries) {
+    public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries,WarMap d_warMap) {
 
         int l_maxLength = 0;
         int l_countrySize = l_countries.size();

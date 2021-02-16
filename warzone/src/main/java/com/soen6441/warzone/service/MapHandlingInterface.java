@@ -43,5 +43,5 @@ public interface MapHandlingInterface {
      *
      * @return
      */
-    public CommandResponse showMap();
+    public CommandResponse showMap(WarMap d_warMap);
 }
