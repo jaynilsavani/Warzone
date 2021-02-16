@@ -20,10 +20,15 @@ public interface GameConfigService {
      * This function is used to show the map of the countries of a particular
      * player
      *
-     * @param p_player
+     *
      * @return commandresponse to show the map of countries a player has
      */
-    public CommandResponse showPlayerMap(Player p_player);
+    /**
+     *
+     * @param p_gamePlay gameplay phase of the player
+     * @return
+     */
+    public CommandResponse showPlayerMap(GamePlay p_gamePlay);
     
     /**
      * This function is used to load file for game play
@@ -40,4 +45,11 @@ public interface GameConfigService {
      * @return updated GamePlayCommand
      */
     public GamePlay updatePlayer(GamePlay p_currentGamePlay,String p_commnd);
+
+
+    /**
+     *   To assign the countries on the first time when map was loaded
+     * @return commanresponse stating the detail of each player with their countries
+     */
+    public CommandResponse assignCountries(GamePlay p_gamePlay) throws IOException;
 }
