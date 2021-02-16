@@ -110,7 +110,7 @@ public class GameConfigController implements Initializable {
         if (l_command.toLowerCase().startsWith(SHOW_MAP)) {
             if (d_warMap != null) {
                 l_gmConfigRes=d_gameConfigService.showPlayerMap(d_gamePlay);
-                d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                //d_showPlayPhase.appendText(l_gmConfigRes.toString());
             } else {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
@@ -143,11 +143,11 @@ public class GameConfigController implements Initializable {
             if (l_commandSegments.size() == 1) {
                 try {
                     l_gmConfigRes= d_gameConfigService.assignCountries(d_gamePlay);
-                    d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                    //d_showPlayPhase.appendText(l_gmConfigRes.toString());
                 } catch (IOException e) {
                     l_gmConfigRes.setD_isValid(false);
                     l_gmConfigRes.setD_responseString("not able to assign countries due to map is not readable");
-                    d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                    //d_showPlayPhase.appendText(l_gmConfigRes.toString());
                 }
 
             } else {
@@ -162,7 +162,7 @@ public class GameConfigController implements Initializable {
 
         }
 
-        d_CommandLine.setText(l_gmConfigRes.toString());
+        d_showPlayPhase.setText(l_gmConfigRes.toString());
 //        d_CommandLine.clear();
     }
 
