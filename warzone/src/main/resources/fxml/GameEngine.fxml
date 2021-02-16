@@ -34,10 +34,10 @@
          </font>
       </Label>
       <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="195.0" layoutY="346.0" prefHeight="26.0" prefWidth="497.0" promptText="Reinforcement and Fortification Command" />
-      <Button fx:id="FireCommand" layoutX="340.0" layoutY="387.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="208.0" text="Reinforcement and Fortify">
+      <Button fx:id="d_FireCommand" layoutX="340.0" layoutY="387.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="208.0" text="Reinforcement and Fortify">
          <font>
             <Font size="14.0" />
          </font></Button>
-      <TextArea fx:id="FireCommandList" layoutX="199.0" layoutY="440.0" prefHeight="146.0" prefWidth="498.0" wrapText="true" />
+      <TextArea fx:id="d_FireCommandList" layoutX="199.0" layoutY="440.0" prefHeight="146.0" prefWidth="498.0" wrapText="true" />
    </children>
 </AnchorPane>
