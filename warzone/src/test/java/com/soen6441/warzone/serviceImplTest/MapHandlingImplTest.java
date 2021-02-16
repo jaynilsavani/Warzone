@@ -65,6 +65,7 @@ public class MapHandlingImplTest {
     @Test
     void testForWriteMapToFile() {
         d_warMap = d_mapHandlingImpl.readMap("test.map");
+        d_warMap.setD_mapName("test1");
         assertEquals(d_mapHandlingImpl.writeMapToFile(d_warMap), true);
 
     }
@@ -107,10 +108,7 @@ public class MapHandlingImplTest {
         Map<Integer, Continent> l_continentMap = new HashMap<Integer, Continent>();
         l_continentMap.put(1, l_continent);
         d_warMap.setD_continents(l_continentMap);
-        WarMap obj = new WarMap();
-        obj = d_mapHandlingImpl.readMap("test.map");
-        System.out.println(d_warMap);
-        System.out.println(obj);
+       
         assertThat(d_warMap.equals(d_mapHandlingImpl.readMap("test.map"))).isTrue();
     }
 
