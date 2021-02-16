@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 
 
 @Controller
-public class GameEngineController implements Initializable {
+public class GameEngine implements Initializable {
     @FXML
     public TextArea d_TerritoryListText;
     public TextArea d_ContinentText;
