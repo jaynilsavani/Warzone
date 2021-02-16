@@ -50,11 +50,11 @@ public class GameConfigController implements Initializable {
 
     @Autowired
     private GamePlay d_gamePlay;
-    
+
     @Lazy
     @Autowired
     private StageManager d_stageManager;
-    
+
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
@@ -128,7 +128,7 @@ public class GameConfigController implements Initializable {
 
         } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {
             if ((l_commandSegments.size() - 1) % 2 == 0) {
-
+                d_gameConfigService.updatePlayer(d_gamePlay, l_command);
             } else {
                 d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
                 l_gmConfigRes = d_generalUtil.getResponse();

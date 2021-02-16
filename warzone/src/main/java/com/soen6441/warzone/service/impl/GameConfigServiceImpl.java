@@ -8,6 +8,8 @@ import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +43,29 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     /**
      * This function is used to update layer list
+     *
      * @param p_currentGamePlay
+     * @param p_command updation command
      * @return Current Updated Gameplay
      */
     @Override
-    public GamePlay updatePlayer(GamePlay p_currentGamePlay,String p_command){
-        return new GamePlay();
+    public GamePlay updatePlayer(GamePlay p_currentGamePlay, String p_command) {
+        List<String> l_commandSegments = Arrays.asList(p_command.split(" "));
+        String l_playerName;
+        for (int i = 0; i < l_commandSegments.size(); i++) {
+            String l_playerCommand = l_commandSegments.get(i);
+            if (l_playerCommand.equalsIgnoreCase("-add") || l_playerCommand.equalsIgnoreCase("-remove")) {
+//                if (l_playerCommand.equalsIgnoreCase("-add")) {
+//                    l_playerName = l_commandSegments.get(i + 1);
+//                    if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+//                        {
+//                        }
+//                    }
+//                }else{
+//                    
+//                }
+            }
+        }
+        return null;
     }
-
 }
