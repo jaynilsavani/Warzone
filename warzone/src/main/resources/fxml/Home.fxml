@@ -4,18 +4,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="AnchorMain" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="440.0" prefWidth="660.0" style="-fx-background-color: #CDCD14;"  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.WelcomeController">
+<AnchorPane fx:id="AnchorMain" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="440.0" prefWidth="660.0" style="-fx-background-color: #CDCD14;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.WelcomeController">
    <children>
-      <Button fx:id="BtnCreateMap" layoutX="35.0" layoutY="128.0" mnemonicParsing="false" onAction="#createMap" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Create Map" />
-      <Button fx:id="BtnPlayGame" layoutX="174.0" layoutY="128.0" mnemonicParsing="false" prefHeight="26.0" onAction="#playGame" prefWidth="110.0" style="-fx-background-color: grey;" text="Play Game" />
-      <Label contentDisplay="CENTER" layoutX="218.0" layoutY="32.0" prefHeight="44.0" prefWidth="164.0" text="WARZONE" textAlignment="CENTER" underline="true">
+      <Button fx:id="BtnCreateMap" layoutX="74.0" layoutY="154.0" mnemonicParsing="false" onAction="#createMap" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Create Map">
          <font>
-            <Font name="Bell MT Bold" size="30.0" />
+            <Font size="14.0" />
+         </font></Button>
+      <Button fx:id="BtnPlayGame" layoutX="275.0" layoutY="154.0" mnemonicParsing="false" onAction="#playGame" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Play Game">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Label contentDisplay="CENTER" layoutX="218.0" layoutY="32.0" prefHeight="74.0" prefWidth="225.0" text="WARZONE" textAlignment="CENTER" underline="true">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="40.0" />
          </font>
       </Label>
-      <Button fx:id="d_BtnExit" layoutX="316.0" layoutY="128.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Exit" />
-      <Button fx:id="BtnHowToPlay" layoutX="458.0" layoutY="128.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="How To Play" />
-      <AnchorPane layoutX="466.0" layoutY="220.0" prefHeight="117.0" prefWidth="164.0">
+      <Button fx:id="d_BtnExit" layoutX="466.0" layoutY="154.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: grey;" text="Exit">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <AnchorPane layoutX="474.0" layoutY="230.0" prefHeight="117.0" prefWidth="164.0">
          <children>
             <Label layoutX="3.0" prefHeight="26.0" prefWidth="97.0" text="Developed By:" underline="true" />
             <Label layoutX="3.0" layoutY="26.0" prefHeight="18.0" prefWidth="135.0" text="Gaurang Dobariya" />
@@ -27,4 +35,3 @@
       </AnchorPane>
    </children>
 </AnchorPane>
-
