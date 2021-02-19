@@ -1,6 +1,8 @@
 package com.soen6441.warzone.controller;
 
+import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import javafx.event.ActionEvent;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -78,17 +82,45 @@ public class GameEngine implements Initializable {
         d_CommandLine.clear();
     }
 
+    /**
+     * This is used for setting GameConfig for GameEngine
+     *
+     * @param p_gameConfig
+     */
     public void setGamePlay(GamePlay p_gameConfig) {
         d_gamePlay = p_gameConfig;
         mainGameLoop();
     }
 
+    /**
+     * This is used for Main Game loop Which includes
+     * AssignREinforcement,IssueOrder phase,NextOrder
+     */
     private void mainGameLoop() {
         //Call for reinforcement
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
-        //call for issue order
-
+        //call for issue order 
         //call for next order
+        nextOrders();
+    }
+
+    /**
+     *
+     * This method is used for executing issued Order
+     *
+     * @return The liast of Command Response of Executed Order
+     */
+    private List<CommandResponse> nextOrders() {
+        List<CommandResponse> l_orderStatus = new ArrayList<>();
+        for (int i = 0; i < d_gamePlay.getMaxNumberOfTurns(); i++) {
+            for (Player l_player : d_gamePlay.getPlayerList()) {
+                if (l_player.hasOrder()) {
+                    boolean executeOrder = l_player.next_order().executeOrder();
+                    l_orderStatus.add(new CommandResponse(executeOrder, "" + l_player.getD_playerName() + "'s command executed sucessfully"));
+                }
+            }
+        }
+        return l_orderStatus;
     }
 
 }
