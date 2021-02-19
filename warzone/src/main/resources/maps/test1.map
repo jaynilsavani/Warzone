@@ -7,8 +7,8 @@ pic warzone_pic.png
 asia 5
 
 [countries]
-1 india 10 0
-2 china 10 0
+1 india 1 0 0
+2 china 1 0 0
 
 [borders]
 1 2

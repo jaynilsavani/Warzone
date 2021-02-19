@@ -36,13 +36,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class MapHandlingImplTest {
-
+  
     @Autowired
     WarMap d_warMap;
 
     @Autowired
     MapHandlingImpl d_mapHandlingImpl;
-
+   
     public MapHandlingImplTest() {
     }
 
@@ -55,11 +55,12 @@ public class MapHandlingImplTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException { 
+        d_warMap = d_mapHandlingImpl.readMap("test.map");
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
     }
 
     /**
@@ -122,5 +123,65 @@ public class MapHandlingImplTest {
             Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    /**
+     * Test to check map is valid
+     * @throws IOException Indicates error in reading file
+     */
+    @Test
+    void testForValidMap() throws IOException {
+        d_warMap = d_mapHandlingImpl.readMap("test.map");
+        assertEquals(d_mapHandlingImpl.validateMap(d_warMap), true);       
+    }  
+    
+    /**
+     * Test to check map is invalid
+     * @throws IOException Indicates error in reading file
+     */
+    @Test
+    void testForInValidMap() throws IOException {
+        d_warMap = d_mapHandlingImpl.readMap("invalid.map");
+        assertEquals(d_mapHandlingImpl.validateMap(d_warMap), false);       
+    }
+    
+    /**
+     * Test to check editmap command        
+     */
+    @Test
+    void testForCheckCommandEditMap(){
+        assertEquals(true, (d_mapHandlingImpl.checkCommandEditMap("editmap test.map")).isD_isValid());
+    }
+    
+    /**
+     * Test to check delete continent operation
+     */
+    @Test
+    void testForDeleteContinent(){  
+        assertEquals(true, d_mapHandlingImpl.deleteContinent("asia"));
+    }
+    
+    /**
+     * Test to check delete country operation
+     */
+    @Test
+    void testForDeleteCountry(){
+        assertEquals(true,d_mapHandlingImpl.deleteCountry("india").isD_isValid());
+    }
+    
+    /**
+     * Test to check delete neighbor operation
+     */
+    @Test
+    void testForDeleteNeighbour(){
+        assertEquals(true,d_mapHandlingImpl.deleteNeighbour("india", "china").isD_isValid());
+    }
+    
+    /**
+     * Test to check save neighbor operation
+     */
+    @Test
+    void testForSaveNeighbour(){
+        assertEquals(false,d_mapHandlingImpl.saveNeighbour(1, 2));
+    }
+    
 }

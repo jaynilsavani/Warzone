@@ -307,7 +307,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         d_warMap = readMap(l_fullName);
                         d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
                     } catch (Exception e) {
-                        d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
+                            d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                     }
                 } else {
                     d_generalUtil.prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
@@ -414,7 +414,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (!l_countries.isEmpty()) {
 
                     // check graph is connected or not
-                    l_countries = getAvailableCountries(d_warMap);
+                    l_countries = getAvailableCountries(p_warMap);
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
@@ -719,7 +719,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     for (Country l_country : l_countryList) {
 
                         //here all countries will store into the l_countryStringBuilder
-                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 0")
+                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " 0 0")
                                 .append(System.lineSeparator());
 
                         List<String> l_neighborList = l_country.getD_neighbourCountries();
