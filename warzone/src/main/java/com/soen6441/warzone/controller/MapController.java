@@ -47,6 +47,7 @@ public class MapController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        d_commandResponse.setStyle("-fx-font-family: monospace");
     }
 
 
