@@ -83,6 +83,8 @@ public class GameConfigController implements Initializable {
     void backToWelcome(ActionEvent event) {
 
         d_stageManager.switchScene(FxmlView.HOME, null);
+        d_warMap = null;
+        d_gamePlay = null;
     }
 
     /**
@@ -93,7 +95,7 @@ public class GameConfigController implements Initializable {
     @FXML
     void toStartGame(ActionEvent event) {
 
-        d_stageManager.switchScene(FxmlView.GAMEENGINE, null);
+        d_stageManager.switchScene(FxmlView.GAMEENGINE, d_gamePlay);
     }
 
     /**
@@ -108,7 +110,7 @@ public class GameConfigController implements Initializable {
         CommandResponse l_gmConfigRes = new CommandResponse();
         if (l_command.toLowerCase().startsWith(SHOW_MAP)) {
             if (d_warMap != null) {
-                l_gmConfigRes=d_gameConfigService.showPlayerMap(d_gamePlay);
+                l_gmConfigRes = d_gameConfigService.showPlayerMap(d_gamePlay);
                 //d_showPlayPhase.appendText(l_gmConfigRes.toString());
             } else {
                 l_gmConfigRes.setD_isValid(false);
@@ -135,16 +137,15 @@ public class GameConfigController implements Initializable {
                     d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
                     d_generalUtil.prepareResponse(true, "Please updated Sucessfully");
                 } else {
-                    d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
+                    d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
                 }
                 l_gmConfigRes = d_generalUtil.getResponse();
             }
 
-        }
-        else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {
+        } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {
             if (l_commandSegments.size() == 1) {
                 try {
-                    l_gmConfigRes= d_gameConfigService.assignCountries(d_gamePlay);
+                    l_gmConfigRes = d_gameConfigService.assignCountries(d_gamePlay);
                     //d_showPlayPhase.appendText(l_gmConfigRes.toString());
                 } catch (IOException e) {
                     l_gmConfigRes.setD_isValid(false);
@@ -157,8 +158,7 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes = d_generalUtil.getResponse();
             }
 
-        }
-        else {
+        } else {
             d_generalUtil.prepareResponse(false, "Please enter valid command");
             l_gmConfigRes = d_generalUtil.getResponse();
 

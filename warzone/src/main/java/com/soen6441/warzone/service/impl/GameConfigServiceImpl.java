@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * this is an implementation of GameConfigService for configuration utility
+ * This is an implementation of GameConfigService for configuration utility
  *
  * @author <a href="mailto:y_vaghan@encs.concordia.ca">Yashkumar Vaghani</a>
  */
