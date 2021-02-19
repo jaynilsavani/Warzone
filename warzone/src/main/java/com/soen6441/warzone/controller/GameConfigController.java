@@ -1,6 +1,6 @@
 package com.soen6441.warzone.controller;
 
-import com.soen6441.warzone.config.FxmlView;
+import com.soen6441.warzone.view.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GamePlay;

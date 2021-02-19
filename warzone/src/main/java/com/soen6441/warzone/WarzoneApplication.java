@@ -1,6 +1,6 @@
 package com.soen6441.warzone;
 
-import com.soen6441.warzone.config.FxmlView;
+import com.soen6441.warzone.view.FxmlView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

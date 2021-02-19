@@ -1,4 +1,4 @@
-package com.soen6441.warzone.config;
+package com.soen6441.warzone.view;
 
 
 /**

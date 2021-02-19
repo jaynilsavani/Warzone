@@ -5,6 +5,7 @@
  */
 package com.soen6441.warzone.config;
 
+import com.soen6441.warzone.view.FxmlView;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
