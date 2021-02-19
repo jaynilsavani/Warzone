@@ -21,7 +21,10 @@ import org.springframework.stereotype.Component;
 public class DeployOrder implements Order {
 
     private int d_noOfArmies;
-    private int d_CountryIndex;
+    private String d_CountryName;
+    private Player d_player;
+
+
 
     /**
      * {@inheritDoc }
@@ -33,7 +36,19 @@ public class DeployOrder implements Order {
         // logic of the Execute order
         // move armies here
         // and decrease the number of armies
-        return true;
+        for(Country l_country:d_player.getD_ownedCountries())
+        {
+            if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()>=d_noOfArmies))
+            {
+                int l_getArmy=l_country.getD_noOfArmies();
+                l_country.setD_noOfArmies(l_getArmy+d_noOfArmies);
+                int l_playerArmy=d_player.getD_noOfArmies();
+                d_player.setD_noOfArmies(l_playerArmy-d_noOfArmies);
+                return true;
+            }
+        }
+        return false;
+
     }
 
 }
