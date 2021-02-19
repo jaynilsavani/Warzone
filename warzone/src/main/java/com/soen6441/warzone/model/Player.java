@@ -53,9 +53,9 @@ public class Player {
     private int d_currentFromCountry;
 
     /**
-     * index for country for execution of the command
+     * Name for country for execution of the command
      */
-    private int d_currentToCountry;
+    private String d_currentToCountry;
     /**
      * number of armies for the current command
      */
@@ -66,7 +66,7 @@ public class Player {
      */
     public void issue_order() {
         DeployOrder d_deplyOrder = new DeployOrder();
-        d_deplyOrder.setD_CountryIndex(d_currentToCountry);
+        d_deplyOrder.setD_CountryName(d_currentToCountry);
         d_deplyOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
         d_orders.add(d_deplyOrder);
     }
