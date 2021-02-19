@@ -6,6 +6,7 @@
 package com.soen6441.warzone.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
+@NoArgsConstructor
 public class CommandResponse {
 
     /**
@@ -33,15 +35,20 @@ public class CommandResponse {
      */
     private String d_responseString;
 
+    public CommandResponse(boolean d_isValid, String d_responseString) {
+        this.d_isValid = d_isValid;
+        this.d_responseString = d_responseString;
+    }
+
     @Override
     public String toString() {
-        String l_validity ;
-        if(d_isValid){
+        String l_validity;
+        if (d_isValid) {
             l_validity = "Command Executed Sucessfully";
-        }else{
-            l_validity ="Command Execution failed";
+        } else {
+            l_validity = "Command Execution failed";
         }
-        if(d_responseString == null){
+        if (d_responseString == null) {
             d_responseString = "Command Fails For some reason";
         }
         return "Validity :: " + l_validity + "\n" + "Message :: \n" + d_responseString + "\n";
