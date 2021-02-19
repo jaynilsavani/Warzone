@@ -238,8 +238,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method is used to validate the neighbour command and calls add or
      * remove as per the user command
      *
-     * @param p_neighbour
-     * @return
+     * @param p_neighbour is the command to add neighbour in specific country's neighbour list
+     * @return CommandResponse object
      */
     public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
         String l_countryName = "";
@@ -282,7 +282,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method will check edit map command and if file is already exist then
      * read the data of existing map file otherwise it will create new map file
      *
-     * @param p_editMapCommand
+     * @param p_editMapCommand is command to edit a existing map or create new map
      * @return Response of execution of command
      */
     public CommandResponse checkCommandEditMap(String p_editMapCommand) {
@@ -307,7 +307,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         d_warMap = readMap(l_fullName);
                         d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
                     } catch (Exception e) {
-                        d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
+                            d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                     }
                 } else {
                     d_generalUtil.prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
@@ -333,7 +333,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         boolean l_fileExtension = false;
         if (p_fileName.contains(".")) {
             String l_fileName = p_fileName.split("\\.")[1];
-
+            
             if (l_fileName.equals("map")) {
                 l_fileExtension = true;
             } else {
@@ -414,7 +414,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (!l_countries.isEmpty()) {
 
                     // check graph is connected or not
-                    l_countries = getAvailableCountries(d_warMap);
+                    l_countries = getAvailableCountries(p_warMap);
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
@@ -604,9 +604,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method is used to add the neighbour
      *
-     * @param p_countryId
-     * @param p_neighbour
-     * @return
+     * @param p_countryId is unique ID of country in which we want to add neighbour
+     * @param p_neighbour is the name of neighbour
+     * @return returns true if neighbour is successfully added
      */
     public boolean saveNeighbour(int p_countryId, int p_neighbour) {
         if (p_countryId == p_neighbour) {
@@ -690,6 +690,15 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Override
     public boolean writeMapToFile(WarMap p_warMap) {
+        String l_fileName = p_warMap.getD_mapName();
+        if(l_fileName.contains(".")){
+            String l_fileNameSplit = l_fileName.split("\\.")[1];
+            if(!l_fileNameSplit.equals("map")){
+               l_fileName = l_fileName.concat(".map");
+            }
+        }else{
+            l_fileName = l_fileName.concat(".map");
+        }
         boolean status;
         try {
             StringBuilder l_continentStringBuilder = new StringBuilder(CONTINENTS).append(System.lineSeparator());
@@ -697,7 +706,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
 
             try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(MAP_DEF_PATH + p_warMap.getD_mapName() + ".map"), "utf-8")));) {
+                    new FileOutputStream(MAP_DEF_PATH + l_fileName), "utf-8")));) {
 
                 Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
 
@@ -710,7 +719,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     for (Country l_country : l_countryList) {
 
                         //here all countries will store into the l_countryStringBuilder
-                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + "0 0")
+                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " 0 0")
                                 .append(System.lineSeparator());
 
                         List<String> l_neighborList = l_country.getD_neighbourCountries();
@@ -970,7 +979,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * used to get all countries available in the map
      *
-     * @param p_continentMap
+     * @param p_continentMap is the object of WarMap model
      * @return arraylist of the country
      */
     public ArrayList<Country> getAvailableCountries(WarMap p_continentMap) {

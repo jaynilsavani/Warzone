@@ -1,7 +1,7 @@
-name test.Map
+name test1
 
 [files]
-pic risk_pic.png
+pic warzone_pic.png
 
 [continents]
 asia 5
@@ -13,3 +13,4 @@ asia 5
 [borders]
 1 2
 2 1
+

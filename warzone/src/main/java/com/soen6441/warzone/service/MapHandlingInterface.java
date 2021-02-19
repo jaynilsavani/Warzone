@@ -41,7 +41,7 @@ public interface MapHandlingInterface {
      * This method is used to show the map in 2D matrix containing Countries as
      * x-y axis
      *
-     * @return
+     * @return CommandResponse object
      */
     public CommandResponse showMap(WarMap d_warMap);
 }

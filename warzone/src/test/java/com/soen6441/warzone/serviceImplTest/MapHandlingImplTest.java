@@ -36,13 +36,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class MapHandlingImplTest {
-
+  
     @Autowired
     WarMap d_warMap;
 
     @Autowired
     MapHandlingImpl d_mapHandlingImpl;
-
+   
     public MapHandlingImplTest() {
     }
 
@@ -55,11 +55,12 @@ public class MapHandlingImplTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException { 
+        d_warMap = d_mapHandlingImpl.readMap("test.map");
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
     }
 
     /**
@@ -69,6 +70,7 @@ public class MapHandlingImplTest {
     void testForWriteMapToFile() {
         try {
             d_warMap = d_mapHandlingImpl.readMap("test.map");
+            d_warMap.setD_mapName("test1");
         } catch (IOException ex) {
             Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -87,9 +89,9 @@ public class MapHandlingImplTest {
             Country l_country = new Country();
             l_country.setD_continentIndex(1);
             l_country.setD_countryIndex(1);
-            l_country.setD_countryName("aa");
+            l_country.setD_countryName("india");
             List<String> l_neighborList = new ArrayList();
-            l_neighborList.add("bb");
+            l_neighborList.add("china");
             
             l_country.setD_neighbourCountries(l_neighborList);
             l_countryList.add(l_country);
@@ -97,16 +99,16 @@ public class MapHandlingImplTest {
             Country l_country1 = new Country();
             l_country1.setD_continentIndex(1);
             l_country1.setD_countryIndex(2);
-            l_country1.setD_countryName("bb");
+            l_country1.setD_countryName("china");
             List<String> l_neighborList1 = new ArrayList();
-            l_neighborList1.add("aa");
+            l_neighborList1.add("india");
             
             l_country1.setD_neighbourCountries(l_neighborList1);
             l_countryList.add(l_country1);
             
             Continent l_continent = new Continent();
             l_continent.setD_continentIndex(1);
-            l_continent.setD_continentName("abc");
+            l_continent.setD_continentName("asia");
             l_continent.setD_continentValue(5);
             l_continent.setD_countryList(l_countryList);
             
@@ -115,17 +117,71 @@ public class MapHandlingImplTest {
             Map<Integer, Continent> l_continentMap = new HashMap<Integer, Continent>();
             l_continentMap.put(1, l_continent);
             d_warMap.setD_continents(l_continentMap);
-            WarMap obj = new WarMap();
-            try {
-                obj = d_mapHandlingImpl.readMap("test.map");
-            } catch (IOException ex) {
-                Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
             
             assertThat(d_warMap.equals(d_mapHandlingImpl.readMap("test.map"))).isTrue();
         } catch (IOException ex) {
             Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    /**
+     * Test to check map is valid
+     * @throws IOException Indicates error in reading file
+     */
+    @Test
+    void testForValidMap() throws IOException {
+        d_warMap = d_mapHandlingImpl.readMap("test.map");
+        assertEquals(d_mapHandlingImpl.validateMap(d_warMap), true);       
+    }  
+    
+    /**
+     * Test to check map is invalid
+     * @throws IOException Indicates error in reading file
+     */
+    @Test
+    void testForInValidMap() throws IOException {
+        d_warMap = d_mapHandlingImpl.readMap("invalid.map");
+        assertEquals(d_mapHandlingImpl.validateMap(d_warMap), false);       
+    }
+    
+    /**
+     * Test to check editmap command        
+     */
+    @Test
+    void testForCheckCommandEditMap(){
+        assertEquals(true, (d_mapHandlingImpl.checkCommandEditMap("editmap test.map")).isD_isValid());
+    }
+    
+    /**
+     * Test to check delete continent operation
+     */
+    @Test
+    void testForDeleteContinent(){  
+        assertEquals(true, d_mapHandlingImpl.deleteContinent("asia"));
+    }
+    
+    /**
+     * Test to check delete country operation
+     */
+    @Test
+    void testForDeleteCountry(){
+        assertEquals(true,d_mapHandlingImpl.deleteCountry("india").isD_isValid());
+    }
+    
+    /**
+     * Test to check delete neighbor operation
+     */
+    @Test
+    void testForDeleteNeighbour(){
+        assertEquals(true,d_mapHandlingImpl.deleteNeighbour("india", "china").isD_isValid());
+    }
+    
+    /**
+     * Test to check save neighbor operation
+     */
+    @Test
+    void testForSaveNeighbour(){
+        assertEquals(false,d_mapHandlingImpl.saveNeighbour(1, 2));
+    }
+    
 }
