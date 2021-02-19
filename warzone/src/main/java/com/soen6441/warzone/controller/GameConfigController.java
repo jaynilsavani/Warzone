@@ -106,7 +106,6 @@ public class GameConfigController implements Initializable {
         String l_command = d_CommandLine.getText();
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
-        System.out.println(l_command);
         if (l_command.toLowerCase().startsWith(SHOW_MAP)) {
             if (d_warMap != null) {
                 l_gmConfigRes=d_gameConfigService.showPlayerMap(d_gamePlay);
@@ -131,10 +130,13 @@ public class GameConfigController implements Initializable {
             }
 
         } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {
-            if ((l_commandSegments.size() - 1) % 2 == 0) {
-                d_gameConfigService.updatePlayer(d_gamePlay, l_command);
-            } else {
-                d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
+            if (d_gamePlay.getD_warMap() != null) {
+                if ((l_commandSegments.size() - 1) % 2 == 0) {
+                    d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
+                    d_generalUtil.prepareResponse(true, "Please updated Sucessfully");
+                } else {
+                    d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
+                }
                 l_gmConfigRes = d_generalUtil.getResponse();
             }
 
@@ -194,6 +196,7 @@ public class GameConfigController implements Initializable {
                     d_generalUtil.prepareResponse(true, "Map loaded successfully!");
                     //set loaded map in the Game play object
                     d_gamePlay.setD_warMap(d_warMap);
+                    d_gamePlay.setFileName(p_fileName);
                     d_warMap.setD_mapName(l_fullName);
                 } catch (IOException e) {
                     d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
