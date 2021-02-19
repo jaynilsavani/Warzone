@@ -19,8 +19,12 @@
             <Font size="14.0" />
          </font>
       </Label>
+
       <TextField fx:id="d_CommandLine" layoutX="110.0" layoutY="192.0" prefHeight="26.0" prefWidth="440.0" promptText="Please Enter Command for Gameplay and Startup Phase" />
       <Button fx:id="d_FireCommand" layoutX="240.0" layoutY="234.0" mnemonicParsing="false" onAction="#getData" prefHeight="26.0" prefWidth="146.0" text="Execute Command" />
       <TextArea layoutX="110.0" layoutY="300.0" prefHeight="112.0" prefWidth="440.0" />
+     
+      <TextArea fx:id="d_showPlayPhase" layoutX="110.0" layoutY="300.0" prefHeight="112.0" prefWidth="440.0" />
+
    </children>
 </AnchorPane>
