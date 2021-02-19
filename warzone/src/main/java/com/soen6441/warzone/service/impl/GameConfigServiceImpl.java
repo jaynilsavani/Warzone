@@ -45,7 +45,8 @@ public class GameConfigServiceImpl implements GameConfigService {
         CommandResponse l_showCountris=d_mapConfig.showMap(l_warMap);
         if(p_gamePlay.getPlayerList()==null)
         {
-            d_generalUtil.prepareResponse(false,"no player are present currently");
+            String l_showMapOfCountris=l_showCountris.getD_responseString();
+            d_generalUtil.prepareResponse(true,l_showMapOfCountris);
         }
         else
         {
