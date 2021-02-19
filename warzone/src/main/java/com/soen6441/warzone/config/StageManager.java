@@ -5,6 +5,9 @@
  */
 package com.soen6441.warzone.config;
 
+import com.soen6441.warzone.controller.GameEngine;
+import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.view.FxmlView;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +16,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * This is used for managing different stages of application 
- * 
+ * This is used for managing different stages of application
+ *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class StageManager {
@@ -46,7 +49,8 @@ public class StageManager {
     }
 
     /**
-     * This method will show the view of the title given in arguments and set the root node
+     * This method will show the view of the title given in arguments and set
+     * the root node
      *
      * p_rootnode rootnode is a parent node of scene
      *
@@ -93,7 +97,14 @@ public class StageManager {
         Parent l_rootNode = null;
         try {
             FXMLLoader l_loader = d_springFXMLLoader.load(p_fxmlFilePath);
-            l_rootNode = l_loader.load();
+            if (p_fxmlFilePath.contains(FxmlView.GAMEENGINE.getFxmlFile())) {
+                l_rootNode = l_loader.load();
+                GameEngine l_gameEngine = l_loader.getController();
+                l_gameEngine.setGamePlay((GamePlay) p_object);
+            } else {
+                l_rootNode = l_loader.load();
+            }
+
         } catch (IOException exception) {
             logAndExit("Unable to load FXML view" + p_fxmlFilePath, exception);
         }

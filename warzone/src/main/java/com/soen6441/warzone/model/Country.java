@@ -1,6 +1,7 @@
 package com.soen6441.warzone.model;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.EqualsAndHashCode;
 
 import lombok.Getter;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 @Component
-@EqualsAndHashCode
+//@EqualsAndHashCode
 public class Country {
 
     /**
@@ -47,4 +48,30 @@ public class Country {
      */
     private int d_noOfArmies;
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.d_countryName);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Country other = (Country) obj;
+        if (!Objects.equals(this.d_countryName, other.d_countryName)) {
+            return false;
+        }
+        return true;
+    }
+
+    
 }
