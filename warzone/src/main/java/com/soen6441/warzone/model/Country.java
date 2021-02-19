@@ -42,4 +42,9 @@ public class Country {
      */
     private List<String> d_neighbourCountries;
 
+    /**
+     * number of armies in this country
+     */
+    private int d_noOfArmies;
+
 }

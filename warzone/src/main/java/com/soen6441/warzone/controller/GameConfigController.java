@@ -39,6 +39,9 @@ public class GameConfigController implements Initializable {
     @FXML
     private TextField d_CommandLine;
 
+    @FXML
+    private TextArea d_showPlayPhase;
+
     @Autowired
     private WarMap d_warMap;
 
@@ -105,7 +108,8 @@ public class GameConfigController implements Initializable {
         CommandResponse l_gmConfigRes = new CommandResponse();
         if (l_command.toLowerCase().startsWith(SHOW_MAP)) {
             if (d_warMap != null) {
-                //call show map
+                l_gmConfigRes=d_gameConfigService.showPlayerMap(d_gamePlay);
+                //d_showPlayPhase.appendText(l_gmConfigRes.toString());
             } else {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
@@ -136,13 +140,31 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes = d_generalUtil.getResponse();
             }
 
-        } else {
+        }
+        else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {
+            if (l_commandSegments.size() == 1) {
+                try {
+                    l_gmConfigRes= d_gameConfigService.assignCountries(d_gamePlay);
+                    //d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                } catch (IOException e) {
+                    l_gmConfigRes.setD_isValid(false);
+                    l_gmConfigRes.setD_responseString("not able to assign countries due to map is not readable");
+                    //d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                }
+
+            } else {
+                d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
+                l_gmConfigRes = d_generalUtil.getResponse();
+            }
+
+        }
+        else {
             d_generalUtil.prepareResponse(false, "Please enter valid command");
             l_gmConfigRes = d_generalUtil.getResponse();
 
         }
 
-        d_CommandLine.setText(l_gmConfigRes.toString());
+        d_showPlayPhase.setText(l_gmConfigRes.toString());
 //        d_CommandLine.clear();
     }
 
