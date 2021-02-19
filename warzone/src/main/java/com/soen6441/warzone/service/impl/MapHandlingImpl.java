@@ -333,7 +333,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         boolean l_fileExtension = false;
         if (p_fileName.contains(".")) {
             String l_fileName = p_fileName.split("\\.")[1];
-            
+
             if (l_fileName.equals("map")) {
                 l_fileExtension = true;
             } else {
@@ -388,9 +388,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
         for (l_i = 0; l_i < l_countrySize; l_i++) {
             for (l_j = 0; l_j < l_countrySize; l_j++) {
                 String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
-                l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
+                l_showMapIn2D = l_showMapIn2D + l_stringFrmat;
             }
-            l_showMapIn2D = l_showMapIn2D + "\n\t";
+            l_showMapIn2D = l_showMapIn2D + "\n";
         }
         d_generalUtil.prepareResponse(true, l_showMapIn2D);
 
@@ -449,8 +449,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         return l_result;
     }
-    
-    
+
+
     //-----------------Below Functions are utility function for above commands----------//
 
     // // Delete commands Function
@@ -671,6 +671,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     int l_conintentIndex=l_countries.get(l_i-1).getD_continentIndex();
                     String l_continentName=getContinentNameByContinentId(d_warMap.getD_continents(),l_conintentIndex);
                     l_mapMetrices[l_i][l_j] =l_countries.get(l_i - 1).getD_countryName()+" ("+l_continentName+")";
+                    if (l_maxLength < l_mapMetrices[l_i][l_j].length()) {
+                        l_maxLength = l_mapMetrices[l_i][l_j].length();
+                    }
                 } else {
                     if (l_countries.get(l_i - 1).getD_neighbourCountries() != null) {
                         if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(l_mapMetrices[0][l_j])) {

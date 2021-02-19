@@ -44,7 +44,7 @@ public class CommandResponse {
         if(d_responseString == null){
             d_responseString = "Command Fails For some reason";
         }
-        return "Validity :: " + l_validity + "\n" + "Message :: " + d_responseString + "\n";
+        return "Validity :: " + l_validity + "\n" + "Message :: \n" + d_responseString + "\n";
     }
 
 }

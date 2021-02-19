@@ -12,6 +12,7 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -35,12 +36,16 @@ public class GameConfigController implements Initializable {
     public static final String SHOW_MAP = "showmap";
     public static final String GAME_PLAYER = "gameplayer";
     public static final String ASSIGN_COUNTRY = "assigncountries";
+    public static int AssignCountryFlag=0;
 
     @FXML
     private TextField d_CommandLine;
 
     @FXML
     private TextArea d_showPlayPhase;
+
+    @FXML
+    private Button d_StartGame;
 
     @Autowired
     private WarMap d_warMap;
@@ -71,7 +76,8 @@ public class GameConfigController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        d_StartGame.setDisable(true);
+        d_showPlayPhase.setStyle("-fx-font-family: monospace");
     }
 
     /**
@@ -81,7 +87,6 @@ public class GameConfigController implements Initializable {
      */
     @FXML
     void backToWelcome(ActionEvent event) {
-
         d_stageManager.switchScene(FxmlView.HOME, null);
         d_warMap = null;
         d_gamePlay = null;
@@ -117,7 +122,11 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes.setD_responseString("Please load the map first");
             }
         } else if (l_command.toLowerCase().startsWith(LOAD_MAP)) {
-
+            if(AssignCountryFlag==1)
+            {
+                l_gmConfigRes.setD_isValid(false);
+                l_gmConfigRes.setD_responseString("countries are already assigned to each player");
+            }
             String l_fileName = (l_commandSegments != null && l_commandSegments.size() == 2) ? l_commandSegments.get(1) : null;
             if (l_fileName != null) {
                 if (d_generalUtil.validateIOString(l_fileName, "^[a-zA-Z]+.?[a-zA-Z]+") || d_generalUtil.validateIOString(l_fileName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
@@ -132,6 +141,11 @@ public class GameConfigController implements Initializable {
             }
 
         } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {
+            if(AssignCountryFlag==1)
+            {
+                l_gmConfigRes.setD_isValid(false);
+                l_gmConfigRes.setD_responseString("countries are already assigned to each player");
+            }
             if (d_gamePlay.getD_warMap() != null) {
                 if ((l_commandSegments.size() - 1) % 2 == 0) {
                     d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
@@ -145,7 +159,12 @@ public class GameConfigController implements Initializable {
         } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {
             if (l_commandSegments.size() == 1) {
                 try {
-                    l_gmConfigRes = d_gameConfigService.assignCountries(d_gamePlay);
+                    l_gmConfigRes= d_gameConfigService.assignCountries(d_gamePlay);
+                    if(l_gmConfigRes.isD_isValid())
+                    {
+                        d_StartGame.setDisable(false);
+                        AssignCountryFlag=1;
+                    }
                     //d_showPlayPhase.appendText(l_gmConfigRes.toString());
                 } catch (IOException e) {
                     l_gmConfigRes.setD_isValid(false);
