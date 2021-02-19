@@ -77,6 +77,7 @@ public class GameConfigController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         d_StartGame.setDisable(true);
+        d_showPlayPhase.setStyle("-fx-font-family: monospace");
     }
 
     /**

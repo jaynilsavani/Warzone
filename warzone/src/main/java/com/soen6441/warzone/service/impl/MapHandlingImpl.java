@@ -388,7 +388,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         for (l_i = 0; l_i < l_countrySize; l_i++) {
             for (l_j = 0; l_j < l_countrySize; l_j++) {
                 String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
-                l_showMapIn2D = l_showMapIn2D + l_stringFrmat + "\t";
+                l_showMapIn2D = l_showMapIn2D + l_stringFrmat;
             }
             l_showMapIn2D = l_showMapIn2D + "\n";
         }
