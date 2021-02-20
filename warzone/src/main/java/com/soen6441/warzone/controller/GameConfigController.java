@@ -184,7 +184,7 @@ public class GameConfigController implements Initializable {
         }
 
         d_showPlayPhase.setText(l_gmConfigRes.toString());
-//        d_CommandLine.clear();
+        d_CommandLine.clear();
     }
 
     //Utility functions For above Command execution 

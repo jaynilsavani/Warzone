@@ -4,6 +4,9 @@ import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GamePlay;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameEngineService;
+import com.soen6441.warzone.service.GeneralUtil;
+import com.soen6441.warzone.model.DeployOrder;
+import com.soen6441.warzone.model.Order;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -19,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Arrays;
 
 /**
  * This Class is made to handle Game Engine controller request
@@ -39,11 +44,30 @@ public class GameEngine implements Initializable {
     @FXML
     private TextField d_CommandLine;
 
+    @FXML
+    private TextArea d_FireCommandList;
+
+    @FXML
+    private Button d_FireCommand;
+
     @Autowired
     GamePlay d_gamePlay;
 
     @Autowired
     private GameEngineService d_gameEngineSevice;
+
+    @Autowired
+    GeneralUtil d_generalUtil;
+    /**
+     * used to add flag for all players whether they want to add issue or not
+     */
+    private static int[] PlayerFlag;
+
+    /**
+     * used to give turn to each player
+     */
+    private static int PlayCounter = 0;
+
 
     /**
      * This method will exit the game and close the stage
@@ -78,8 +102,44 @@ public class GameEngine implements Initializable {
      */
     public void getData(ActionEvent event) {
         String s = d_CommandLine.getText();
-        System.out.println(s);
-        d_CommandLine.clear();
+        if (d_generalUtil.validateIOString(s, "deploy\\s[a-zA-Z]+\\s[0-9]*") || s.equalsIgnoreCase("done")) {
+            d_CommandLine.clear();	            CommandResponse l_commandResponse = issuingPlayer(s);
+            d_FireCommandList.appendText(l_commandResponse.toString());
+            while (true) {
+                int l_j = 0;
+                for (int l_i = 0; l_i < PlayerFlag.length; l_i++) {
+                    if (PlayerFlag[l_i] == 1) {
+                        l_j++;
+                    }
+                }
+                if (l_j == PlayerFlag.length) {
+                    d_FireCommand.setText("Execute Orer");
+                    //execute order function
+                    break;
+                }
+
+
+                PlayCounter++;
+                if (PlayCounter == PlayerFlag.length) {
+                    PlayCounter = 0;
+                }
+                if (PlayerFlag[PlayCounter] == 1) {
+                    continue;
+                } else if (PlayerFlag[PlayCounter] == 0) {
+                    d_FireCommand.setText("issue order for " + d_gamePlay.getPlayerList().get(PlayCounter).getD_playerName());
+                    d_CommandLine.clear();
+                    break;
+                }
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Error box");
+            alert.setContentText("Invalid Commad!!");
+
+            alert.showAndWait();
+        }
+
     }
 
     /**
@@ -89,6 +149,9 @@ public class GameEngine implements Initializable {
      */
     public void setGamePlay(GamePlay p_gameConfig) {
         d_gamePlay = p_gameConfig;
+        d_FireCommand.setText("issue order for " + d_gamePlay.getPlayerList().get(0).getD_playerName());
+        PlayerFlag = new int[d_gamePlay.getPlayerList().size()];
+        Arrays.fill(PlayerFlag, 0);
         mainGameLoop();
     }
 
@@ -122,5 +185,41 @@ public class GameEngine implements Initializable {
         }
         return l_orderStatus;
     }
+
+    /**
+     * This method is used to store the user input of orders in player's lst of orders
+     * @param p_command String that has been given by user
+     * @return return the response in term of wether order is added or player is completed with orders or not
+     */
+    public CommandResponse issuingPlayer(String p_command) {
+        Player l_player = d_gamePlay.getPlayerList().get(PlayCounter);
+        if (p_command.equalsIgnoreCase("done")) {
+            PlayerFlag[PlayCounter] = 1;
+            String l_response = l_player.getD_playerName() + " : done with issuing orders";
+            d_generalUtil.prepareResponse(true, l_response);
+            return d_generalUtil.getResponse();
+        } else {
+            String[] l_commands = p_command.split("\\s+");
+            DeployOrder l_dorder = new DeployOrder();
+            if (l_player.getD_orders() == null) {
+                List<Order> l_order = new ArrayList<Order>();
+
+                l_dorder.setD_CountryName(l_commands[1]);
+                l_dorder.setD_noOfArmies(Integer.parseInt(l_commands[2]));
+                l_order.add(l_dorder);
+                d_gamePlay.getPlayerList().get(PlayCounter).setD_orders(l_order);
+            } else {
+                l_dorder.setD_noOfArmies(Integer.parseInt(l_commands[2]));
+                l_dorder.setD_CountryName(l_commands[1]);
+                d_gamePlay.getPlayerList().get(PlayCounter).getD_orders().add(l_dorder);
+
+            }
+            d_generalUtil.prepareResponse(true, p_command);
+            return d_generalUtil.getResponse();
+        }
+
+
+    }
+
 
 }

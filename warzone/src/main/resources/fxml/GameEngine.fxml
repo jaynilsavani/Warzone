@@ -28,13 +28,13 @@
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
-      <Label layoutX="60.0" layoutY="349.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
+      <Label fx:id="d_playerTurn" layoutX="60.0" layoutY="349.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="195.0" layoutY="346.0" prefHeight="26.0" prefWidth="497.0" promptText="Reinforcement and Fortification Command" />
-      <Button fx:id="d_FireCommand" layoutX="340.0" layoutY="387.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="208.0" text="Reinforcement and Fortify">
+      <Button fx:id="d_FireCommand" onAction="#getData" layoutX="255.0" layoutY="387.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="386.0" text="Reinforcement and Fortify">
          <font>
             <Font size="14.0" />
          </font></Button>
