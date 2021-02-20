@@ -170,19 +170,14 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         && d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
 
                     // prepare country list of continent entered by user
-                    ArrayList<Country> l_countryList = new ArrayList<Country>();
+                    ArrayList<Country> l_countryList = getAvailableCountries(d_warMap);
                     int l_continentIndex = 1;
                     boolean isValidContinent = false;
                     if (d_warMap.getD_continents() != null) {
                         for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
                             // check if continent exists or not
-                            if (l_entry.getValue() != null) {
+                            if (l_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
                                 l_continentIndex = l_entry.getKey();
-                                if (l_entry.getValue().getD_countryList() != null) {
-                                    l_entry.getValue().getD_countryList().forEach((country) -> {
-                                        l_countryList.add(country);
-                                    });
-                                }
                                 isValidContinent = true;
                                 break;
                             }
@@ -199,6 +194,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                                 if (!l_countryName.equalsIgnoreCase(country.getD_countryName())) {
                                     saveCountry(l_countryName, l_continentIndex);
                                     d_generalUtil.prepareResponse(true, "Country saved successfully");
+                                    break;
                                 } else {
                                     d_generalUtil.prepareResponse(false, "Country already exists");
                                     break;
@@ -564,7 +560,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_value value of Continent
      */
     public void saveContinent(String p_continentName, String p_value) {
-
+        if (d_warMap.getD_continents() != null) {
+            ContinentId = d_warMap.getD_continents().size() + 1;
+        }
         Continent l_continent = new Continent();
         l_continent.setD_continentIndex(ContinentId);
         l_continent.setD_continentName(p_continentName);
@@ -576,7 +574,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
         } else {
             d_warMap.getD_continents().put(ContinentId, l_continent);
         }
-        ContinentId++;
     }
 
     /**
@@ -586,6 +583,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_continentIndex index of continent
      */
     public void saveCountry(String p_countryName, int p_continentIndex) {
+        ArrayList<Country> l_countries = getAvailableCountries(d_warMap);
+        if (!l_countries.isEmpty()) {
+            CountryId = l_countries.size() + 1;
+        }
         Country l_country = new Country();
         l_country.setD_continentIndex(p_continentIndex);
         l_country.setD_countryName(p_countryName);
@@ -598,7 +599,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
             l_countryList.add(l_country);
             l_continent.setD_countryList(l_countryList);
         }
-        CountryId++;
     }
 
     /**
@@ -983,15 +983,17 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * used to get all countries available in the map
      *
      * @param p_continentMap is the object of WarMap model
-     * @return arraylist of the country
+     * @return array list of the country
      */
     public ArrayList<Country> getAvailableCountries(WarMap p_continentMap) {
 
         List<Country> l_countries = new ArrayList<Country>();
         l_countries.clear();
         for (Map.Entry<Integer, Continent> l_entry : p_continentMap.getD_continents().entrySet()) {
-            for (Country l_country : l_entry.getValue().getD_countryList()) {
-                l_countries.add(l_country);
+             if (l_entry.getValue().getD_countryList() != null) {
+                for (Country l_country : l_entry.getValue().getD_countryList()) {
+                    l_countries.add(l_country);
+                }
             }
         }
         return (ArrayList<Country>) l_countries;
