@@ -85,4 +85,11 @@ public class Player {
         }
     }
 
+    public boolean hasOrder() {
+        if (d_orders != null && !d_orders.isEmpty()) {
+            return false;
+        }
+        return d_orders.size() > 0;
+    }
+
 }
