@@ -44,4 +44,12 @@ public interface MapHandlingInterface {
      * @return CommandResponse object
      */
     public CommandResponse showMap(WarMap d_warMap);
+    
+    /**
+     * This function will validate map file
+     *
+     * @param p_warMap use to validate
+     * @return return true if map is valid
+     */
+    public boolean validateMap(WarMap p_warMap);
 }

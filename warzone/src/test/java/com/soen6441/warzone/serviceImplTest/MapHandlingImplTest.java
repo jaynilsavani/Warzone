@@ -215,7 +215,7 @@ public class MapHandlingImplTest {
     }
     
     /**
-     * Test to check save country operation
+     * Test to check save continent operation
      */
     @Test
     public void testForSaveContinent() {
