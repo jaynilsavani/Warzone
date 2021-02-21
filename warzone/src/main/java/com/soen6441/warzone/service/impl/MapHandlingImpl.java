@@ -522,6 +522,21 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         l_dCountryResponse.setD_responseString("Country Deleted Sucessfully");
                     }
                 }
+                for(Country l_country: l_countryList){
+                    boolean l_status = false;
+                    List<String> l_neighbourList = l_country.getD_neighbourCountries();
+                    for(String l_neighbour : l_neighbourList){
+                        if(l_neighbour.equals(p_countryName)){
+                            l_status = true;
+                           // l_neighbourList.remove(new String(l_neighbour));
+                        }
+                    }
+                    if (l_status) {
+                        l_neighbourList.remove(new String(p_countryName));
+                    }
+                    l_country.setD_neighbourCountries(l_neighbourList);
+                }
+                l_continent.getValue().setD_countryList(l_countryList);
             }
             l_dCountryResponse.setD_isValid(true);
             if (!l_result) {
@@ -672,6 +687,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method is used to convert map object to metric
      *
      * @param l_countries list of countries
+     * @param d_warMap : object of WarMap model
      * @return return no of countries and metric
      */
     public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries,WarMap d_warMap) {
@@ -1055,5 +1071,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         }
         return  l_continentName;
+    }
+    
+    /**
+     *This method return WarMap object 
+     * @return WarMap model object
+     */
+    public WarMap getWarMapObject(){
+        return d_warMap;
     }
 }

@@ -58,10 +58,10 @@ public interface GeneralUtil {
     /**
      * This method is used to traverse metric
      *
-     * @param p_source
-     * @param p_visited
-     * @param p_noOfCountries
-     * @param p_metricesOfMap
+     * @param p_source : source node to check graph is connected or not
+     * @param p_visited : boolean array to store visited node
+     * @param p_noOfCountries : total number of countries in map
+     * @param p_metricesOfMap : metrics of map 
      */
     public void traverse(int p_source, boolean[] p_visited, int p_noOfCountries, int[][] p_metricesOfMap);
 
@@ -71,7 +71,7 @@ public interface GeneralUtil {
      * @param p_path directory path of files
      * @param p_fileExtension extension of file to be searched
      * @return list of files
-     * @throws java.io.IOException
+     * @throws java.io.IOException throws input/output exception
      */
     public List<String> getListOfAllFiles(Path p_path, String p_fileExtension) throws IOException;
 
