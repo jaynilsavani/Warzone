@@ -1,6 +1,5 @@
 package com.soen6441.warzone.model;
 
-import javafx.util.Pair;
 
 /**
  *

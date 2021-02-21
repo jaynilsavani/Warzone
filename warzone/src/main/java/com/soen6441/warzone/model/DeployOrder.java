@@ -1,6 +1,5 @@
 package com.soen6441.warzone.model;
 
-import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
