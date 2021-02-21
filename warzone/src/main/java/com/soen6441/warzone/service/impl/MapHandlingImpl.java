@@ -498,11 +498,16 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     }
                 }
                 for(Country l_country: l_countryList){
+                    boolean l_status = false;
                     List<String> l_neighbourList = l_country.getD_neighbourCountries();
                     for(String l_neighbour : l_neighbourList){
                         if(l_neighbour.equals(p_countryName)){
-                            l_neighbourList.remove(new String(l_neighbour));
+                            l_status = true;
+                           // l_neighbourList.remove(new String(l_neighbour));
                         }
+                    }
+                    if (l_status) {
+                        l_neighbourList.remove(new String(p_countryName));
                     }
                     l_country.setD_neighbourCountries(l_neighbourList);
                 }
@@ -1041,5 +1046,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         }
         return  l_continentName;
+    }
+    
+    /**
+     *This method return WarMap object 
+     * @return 
+     */
+    public WarMap getWarMapObject(){
+        return d_warMap;
     }
 }
