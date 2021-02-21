@@ -126,7 +126,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (l_isValidName) {
                         saveContinent(l_continentName, l_continetValue);
                         d_generalUtil.prepareResponse(true, "Continent saved successfully");
-                        return d_generalUtil.getResponse();
                     }
 
                 } else {
@@ -718,22 +717,26 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                     //here all continets will store into the l_continentStringBuilder
                     l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
-                    List<Country> l_countryList = l_currentContinent.getD_countryList();
-                    for (Country l_country : l_countryList) {
+                    if (l_currentContinent.getD_countryList() != null) {
+                        List<Country> l_countryList = l_currentContinent.getD_countryList();
+                        for (Country l_country : l_countryList) {
 
-                        //here all countries will store into the l_countryStringBuilder
-                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " 0 0")
-                                .append(System.lineSeparator());
+                            //here all countries will store into the l_countryStringBuilder
+                            l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " 0 0")
+                                    .append(System.lineSeparator());
 
-                        List<String> l_neighborList = l_country.getD_neighbourCountries();
-                        if (!l_neighborList.isEmpty() && l_neighborList != null) {
-                            l_neighborStringBuilder.append(l_country.getD_countryIndex());
-                            for (String l_neighborName : l_neighborList) {
+                            if (l_country.getD_neighbourCountries() != null) {
+                                List<String> l_neighborList = l_country.getD_neighbourCountries();
+                                if (!l_neighborList.isEmpty() && l_neighborList != null) {
+                                    l_neighborStringBuilder.append(l_country.getD_countryIndex());
+                                    for (String l_neighborName : l_neighborList) {
 
-                                //here all neighbors will store into the l_neighborStringBuilder
-                                l_neighborStringBuilder.append(" " + getCountryIndexByCountrName(p_warMap, l_neighborName));
+                                        //here all neighbors will store into the l_neighborStringBuilder
+                                        l_neighborStringBuilder.append(" " + getCountryIndexByCountryName(p_warMap, l_neighborName));
+                                    }
+                                    l_neighborStringBuilder.append(System.lineSeparator());
+                                }
                             }
-                            l_neighborStringBuilder.append(System.lineSeparator());
                         }
                     }
                 }
@@ -933,19 +936,21 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_countryName is the name of country
      * @return index of country
      */
-    private int getCountryIndexByCountrName(WarMap p_warMap, String p_countryName) {
+    private int getCountryIndexByCountryName(WarMap p_warMap, String p_countryName) {
         int l_countryIndex = 0;
         Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
 
         for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
             Continent l_currentContinent = l_entry.getValue();
 
-            List<Country> l_countryList = l_currentContinent.getD_countryList();
-            for (Country l_country : l_countryList) {
-                if (l_country != null) {
-                    if (l_country.getD_countryName() == p_countryName) {
-                        l_countryIndex = l_country.getD_countryIndex();
-                        break;
+            if (l_currentContinent.getD_countryList() != null) {
+                List<Country> l_countryList = l_currentContinent.getD_countryList();
+                for (Country l_country : l_countryList) {
+                    if (l_country != null) {
+                        if (l_country.getD_countryName() == p_countryName) {
+                            l_countryIndex = l_country.getD_countryIndex();
+                            break;
+                        }
                     }
                 }
             }
