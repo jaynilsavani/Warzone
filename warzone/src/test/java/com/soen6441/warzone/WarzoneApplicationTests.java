@@ -1,7 +1,7 @@
 package com.soen6441.warzone;
 
 import com.soen6441.warzone.serviceImplTest.MapHandlingImplTest;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -19,10 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @RunWith(Suite.class)
 @SuiteClasses({MapHandlingImplTest.class})
-class WarzoneApplicationTests {
+public class WarzoneApplicationTests {
 
+    /**
+     * This method is used to load Springboot Apllication Context
+     */
     @Test
-    void contextLoads() {
+    public void contextLoads() {
+
     }
 
 }

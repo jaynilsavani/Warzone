@@ -414,7 +414,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
-                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
+                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,p_warMap);
                     String[][] l_mapMetrix = pair.getValue();
 
                     int[][] l_intMetric = new int[l_countrySize - 1][l_countrySize - 1];
