@@ -64,7 +64,6 @@ public class MapHandlingImplTest {
 
     @Before
     public void setUp() throws IOException {
-//        d_warMap = d_mapHandlingImpl.readMap("test.map");
         d_mapHandlingImpl.checkCommandEditMap("editmap test.map");
     }
 
