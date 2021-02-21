@@ -4,11 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="617.0" prefWidth="793.0" style="-fx-background-color: #CDCD14;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.GameEngine">
+<AnchorPane prefHeight="646.0" prefWidth="755.0" style="-fx-background-color: #EDF1FF;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.GameEngine">
    <children>
       <Label layoutX="82.0" layoutY="89.0" prefHeight="20.0" prefWidth="99.0" text="Territory List">
          <font>
-            <Font name="System Bold Italic" size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <TextArea fx:id="d_TerritoryListText" layoutX="60.0" layoutY="129.0" prefHeight="164.0" prefWidth="128.0" wrapText="true" />
@@ -24,7 +24,7 @@
             <Font name="System Bold Italic" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="d_BtnExit" layoutX="643.0" layoutY="32.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="30.0" prefWidth="128.0" text="Exit Game">
+      <Button fx:id="d_BtnExit" layoutX="577.0" layoutY="23.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="30.0" prefWidth="128.0" text="Exit Game">
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
@@ -34,10 +34,10 @@
          </font>
       </Label>
       <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="195.0" layoutY="346.0" prefHeight="26.0" prefWidth="497.0" promptText="Reinforcement and Fortification Command" />
-      <Button fx:id="d_FireCommand" onAction="#getData" layoutX="255.0" layoutY="387.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="386.0" text="Reinforcement and Fortify">
+      <Button fx:id="d_FireCommand" layoutX="306.0" layoutY="385.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="283.0" text="Reinforcement">
          <font>
-            <Font size="14.0" />
+            <Font name="System Italic" size="14.0" />
          </font></Button>
-      <TextArea fx:id="d_FireCommandList" layoutX="199.0" layoutY="440.0" prefHeight="146.0" prefWidth="498.0" wrapText="true" />
+      <TextArea fx:id="d_FireCommandList" layoutX="194.0" layoutY="450.0" prefHeight="146.0" prefWidth="498.0" wrapText="true" />
    </children>
 </AnchorPane>
