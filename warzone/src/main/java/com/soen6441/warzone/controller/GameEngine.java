@@ -177,10 +177,7 @@ public class GameEngine implements Initializable {
      */
     private void reinforcementArmies() {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
-        for(Player p:d_gamePlay.getPlayerList())
-        {
-            System.out.println(p.getD_noOfArmies());
-        }
+
 
     }
 
