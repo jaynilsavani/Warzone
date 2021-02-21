@@ -41,7 +41,7 @@ public class StageManager {
      * This method will help to switch the scene from one to another
      *
      * @param p_view is scene to show
-     * @param p_object
+     * @param p_object: object
      */
     public void switchScene(final FxmlView p_view, Object p_object) {
         Parent l_viewRootNodeHierarchy = loadViewNodeHierarchy(p_view.getFxmlFile(), p_object);

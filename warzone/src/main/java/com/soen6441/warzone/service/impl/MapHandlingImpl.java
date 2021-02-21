@@ -413,7 +413,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
-                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
+                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,p_warMap);
                     String[][] l_mapMetrix = pair.getValue();
 
                     int[][] l_intMetric = new int[l_countrySize - 1][l_countrySize - 1];
@@ -508,7 +508,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 }
                 l_continent.getValue().setD_countryList(l_countryList);
             }
-            
             l_dCountryResponse.setD_isValid(true);
             if (!l_result) {
                 l_dCountryResponse.setD_responseString("Country Does Not Exist!!");
@@ -658,6 +657,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method is used to convert map object to metric
      *
      * @param l_countries list of countries
+     * @param d_warMap : object of WarMap model
      * @return return no of countries and metric
      */
     public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries,WarMap d_warMap) {

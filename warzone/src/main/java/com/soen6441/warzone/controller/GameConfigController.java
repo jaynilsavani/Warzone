@@ -107,7 +107,7 @@ public class GameConfigController implements Initializable {
      * This method is used to get fire command from user and put it as a
      * parameter in validation
      *
-     * @param event
+     * @param event : events from view
      */
     public void getData(ActionEvent event) {
         String l_command = d_CommandLine.getText();

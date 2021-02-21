@@ -100,7 +100,7 @@ public class GameEngine implements Initializable {
      * This method is used to get fire command from user and put it as a
      * parameter in validation
      *
-     * @param event
+     * @param event  :event from view
      */
     public void getData(ActionEvent event) {
         String s = d_CommandLine.getText();
@@ -149,7 +149,7 @@ public class GameEngine implements Initializable {
     /**
      * This is used for setting GameConfig for GameEngine
      *
-     * @param p_gameConfig
+     * @param p_gameConfig : object of GamePlay model
      */
     public void setGamePlay(GamePlay p_gameConfig) {
         d_gamePlay = p_gameConfig;

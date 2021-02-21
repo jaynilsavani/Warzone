@@ -21,8 +21,8 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: cd warzone && mvn clean install
+      run: cd warzone && mvn clean install -DskipTests
     - name: Test with Maven
-      run: cd warzone && mvn test
+      run: cd warzone && mvn -Dtest=WarzoneApplicationTests test
     - name: Generte javadoc
       run: cd warzone && mvn javadoc:javadoc
