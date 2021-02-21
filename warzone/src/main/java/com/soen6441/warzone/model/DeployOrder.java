@@ -36,7 +36,6 @@ public class DeployOrder implements Order {
     public boolean executeOrder() {
         for(Country l_country:d_player.getD_ownedCountries())
         {
-            System.out.println("hehe "+d_CountryName+" ^^ "+d_noOfArmies+" %% "+l_country.getD_countryName()+" ## "+d_player.getD_noOfArmies());
             if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()>=d_noOfArmies))
             {
                 int l_getArmy=l_country.getD_noOfArmies();

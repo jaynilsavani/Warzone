@@ -152,7 +152,6 @@ public class GameEngine implements Initializable {
 
             alert.showAndWait();
         }
-        System.out.println(CounterRound);
     }
 
     /**
@@ -176,10 +175,7 @@ public class GameEngine implements Initializable {
      */
     private void reinforcementArmies() {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
-        for(Player p:d_gamePlay.getPlayerList())
-        {
-            System.out.println(p.getD_noOfArmies());
-        }
+
     }
 
     /**
@@ -190,23 +186,16 @@ public class GameEngine implements Initializable {
      */
     private List<CommandResponse> executionOfOrders() {
         List<CommandResponse> l_orderStatus = new ArrayList<>();
-        System.out.println("&& "+CounterRound);
         for (int i = 0; i < CounterRound; i++) {
             for (int j=0;j<d_gamePlay.getPlayerList().size();j++) {
                 if (d_gamePlay.getPlayerList().get(j).hasOrder()) {
                     Order l_order=d_gamePlay.getPlayerList().get(j).next_order();
-                    System.out.println(l_order);;
                     ((DeployOrder) l_order).setD_player(d_gamePlay.getPlayerList().get(j));
                     boolean l_executeOrder= l_order.executeOrder();
                     if(l_executeOrder) {
                         l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gamePlay.getPlayerList().get(j).getD_playerName() + "'s command executed sucessfully\n"));
                         d_gamePlay.getPlayerList().remove(j);
                         d_gamePlay.getPlayerList().add(j,((DeployOrder) l_order).getD_player());
-                        System.out.println(d_gamePlay.getPlayerList().get(j).getD_noOfArmies()+"@@\n");
-                        for(Country c:d_gamePlay.getPlayerList().get(j).getD_ownedCountries())
-                        {
-                            System.out.println(c.getD_noOfArmies());
-                        }
                     }
                     else
                     {
