@@ -238,10 +238,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method is used to validate the neighbor command and calls add or
+     * This method is used to validate the neighbour command and calls add or
      * remove as per the user command
      *
-     * @param p_neighbor is the command to add neighbor in specific country's neighbor list
+     * @param p_neighbour is the command to add neighbour in specific country's neighbour list
      * @return CommandResponse object
      */
     public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
