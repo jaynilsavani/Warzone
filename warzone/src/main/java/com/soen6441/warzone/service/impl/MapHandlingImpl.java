@@ -100,6 +100,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return message of result after edit Continent operation
      */
     public CommandResponse checkCommandEditContinent(String p_editContinentCommand) {
+        if (!d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is not selected");
+            return d_generalUtil.getResponse();
+        }
         String l_continentName = "";
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
@@ -157,6 +161,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return message of result after edit Country command execution
      */
     public CommandResponse checkCommandEditCountry(String p_editCountryCommand) {
+        if (!d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is not selected");
+            return d_generalUtil.getResponse();
+        }
         String l_countryName = "";
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
@@ -230,13 +238,17 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method is used to validate the neighbour command and calls add or
+     * This method is used to validate the neighbor command and calls add or
      * remove as per the user command
      *
-     * @param p_neighbour is the command to add neighbour in specific country's neighbour list
+     * @param p_neighbor is the command to add neighbor in specific country's neighbor list
      * @return CommandResponse object
      */
     public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
+        if (!d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is not selected");
+            return d_generalUtil.getResponse();
+        }
         String l_countryName = "";
         String l_neighbourCountryName = "";
         boolean l_result = false;
@@ -293,10 +305,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_fullName = index > 0
                         ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
 
-                // Set status and map file name 
-                d_warMap.setD_status(true);
-                d_warMap.setD_mapName(l_fullName);
-
                 if (l_mapFileNameList.contains(l_fullName)) {
                     try {
                         d_warMap = readMap(l_fullName);
@@ -305,6 +313,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
                             d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                     }
                 } else {
+                    // reset warmap object if user first edit existing map and then try to edit new map
+                    d_warMap = new WarMap();
+                    // Set status and map file name 
+                    d_warMap.setD_status(true);
+                    d_warMap.setD_mapName(l_fullName);
                     d_generalUtil.prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
                 }
             } catch (IOException ex) {
@@ -325,6 +338,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return object of commandResponse
      */
     public CommandResponse checkCommandSaveMap(String p_fileName) {
+        if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is null or not selected");
+            return d_generalUtil.getResponse();
+        }
         boolean l_fileExtension = false;
         if (p_fileName.contains(".")) {
             String l_fileName = p_fileName.split("\\.")[1];
@@ -368,13 +385,18 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Override
     public CommandResponse showMap(WarMap d_warMap) {
-        if (d_warMap == null) {
-            d_generalUtil.prepareResponse(false, "Map is Null");
+        if (d_warMap.getD_continents() == null || !d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is null or not selected");
             return d_generalUtil.getResponse();
         }
         String l_showMapIn2D = "";
         List<Country> l_countries = getAvailableCountries(d_warMap);
         int l_countrySize = l_countries.size();
+        if (l_countrySize < 1) {
+            d_generalUtil.prepareResponse(false, "Countries not found. Please add countries in the map.");
+
+            return d_generalUtil.getResponse();
+        }
         int l_i, l_j;
         l_countrySize++;
         Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
@@ -399,6 +421,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return return true if map is valid
      */
     public boolean validateMap(WarMap p_warMap) {
+        if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
+            return false;
+        }
         boolean l_result = false;
         try {
             // check one or more continent is available in map
