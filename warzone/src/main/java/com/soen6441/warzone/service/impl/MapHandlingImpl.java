@@ -414,6 +414,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
         return d_generalUtil.getResponse();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean validateMap(WarMap p_warMap) {
         if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
