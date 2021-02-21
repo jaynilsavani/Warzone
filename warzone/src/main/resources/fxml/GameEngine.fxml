@@ -6,38 +6,21 @@
 
 <AnchorPane prefHeight="617.0" prefWidth="793.0" style="-fx-background-color: #CDCD14;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.GameEngine">
    <children>
-      <Label layoutX="82.0" layoutY="89.0" prefHeight="20.0" prefWidth="99.0" text="Territory List">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <TextArea fx:id="d_TerritoryListText" layoutX="60.0" layoutY="129.0" prefHeight="164.0" prefWidth="128.0" wrapText="true" />
-      <TextArea fx:id="d_ContinentText" layoutX="267.0" layoutY="129.0" prefHeight="164.0" prefWidth="168.0" wrapText="true" />
-      <TextArea fx:id="d_TerritoryPlayerArmyText" layoutX="509.0" layoutY="129.0" prefHeight="164.0" prefWidth="226.0" wrapText="true" />
-      <Label layoutX="319.0" layoutY="89.0" prefHeight="20.0" prefWidth="84.0" text="Continent">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="548.0" layoutY="89.0" prefHeight="20.0" prefWidth="168.0" text="Territory-Player-Army">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Button fx:id="d_BtnExit" layoutX="643.0" layoutY="32.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="30.0" prefWidth="128.0" text="Exit Game">
+
+      <Button fx:id="d_BtnExit" layoutX="333.0" layoutY="23.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="30.0" prefWidth="128.0" text="Exit Game">
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
-      <Label fx:id="d_playerTurn" layoutX="60.0" layoutY="349.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
+      <Label fx:id="d_playerTurn" layoutX="46.0" layoutY="160.0" prefHeight="20.0" prefWidth="174.0" text="                Command Line">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="195.0" layoutY="346.0" prefHeight="26.0" prefWidth="497.0" promptText="Reinforcement and Fortification Command" />
-      <Button fx:id="d_FireCommand" onAction="#getData" layoutX="255.0" layoutY="387.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="386.0" text="Reinforcement and Fortify">
+      <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="222.0" layoutY="157.0" prefHeight="26.0" prefWidth="497.0" promptText="Enter the Command" />
+      <Button fx:id="d_FireCommand" layoutX="432.0" layoutY="199.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="162.0" text="Fire Command">
          <font>
             <Font size="14.0" />
          </font></Button>
-      <TextArea fx:id="d_FireCommandList" layoutX="199.0" layoutY="440.0" prefHeight="146.0" prefWidth="498.0" wrapText="true" />
+      <TextArea fx:id="d_FireCommandList" layoutX="221.0" layoutY="257.0" prefHeight="308.0" prefWidth="498.0" wrapText="true" />
    </children>
 </AnchorPane>

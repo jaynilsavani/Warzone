@@ -1,5 +1,7 @@
 package com.soen6441.warzone.model;
 
+import javafx.util.Pair;
+
 /**
  *
  * This interface is used for and OrderImpl is the implementation of it.
@@ -16,4 +18,5 @@ public interface Order {
      * @return Whether Order Executed or not
      */
     public boolean executeOrder();
+
 }

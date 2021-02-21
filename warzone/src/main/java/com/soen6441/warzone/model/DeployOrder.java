@@ -1,5 +1,6 @@
 package com.soen6441.warzone.model;
 
+import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,11 +34,9 @@ public class DeployOrder implements Order {
      */
     @Override
     public boolean executeOrder() {
-        // logic of the Execute order
-        // move armies here
-        // and decrease the number of armies
         for(Country l_country:d_player.getD_ownedCountries())
         {
+            System.out.println("hehe "+d_CountryName+" ^^ "+d_noOfArmies+" %% "+l_country.getD_countryName()+" ## "+d_player.getD_noOfArmies());
             if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()>=d_noOfArmies))
             {
                 int l_getArmy=l_country.getD_noOfArmies();
