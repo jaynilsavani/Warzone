@@ -497,7 +497,18 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         l_dCountryResponse.setD_responseString("Country Deleted Sucessfully");
                     }
                 }
+                for(Country l_country: l_countryList){
+                    List<String> l_neighbourList = l_country.getD_neighbourCountries();
+                    for(String l_neighbour : l_neighbourList){
+                        if(l_neighbour.equals(p_countryName)){
+                            l_neighbourList.remove(new String(l_neighbour));
+                        }
+                    }
+                    l_country.setD_neighbourCountries(l_neighbourList);
+                }
+                l_continent.getValue().setD_countryList(l_countryList);
             }
+            
             l_dCountryResponse.setD_isValid(true);
             if (!l_result) {
                 l_dCountryResponse.setD_responseString("Country Does Not Exist!!");

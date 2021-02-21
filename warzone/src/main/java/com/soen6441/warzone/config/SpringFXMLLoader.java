@@ -36,7 +36,7 @@ public class SpringFXMLLoader {
      *
      * @param p_fxmlPath is path of fxml file located
      * @return FXML loader
-     * @throws IOException
+     * @throws IOException indicates input/output Exception
      */
     public FXMLLoader load(String p_fxmlPath) throws IOException {
         FXMLLoader l_loader = new FXMLLoader();
