@@ -41,7 +41,7 @@ public class Player {
     /**
      * list of orders of the Player
      */
-    private List<Order> d_orders = new ArrayList<>();
+    private List<Order> d_orders = new ArrayList<Order>();
     /**
      * reinforcementPool Of the player
      */
