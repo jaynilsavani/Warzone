@@ -1050,7 +1050,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     
     /**
      *This method return WarMap object 
-     * @return 
+     * @return WarMap model object
      */
     public WarMap getWarMapObject(){
         return d_warMap;
