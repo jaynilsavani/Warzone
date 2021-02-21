@@ -79,8 +79,8 @@ public class Player {
      */
     public Order next_order() {
         if (d_orders != null && !d_orders.isEmpty()) {
-            Order d_lastOrder = d_orders.get(d_orders.size() - 1);
-            d_orders.remove(d_lastOrder);
+            Order d_lastOrder = d_orders.get(0);
+            d_orders.remove(0);
             return d_lastOrder;
         } else {
             return null;
@@ -89,9 +89,9 @@ public class Player {
 
     public boolean hasOrder() {
         if (d_orders != null && !d_orders.isEmpty()) {
-            return false;
+            return true;
         }
-        return d_orders.size() > 0;
+        return false;
     }
 
     @Override
