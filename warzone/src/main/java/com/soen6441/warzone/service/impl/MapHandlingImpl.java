@@ -339,7 +339,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     public CommandResponse checkCommandSaveMap(String p_fileName) {
         if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
-            d_generalUtil.prepareResponse(false, "Map is null or not selected");
+            d_generalUtil.prepareResponse(false, "Map is empty");
             return d_generalUtil.getResponse();
         }
         boolean l_fileExtension = false;
@@ -386,7 +386,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     @Override
     public CommandResponse showMap(WarMap d_warMap) {
         if (d_warMap.getD_continents() == null || !d_warMap.isD_status()) {
-            d_generalUtil.prepareResponse(false, "Map is null or not selected");
+            d_generalUtil.prepareResponse(false, "Map is empty");
             return d_generalUtil.getResponse();
         }
         String l_showMapIn2D = "";

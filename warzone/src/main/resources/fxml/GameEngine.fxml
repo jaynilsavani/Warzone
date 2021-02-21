@@ -16,12 +16,12 @@
       <TextArea fx:id="d_TerritoryPlayerArmyText" layoutX="509.0" layoutY="129.0" prefHeight="164.0" prefWidth="226.0" wrapText="true" />
       <Label layoutX="319.0" layoutY="89.0" prefHeight="20.0" prefWidth="84.0" text="Continent">
          <font>
-            <Font name="System Bold Italic" size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <Label layoutX="548.0" layoutY="89.0" prefHeight="20.0" prefWidth="168.0" text="Territory-Player-Army">
          <font>
-            <Font name="System Bold Italic" size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <Button fx:id="d_BtnExit" layoutX="577.0" layoutY="23.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="30.0" prefWidth="128.0" text="Exit Game">
