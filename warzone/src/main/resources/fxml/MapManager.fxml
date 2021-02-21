@@ -10,7 +10,7 @@
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
-      <Button fx:id="Execute" layoutX="290.0" layoutY="436.0" mnemonicParsing="false" onAction="#getData" prefHeight="26.0" prefWidth="102.0" text="Execute">
+      <Button fx:id="Execute" layoutX="269.0" layoutY="434.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="123.0" text="Fire Command" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
@@ -19,7 +19,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="d_ExecuteCommand" alignment="CENTER" layoutX="72.0" layoutY="388.0" prefHeight="35.0" prefWidth="523.0" promptText="Execute Your Command" />
+      <TextField fx:id="d_ExecuteCommand" alignment="CENTER" layoutX="72.0" layoutY="388.0" prefHeight="35.0" prefWidth="523.0" promptText="Please Enter Command for Map Editing Phase" />
       <TextArea fx:id="d_commandResponse" layoutX="69.0" layoutY="481.0" prefHeight="146.0" prefWidth="523.0" />
       <TextArea fx:id="d_UserGuide" layoutX="72.0" layoutY="70.0" prefHeight="299.0" prefWidth="523.0" text="Map editor commans:&#10;To Create/Delete Continent, Country and connectivity between countries:&#10;1) editcontinent -add continentID continent value -remove continentID&#10;2) editcountry -add countryID continentID -remove countryID&#10;3) editneighbour -add countryID neighbourIcountryID -remove countryID neighbourIcountryID&#10;&#10;To Display Map: &#10;showmap&#10;&#10;To save map:&#10;savemap filename&#10;&#10;To load map from existing maps or to create map:&#10;editmap filename&#10;&#10;To verify the correctness of map:&#10;validatemap">
          <font>
