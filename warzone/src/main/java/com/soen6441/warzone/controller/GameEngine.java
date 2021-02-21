@@ -95,7 +95,7 @@ public class GameEngine implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        d_FireCommandList.setStyle("-fx-font-family: monospace");
     }
 
     /**
@@ -120,6 +120,9 @@ public class GameEngine implements Initializable {
                 }
                 if (l_j == PlayerFlag.length) {
                     d_playerTurn.setText("     Command Line");
+                    d_playerTurn.setDisable(true);
+                    d_FireCommand.setDisable(true);
+                    d_CommandLine.setDisable(true);
                     List<CommandResponse> l_commandList=executionOfOrders();
                     for(int l_i=0;l_i<l_commandList.size();l_i++)
                     {
@@ -174,6 +177,10 @@ public class GameEngine implements Initializable {
      */
     private void reinforcementArmies() {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
+        for(Player p:d_gamePlay.getPlayerList())
+        {
+            System.out.println(p.getD_noOfArmies());
+        }
 
     }
 
