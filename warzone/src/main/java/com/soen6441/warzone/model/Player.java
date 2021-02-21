@@ -2,6 +2,8 @@ package com.soen6441.warzone.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -92,4 +94,16 @@ public class Player {
         return d_orders.size() > 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return d_noOfArmies == player.d_noOfArmies && d_currentFromCountry == player.d_currentFromCountry && d_currentNoOfArmiesToMove == player.d_currentNoOfArmiesToMove && d_playerName.equals(player.d_playerName) && Objects.equals(d_ownedCountries, player.d_ownedCountries) && Objects.equals(d_orders, player.d_orders) && Objects.equals(d_currentToCountry, player.d_currentToCountry);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(d_playerName, d_ownedCountries, d_orders, d_noOfArmies, d_currentFromCountry, d_currentToCountry, d_currentNoOfArmiesToMove);
+    }
 }
