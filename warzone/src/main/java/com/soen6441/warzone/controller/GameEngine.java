@@ -68,6 +68,8 @@ public class GameEngine implements Initializable {
      */
     private static int PlayCounter = 0;
 
+    private static int CounterRound=0;
+
 
     /**
      * This method will exit the game and close the stage
@@ -102,8 +104,10 @@ public class GameEngine implements Initializable {
      */
     public void getData(ActionEvent event) {
         String s = d_CommandLine.getText();
-        if (d_generalUtil.validateIOString(s, "deploy\\s[a-zA-Z]+\\s[0-9]*") || s.equalsIgnoreCase("done")) {
-            d_CommandLine.clear();	            CommandResponse l_commandResponse = issuingPlayer(s);
+        String []l_validatestr=s.split("\\s");
+        if ((d_generalUtil.validateIOString(s, "deploy\\s[a-zA-Z]+\\s[0-9]+") && l_validatestr.length==3) || s.equalsIgnoreCase("done" )) {
+            d_CommandLine.clear();
+            CommandResponse l_commandResponse = issuingPlayer(s);
             d_FireCommandList.appendText(l_commandResponse.toString());
             while (true) {
                 int l_j = 0;
@@ -193,6 +197,10 @@ public class GameEngine implements Initializable {
      */
     public CommandResponse issuingPlayer(String p_command) {
         Player l_player = d_gamePlay.getPlayerList().get(PlayCounter);
+        if(CounterRound < l_player.getD_orders().size())
+        {
+            CounterRound=l_player.getD_orders().size();
+        }
         if (p_command.equalsIgnoreCase("done")) {
             PlayerFlag[PlayCounter] = 1;
             String l_response = l_player.getD_playerName() + " : done with issuing orders";
@@ -203,17 +211,19 @@ public class GameEngine implements Initializable {
             DeployOrder l_dorder = new DeployOrder();
             if (l_player.getD_orders() == null) {
                 List<Order> l_order = new ArrayList<Order>();
-
-                l_dorder.setD_CountryName(l_commands[1]);
-                l_dorder.setD_noOfArmies(Integer.parseInt(l_commands[2]));
-                l_order.add(l_dorder);
+                d_gamePlay.getPlayerList().get(PlayCounter).setD_currentToCountry(l_commands[1]);
+                d_gamePlay.getPlayerList().get(PlayCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[2]));
                 d_gamePlay.getPlayerList().get(PlayCounter).setD_orders(l_order);
-            } else {
-                l_dorder.setD_noOfArmies(Integer.parseInt(l_commands[2]));
-                l_dorder.setD_CountryName(l_commands[1]);
-                d_gamePlay.getPlayerList().get(PlayCounter).getD_orders().add(l_dorder);
+                d_gamePlay.getPlayerList().get(PlayCounter).issue_order();
+            }
+            else
+                {
+                d_gamePlay.getPlayerList().get(PlayCounter).setD_currentToCountry(l_commands[1]);
+                d_gamePlay.getPlayerList().get(PlayCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[2]));
+                d_gamePlay.getPlayerList().get(PlayCounter).issue_order();
 
             }
+
             d_generalUtil.prepareResponse(true, p_command);
             return d_generalUtil.getResponse();
         }
