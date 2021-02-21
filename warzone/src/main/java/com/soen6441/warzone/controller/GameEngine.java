@@ -11,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.text.FontPosture;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
