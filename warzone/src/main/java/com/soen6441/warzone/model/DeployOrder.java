@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+
+
 /**
  *
  * This Class is used for The deploy order Command 
@@ -33,17 +35,27 @@ public class DeployOrder implements Order {
      */
     @Override
     public boolean executeOrder() {
-        // logic of the Execute order
-        // move armies here
-        // and decrease the number of armies
         for(Country l_country:d_player.getD_ownedCountries())
         {
             if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()>=d_noOfArmies))
             {
                 int l_getArmy=l_country.getD_noOfArmies();
-                l_country.setD_noOfArmies(l_getArmy+d_noOfArmies);
+
                 int l_playerArmy=d_player.getD_noOfArmies();
                 d_player.setD_noOfArmies(l_playerArmy-d_noOfArmies);
+
+                d_noOfArmies=d_noOfArmies+l_getArmy;
+                l_country.setD_noOfArmies(d_noOfArmies);
+
+                return true;
+            }
+            else if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()<d_noOfArmies) && d_player.getD_noOfArmies()!=0)
+            {
+                int l_getArmy=l_country.getD_noOfArmies();
+                d_noOfArmies = d_player.getD_noOfArmies()+l_getArmy;
+                l_country.setD_noOfArmies(d_noOfArmies);
+
+                d_player.setD_noOfArmies(0);
                 return true;
             }
         }

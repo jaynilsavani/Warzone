@@ -37,10 +37,7 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     @Override
     public CommandResponse showPlayerMap(GamePlay p_gamePlay) {
-        String l_mapStringName=p_gamePlay.getFileName();
-        try {
-            WarMap l_warMap=d_mapHandlingImpl.readMap(l_mapStringName);
-
+            WarMap l_warMap=p_gamePlay.getD_warMap();
 
         CommandResponse l_showCountris=d_mapConfig.showMap(l_warMap);
         if(p_gamePlay.getPlayerList()==null)
@@ -85,10 +82,17 @@ public class GameConfigServiceImpl implements GameConfigService {
                     {
                         if(p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().contains(l_countryList.get(l_j-1)))
                         {
-                            //l_playerToCountry[l_i][l_j]= String.valueOf(l_countryList.get(l_j-1).getD_noOfArmies());
-                            l_playerToCountry[l_i][l_j]="1";
 
-
+                            int l_same=0;
+                            while(l_same<p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().size())
+                            {
+                                if(l_countryList.get(l_j-1).getD_countryName().equalsIgnoreCase(p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().get(l_same).getD_countryName()))
+                                {
+                                    l_playerToCountry[l_i][l_j]= String.valueOf(l_countryList.get(l_j-1).getD_noOfArmies());
+                                    break;
+                                }
+                                l_same++;
+                            }
                         }
                         else
                         {
@@ -114,11 +118,7 @@ public class GameConfigServiceImpl implements GameConfigService {
 
 
         return l_showCountris;
-        }
-        catch (IOException e) {
-            d_generalUtil.prepareResponse(false,"could not read the map");
-            return d_generalUtil.getResponse();
-        }
+
     }
 
     /**

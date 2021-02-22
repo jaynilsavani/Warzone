@@ -40,10 +40,10 @@ public interface MapHandlingInterface {
     /**
      * This method is used to show the map in 2D matrix containing Countries as
      * x-y axis
-     *@param d_warMap : object of map model
+     * @param p_warMap : object of map model
      * @return CommandResponse object
      */
-    public CommandResponse showMap(WarMap d_warMap);
+    public CommandResponse showMap(WarMap p_warMap);
     
     /**
      * This function will validate map file
