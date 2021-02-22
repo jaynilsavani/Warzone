@@ -44,7 +44,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int CountryId = 1;
     private static int NeighbourId = 1;
 
-    public static final String MAP_DEF_PATH = "C:\\Users\\abhis\\yash\\Warzone\\warzone\\src\\main\\resources\\maps\\";
+    public static final String MAP_DEF_PATH = "src/main/resources/maps/";
 
     public static final String NAME = "name";
     public static final String FILES = "[files]";
