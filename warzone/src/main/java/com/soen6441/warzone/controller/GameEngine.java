@@ -130,6 +130,7 @@ public class GameEngine implements Initializable {
                     CounterRound = 0;
                     Arrays.fill(PlayerFlag, 0);
                     d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
+                    d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gamePlay));
                     d_playerTurn.setText("Issue an order for " + d_gamePlay.getPlayerList().get(PlayCounter).getD_playerName());
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                     d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
@@ -182,7 +183,7 @@ public class GameEngine implements Initializable {
      */
     private void reinforcementArmies() {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
-
+        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gamePlay));
 
     }
 
@@ -262,6 +263,5 @@ public class GameEngine implements Initializable {
 
 
     }
-
 
 }

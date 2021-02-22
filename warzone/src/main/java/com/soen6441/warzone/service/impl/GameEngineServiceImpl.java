@@ -1,18 +1,20 @@
 package com.soen6441.warzone.service.impl;
 
 import static com.soen6441.warzone.config.WarzoneConstants.*;
+
 import com.soen6441.warzone.model.Continent;
 import com.soen6441.warzone.model.Country;
 import com.soen6441.warzone.model.GamePlay;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameEngineService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 /**
- *
  * This Class is used for manipulating the utilities for GameEngine
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
@@ -21,7 +23,6 @@ import org.springframework.stereotype.Service;
 public class GameEngineServiceImpl implements GameEngineService {
 
     /**
-     *
      * {@inheritDoc }
      */
     @Override
@@ -52,7 +53,7 @@ public class GameEngineServiceImpl implements GameEngineService {
     /**
      * This is used to get Continents owned By Given Player
      *
-     * @param p_player Object of Player For which continents are obtained
+     * @param p_player   Object of Player For which continents are obtained
      * @param p_gamePlay Current Game play Object of the GameState
      * @return List of continents owned by Given Player
      */
@@ -68,5 +69,18 @@ public class GameEngineServiceImpl implements GameEngineService {
 
         }
         return l_continents;
+    }
+
+    /**
+     * @param p_gamePlay gives the gameengine to retrieve player data
+     * @return gives the string with player name and their armies
+     */
+    @Override
+    public String showReinforcementArmies(GamePlay p_gamePlay) {
+        String l_armies = "";
+        for (Player l_p : p_gamePlay.getPlayerList()) {
+            l_armies = l_p.getD_playerName() + " : " + l_p.getD_noOfArmies() + "\n";
+        }
+        return l_armies;
     }
 }
