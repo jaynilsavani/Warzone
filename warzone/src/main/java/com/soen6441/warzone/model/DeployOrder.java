@@ -6,10 +6,8 @@ import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 
-
 /**
- *
- * This Class is used for The deploy order Command 
+ * This Class is used for The deploy order Command
  * Three annotations (Getter,Setter, toString), you can see on the top of the class are lombok
  * dependencies to automatically generate getter, setter and tostring method in
  * the code.
@@ -27,38 +25,35 @@ public class DeployOrder implements Order {
     private Player d_player;
 
 
-
     /**
      * {@inheritDoc }
-     *
+     * <p>
      * This method deploy armies to the country
      */
     @Override
     public boolean executeOrder() {
-        for(Country l_country:d_player.getD_ownedCountries())
-        {
-            if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()>=d_noOfArmies))
-            {
-                int l_getArmy=l_country.getD_noOfArmies();
+        for (Country l_country : d_player.getD_ownedCountries()) {
+            if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() >= d_noOfArmies)) {
+                int l_getArmy = l_country.getD_noOfArmies();
 
-                int l_playerArmy=d_player.getD_noOfArmies();
-                d_player.setD_noOfArmies(l_playerArmy-d_noOfArmies);
+                int l_playerArmy = d_player.getD_noOfArmies();
+                d_player.setD_noOfArmies(l_playerArmy - d_noOfArmies);
 
-                d_noOfArmies=d_noOfArmies+l_getArmy;
+                d_noOfArmies = d_noOfArmies + l_getArmy;
                 l_country.setD_noOfArmies(d_noOfArmies);
 
                 return true;
-            }
-            else if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()<d_noOfArmies) && d_player.getD_noOfArmies()!=0)
-            {
-                int l_getArmy=l_country.getD_noOfArmies();
-                d_noOfArmies = d_player.getD_noOfArmies()+l_getArmy;
+            } else if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() < d_noOfArmies) && d_player.getD_noOfArmies() != 0) {
+                int l_getArmy = l_country.getD_noOfArmies();
+                d_noOfArmies = d_player.getD_noOfArmies() + l_getArmy;
                 l_country.setD_noOfArmies(d_noOfArmies);
 
                 d_player.setD_noOfArmies(0);
                 return true;
             }
         }
+        d_player.setD_noOfArmies(d_player.getD_noOfArmies() - d_noOfArmies);
+
         return false;
 
     }
