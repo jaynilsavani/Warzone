@@ -69,11 +69,9 @@ public class MapController implements Initializable {
      */
     @FXML
     void getData(ActionEvent event) {
-        //just for testing
-        String s = d_ExecuteCommand.getText();
+        String l_s = d_ExecuteCommand.getText();
 
-        System.out.println(s);
-        CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(s);
+        CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(l_s);
 
         d_ExecuteCommand.clear();
         d_commandResponse.setText(l_commandRespose.toString());

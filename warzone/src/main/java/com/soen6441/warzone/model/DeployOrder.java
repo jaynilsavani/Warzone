@@ -59,6 +59,8 @@ public class DeployOrder implements Order {
                 return true;
             }
         }
+        d_player.setD_noOfArmies(d_player.getD_noOfArmies()-d_noOfArmies);
+
         return false;
 
     }

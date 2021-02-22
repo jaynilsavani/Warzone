@@ -11,15 +11,12 @@ import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.text.FontPosture;
+import javafx.scene.control.Alert.AlertType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This Class is made to handle Game Engine controller request
@@ -108,11 +105,11 @@ public class GameEngine implements Initializable {
      * @param event
      */
     public void getData(ActionEvent event) {
-        String s = d_CommandLine.getText();
-        String []l_validatestr=s.split("\\s");
-        if ((d_generalUtil.validateIOString(s, "deploy\\s[a-zA-Z]+\\s[0-9]+") && l_validatestr.length==3) || s.equalsIgnoreCase("done" )) {
+        String l_s = d_CommandLine.getText();
+        String []l_validatestr=l_s.split("\\s");
+        if ((d_generalUtil.validateIOString(l_s, "deploy\\s[a-zA-Z]+\\s[0-9]+") && l_validatestr.length==3) || l_s.equalsIgnoreCase("done" )) {
             d_CommandLine.clear();
-            CommandResponse l_commandResponse = issuingPlayer(s);
+            CommandResponse l_commandResponse = issuingPlayer(l_s);
             d_FireCommandList.appendText(l_commandResponse.getD_responseString()+"\n");
             while (true)
             {
@@ -158,9 +155,10 @@ public class GameEngine implements Initializable {
                 }
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Invalid Commad!!");
-
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Invalid");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid Command!!!");
             alert.showAndWait();
         }
     }
@@ -186,7 +184,11 @@ public class GameEngine implements Initializable {
      */
     private void reinforcementArmies() {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
-
+for(Player p:d_gamePlay.getPlayerList())
+{
+    System.out.println(p.getD_orders());
+    System.out.println(p.getD_noOfArmies());
+}
 
     }
 

@@ -42,7 +42,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int CountryId = 1;
     private static int NeighbourId = 1;
 
-    public static final String MAP_DEF_PATH = "src/main/resources/maps/";
+    public static final String MAP_DEF_PATH = "C:\\Users\\abhis\\yash\\Warzone\\warzone\\src\\main\\resources\\maps\\";
 
     public static final String NAME = "name";
     public static final String FILES = "[files]";
@@ -71,7 +71,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (validateMap(d_warMap)) {
                         d_generalUtil.prepareResponse(true, "Map is valid");
                     } else {
-                        d_generalUtil.prepareResponse(false, "Map is invalid");
+                        d_generalUtil.prepareResponse(false, "Map is invalid or not selected");
                     }
                 } else {
                     d_generalUtil.prepareResponse(false, "Please enter valid command");
@@ -339,7 +339,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     public CommandResponse checkCommandSaveMap(String p_fileName) {
         if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
-            d_generalUtil.prepareResponse(false, "Map is null or not selected");
+            d_generalUtil.prepareResponse(false, "Map is empty");
             return d_generalUtil.getResponse();
         }
         boolean l_fileExtension = false;
@@ -352,7 +352,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_fileExtension = false;
             }
         } else {
-            p_fileName.concat(".map");
+            p_fileName=p_fileName.concat(".map");
             l_fileExtension = true;
         }
         try {
@@ -361,6 +361,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 List<String> l_mapFileList = d_generalUtil.getAvailableMapFiles();
                 if (!p_fileName.equalsIgnoreCase((l_mapFileList) + ".map")) {
                     if (validateMap(d_warMap)) {
+                        if(!d_warMap.getD_mapName().equalsIgnoreCase(p_fileName))
+                        {
+                            d_warMap.setD_mapName(p_fileName);
+                        }
                         writeMapToFile(d_warMap);
                         d_generalUtil.prepareResponse(true, "Map file succesfully saved");
                     } else {
@@ -386,7 +390,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     @Override
     public CommandResponse showMap(WarMap p_warMap) {
         if (p_warMap.getD_continents() == null || !p_warMap.isD_status()) {
-            d_generalUtil.prepareResponse(false, "Map is null or not selected");
+            d_generalUtil.prepareResponse(false, "Map is empty");
             return d_generalUtil.getResponse();
         }
         String l_showMapIn2D = "";
@@ -419,7 +423,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     @Override
     public boolean validateMap(WarMap p_warMap) {
-        if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
+        if (p_warMap.getD_continents() == null  || !p_warMap.isD_status()) {
             return false;
         }
         boolean l_result = false;
