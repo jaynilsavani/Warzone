@@ -415,11 +415,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This function will validate map file
-     *
-     * @param p_warMap use to validate
-     * @return return true if map is valid
+     * {@inheritDoc }
      */
+    @Override
     public boolean validateMap(WarMap p_warMap) {
         if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
             return false;

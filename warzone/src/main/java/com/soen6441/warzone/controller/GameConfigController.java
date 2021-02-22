@@ -207,16 +207,19 @@ public class GameConfigController implements Initializable {
             //check whether file is present or not
             if (l_mapFileNameList.contains(l_fullName)) {
                 try {
-
                     d_warMap = d_gameConfigService.loadMap(l_fullName);
-                    // Set status and map file name 
-                    d_warMap.setD_status(true);
-                    d_warMap.setD_mapName(l_fullName);
-                    d_generalUtil.prepareResponse(true, "Map loaded successfully!");
-                    //set loaded map in the Game play object
-                    d_gamePlay.setD_warMap(d_warMap);
-                    d_gamePlay.setFileName(p_fileName);
-                    d_warMap.setD_mapName(l_fullName);
+                    if (d_maphandlinginterface.validateMap(d_warMap)) {
+                        // Set status and map file name 
+                        d_warMap.setD_status(true);
+                        d_warMap.setD_mapName(l_fullName);
+                        d_generalUtil.prepareResponse(true, "Map loaded successfully!");
+                        //set loaded map in the Game play object
+                        d_gamePlay.setD_warMap(d_warMap);
+                        d_gamePlay.setFileName(p_fileName);
+                        d_warMap.setD_mapName(l_fullName);
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Map is Invalid, Please select another map");
+                    }
                 } catch (IOException e) {
                     d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                 }
