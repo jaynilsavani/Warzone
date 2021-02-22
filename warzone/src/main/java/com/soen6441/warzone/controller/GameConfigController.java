@@ -150,11 +150,11 @@ public class GameConfigController implements Initializable {
                 if (d_gamePlay.getD_warMap() != null) {
                     if ((l_commandSegments.size() - 1) % 2 == 0) {
                         d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
-                        String l_playerName="Players are updated Sucessfully\n[";
-                        for(Player p: d_gamePlay.getPlayerList())
-                        {
-                            l_playerName=l_playerName+" "+p.getD_playerName()+",";
-                        }l_playerName=l_playerName+"]";
+                        String l_playerName = "Players are updated Sucessfully\n[";
+                        for (Player p : d_gamePlay.getPlayerList()) {
+                            l_playerName = l_playerName + " " + p.getD_playerName() + ",";
+                        }
+                        l_playerName = l_playerName + "]";
                         d_generalUtil.prepareResponse(true, l_playerName);
                     } else {
                         d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import javafx.scene.control.TextArea;
 
 
@@ -21,11 +22,9 @@ import javafx.scene.control.TextArea;
 public class MapController implements Initializable {
 
 
-
-
     @FXML
     private TextField d_ExecuteCommand;
-    
+
     @FXML
     private TextArea d_commandResponse;
 
@@ -33,14 +32,14 @@ public class MapController implements Initializable {
     @Lazy
     @Autowired
     StageManager d_stageManager;
-    
+
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
     /**
      * This is the initialization method of this controller
      *
-     * @param location of the FXML file
+     * @param location  of the FXML file
      * @param resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
@@ -59,7 +58,7 @@ public class MapController implements Initializable {
     @FXML
     void backToWelcome(ActionEvent event) {
 
-        d_stageManager.switchScene( FxmlView.HOME, null );
+        d_stageManager.switchScene(FxmlView.HOME, null);
     }
 
     /**
