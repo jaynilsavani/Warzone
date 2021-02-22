@@ -79,7 +79,7 @@ public class GameEngineServiceImpl implements GameEngineService {
     public String showReinforcementArmies(GamePlay p_gamePlay) {
         String l_armies = "";
         for (Player l_p : p_gamePlay.getPlayerList()) {
-            l_armies = l_p.getD_playerName() + " : " + l_p.getD_noOfArmies() + "\n";
+            l_armies = l_armies + l_p.getD_playerName() + " : " + l_p.getD_noOfArmies() + "\n";
         }
         return l_armies;
     }
