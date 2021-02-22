@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javafx.util.Pair;
+import java.util.AbstractMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -384,13 +384,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     @Override
-    public CommandResponse showMap(WarMap d_warMap) {
-        if (d_warMap.getD_continents() == null || !d_warMap.isD_status()) {
+    public CommandResponse showMap(WarMap p_warMap) {
+        if (p_warMap.getD_continents() == null || !p_warMap.isD_status()) {
             d_generalUtil.prepareResponse(false, "Map is null or not selected");
             return d_generalUtil.getResponse();
         }
         String l_showMapIn2D = "";
-        List<Country> l_countries = getAvailableCountries(d_warMap);
+        List<Country> l_countries = getAvailableCountries(p_warMap);
         int l_countrySize = l_countries.size();
         if (l_countrySize < 1) {
             d_generalUtil.prepareResponse(false, "Countries not found. Please add countries in the map.");
@@ -399,7 +399,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
         int l_i, l_j;
         l_countrySize++;
-        Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
+        AbstractMap.SimpleEntry<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,p_warMap);
         int l_maxLength = pair.getKey();
         String[][] l_mapMetrices = pair.getValue();
         for (l_i = 0; l_i < l_countrySize; l_i++) {
@@ -436,7 +436,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
-                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,p_warMap);
+                    AbstractMap.SimpleEntry<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,p_warMap);
                     String[][] l_mapMetrix = pair.getValue();
 
                     int[][] l_intMetric = new int[l_countrySize - 1][l_countrySize - 1];
@@ -684,14 +684,14 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method is used to convert map object to metric
      *
-     * @param l_countries list of countries
-     * @param d_warMap : object of WarMap model
+     * @param p_countries list of countries
+     * @param p_warMap : object of WarMap model
      * @return return no of countries and metric
      */
-    public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries,WarMap d_warMap) {
+    public AbstractMap.SimpleEntry<Integer, String[][]> prepareMetricesOfMap(List<Country> p_countries,WarMap p_warMap) {
 
         int l_maxLength = 0;
-        int l_countrySize = l_countries.size();
+        int l_countrySize = p_countries.size();
         int l_i, l_j;
         l_countrySize++;
         String[][] l_mapMetrices = new String[l_countrySize][l_countrySize];
@@ -701,20 +701,20 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     l_mapMetrices[l_i][l_j] = " ";
                     continue;
                 } else if (l_i == 0 && l_j != 0) {
-                    l_mapMetrices[l_i][l_j] = l_countries.get(l_j - 1).getD_countryName();
+                    l_mapMetrices[l_i][l_j] = p_countries.get(l_j - 1).getD_countryName();
                     if (l_maxLength < l_mapMetrices[l_i][l_j].length()) {
                         l_maxLength = l_mapMetrices[l_i][l_j].length();
                     }
                 } else if (l_j == 0 && l_i != 0) {
-                    int l_conintentIndex=l_countries.get(l_i-1).getD_continentIndex();
-                    String l_continentName=getContinentNameByContinentId(d_warMap.getD_continents(),l_conintentIndex);
-                    l_mapMetrices[l_i][l_j] =l_countries.get(l_i - 1).getD_countryName()+" ("+l_continentName+")";
+                    int l_conintentIndex=p_countries.get(l_i-1).getD_continentIndex();
+                    String l_continentName=getContinentNameByContinentId(p_warMap.getD_continents(),l_conintentIndex);
+                    l_mapMetrices[l_i][l_j] =p_countries.get(l_i - 1).getD_countryName()+" ("+l_continentName+")";
                     if (l_maxLength < l_mapMetrices[l_i][l_j].length()) {
                         l_maxLength = l_mapMetrices[l_i][l_j].length();
                     }
                 } else {
-                    if (l_countries.get(l_i - 1).getD_neighbourCountries() != null) {
-                        if (l_countries.get(l_i - 1).getD_neighbourCountries().contains(l_mapMetrices[0][l_j])) {
+                    if (p_countries.get(l_i - 1).getD_neighbourCountries() != null) {
+                        if (p_countries.get(l_i - 1).getD_neighbourCountries().contains(l_mapMetrices[0][l_j])) {
                             l_mapMetrices[l_i][l_j] = "1";
                         } else {
                             l_mapMetrices[l_i][l_j] = "0";
@@ -726,7 +726,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             }
         }
 
-        return new Pair<Integer, String[][]>(l_maxLength, l_mapMetrices);
+        return new AbstractMap.SimpleEntry<>(l_maxLength, l_mapMetrices);
     }
 
     @Override
