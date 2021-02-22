@@ -438,17 +438,17 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     
                     //check continent is avilable for each country
                     List<Integer> l_continentList = new ArrayList();
-                    for(Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()){
+                    for(Map.Entry<Integer, Continent> l_entry : p_warMap.getD_continents().entrySet()){
                         l_continentList.add(l_entry.getValue().getD_continentIndex());
                     }
-                    for(Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()){
+                    for(Map.Entry<Integer, Continent> l_entry : p_warMap.getD_continents().entrySet()){
                         List<Country> l_countryList = l_entry.getValue().getD_countryList();
                         for(Country l_country : l_countryList){
                             if(!l_continentList.contains(l_country.getD_continentIndex())){
                                 l_result = false;
                             }
                         }
-                    }                  
+                    }                 
                     // check graph is connected or not
                     l_countries = getAvailableCountries(p_warMap);
                     int l_countrySize = l_countries.size();
