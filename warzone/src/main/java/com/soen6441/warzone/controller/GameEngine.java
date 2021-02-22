@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * This Class is made to handle Game Engine controller request
@@ -179,6 +180,7 @@ public class GameEngine implements Initializable {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
 
 
+
     }
 
     /**
@@ -193,12 +195,25 @@ public class GameEngine implements Initializable {
             for (int l_j=0;l_j<d_gamePlay.getPlayerList().size();l_j++) {
                 if (d_gamePlay.getPlayerList().get(l_j).hasOrder()) {
                     Order l_order=d_gamePlay.getPlayerList().get(l_j).next_order();
+                    String l_countryName=((DeployOrder) l_order).getD_CountryName();
                     ((DeployOrder) l_order).setD_player(d_gamePlay.getPlayerList().get(l_j));
                     boolean l_executeOrder= l_order.executeOrder();
                     if(l_executeOrder) {
                         l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gamePlay.getPlayerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
                         d_gamePlay.getPlayerList().remove(l_j);
                         d_gamePlay.getPlayerList().add(l_j,((DeployOrder) l_order).getD_player());
+
+                        int l_noOfArmies=((DeployOrder) l_order).getD_noOfArmies();
+                        if (d_gamePlay.getD_warMap().getD_continents() != null) {
+                            for (Map.Entry<Integer, Continent> l_entry : d_gamePlay.getD_warMap().getD_continents().entrySet()) {
+                                for (Country l_countries : l_entry.getValue().getD_countryList()) {
+                                    if (l_countries.getD_countryName().equalsIgnoreCase(l_countryName)) {
+                                        l_countries.setD_noOfArmies(l_noOfArmies);
+                                    }
+                                }
+                            }
+                        }
+
                     }
                     else
                     {
