@@ -72,6 +72,8 @@ public class GameEngine implements Initializable {
 
     private static int CounterRound=0;
 
+    private static int PreviousCounterRound=0;
+
 
     /**
      * This method will exit the game and close the stage
@@ -112,7 +114,8 @@ public class GameEngine implements Initializable {
             d_CommandLine.clear();
             CommandResponse l_commandResponse = issuingPlayer(s);
             d_FireCommandList.appendText(l_commandResponse.getD_responseString()+"\n");
-            while (true) {
+            while (true)
+            {
                 int l_j = 0;
                 for (int l_i = 0; l_i < PlayerFlag.length; l_i++) {
                     if (PlayerFlag[l_i] == 1) {
@@ -120,10 +123,6 @@ public class GameEngine implements Initializable {
                     }
                 }
                 if (l_j == PlayerFlag.length) {
-                    d_playerTurn.setText("     Command Line");
-                    d_playerTurn.setDisable(true);
-                    d_FireCommand.setDisable(true);
-                    d_CommandLine.setDisable(true);
                     List<CommandResponse> l_commandList=executionOfOrders();
                     for(int l_i=0;l_i<l_commandList.size();l_i++)
                     {
@@ -131,6 +130,15 @@ public class GameEngine implements Initializable {
                     }
                     CommandResponse l_map=d_gameConfig.showPlayerMap(d_gamePlay);
                     d_FireCommandList.appendText(l_map.getD_responseString());
+
+                    PlayCounter=0;
+                    CounterRound=0;
+                    Arrays.fill(PlayerFlag,0);
+                    d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
+                    d_playerTurn.setText("Issue an order for " + d_gamePlay.getPlayerList().get(PlayCounter).getD_playerName());
+                    d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+                    d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+                    d_CommandLine.clear();
                     break;
                 }
 
@@ -180,7 +188,6 @@ public class GameEngine implements Initializable {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
 
 
-
     }
 
     /**
@@ -191,7 +198,7 @@ public class GameEngine implements Initializable {
      */
     private List<CommandResponse> executionOfOrders() {
         List<CommandResponse> l_orderStatus = new ArrayList<>();
-        for (int l_i = 0; l_i < CounterRound; l_i++) {
+        for (int l_i = PreviousCounterRound; l_i < CounterRound; l_i++) {
             for (int l_j=0;l_j<d_gamePlay.getPlayerList().size();l_j++) {
                 if (d_gamePlay.getPlayerList().get(l_j).hasOrder()) {
                     Order l_order=d_gamePlay.getPlayerList().get(l_j).next_order();

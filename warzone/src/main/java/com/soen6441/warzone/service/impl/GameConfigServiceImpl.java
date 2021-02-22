@@ -88,7 +88,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                             {
                                 if(l_countryList.get(l_j-1).getD_countryName().equalsIgnoreCase(p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().get(l_same).getD_countryName()))
                                 {
-                                    l_playerToCountry[l_i][l_j]= String.valueOf(p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().get(l_same).getD_noOfArmies());
+                                    l_playerToCountry[l_i][l_j]= String.valueOf(l_countryList.get(l_j-1).getD_noOfArmies());
                                     break;
                                 }
                                 l_same++;
