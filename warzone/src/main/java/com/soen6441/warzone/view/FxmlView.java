@@ -80,7 +80,7 @@ public enum FxmlView {
     /**
      *
      * This is used for extracting title from bundle resource
-     * @param p_key
+     * @param p_key : key to extract title
      * @return title  
      */
     public String getTitleFromResourceBundle(String p_key) {

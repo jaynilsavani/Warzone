@@ -133,8 +133,8 @@ public class GameConfigServiceImpl implements GameConfigService {
     /**
      * This function is used to update layer list
      *
-     * @param p_currentGamePlay
-     * @param p_command updation command
+     * @param p_currentGamePlay : object of GamePlay model
+     * @param p_command : updation command
      * @return Current Updated Gameplay
      */
     @Override

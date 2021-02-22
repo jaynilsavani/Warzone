@@ -100,6 +100,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return message of result after edit Continent operation
      */
     public CommandResponse checkCommandEditContinent(String p_editContinentCommand) {
+        if (!d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is not selected");
+            return d_generalUtil.getResponse();
+        }
         String l_continentName = "";
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
@@ -126,7 +130,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (l_isValidName) {
                         saveContinent(l_continentName, l_continetValue);
                         d_generalUtil.prepareResponse(true, "Continent saved successfully");
-                        return d_generalUtil.getResponse();
                     }
 
                 } else {
@@ -158,6 +161,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return message of result after edit Country command execution
      */
     public CommandResponse checkCommandEditCountry(String p_editCountryCommand) {
+        if (!d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is not selected");
+            return d_generalUtil.getResponse();
+        }
         String l_countryName = "";
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
@@ -238,6 +245,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return CommandResponse object
      */
     public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
+        if (!d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is not selected");
+            return d_generalUtil.getResponse();
+        }
         String l_countryName = "";
         String l_neighbourCountryName = "";
         boolean l_result = false;
@@ -294,10 +305,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_fullName = index > 0
                         ? l_fileName.toLowerCase() : l_fileName.toLowerCase() + ".map";
 
-                // Set status and map file name 
-                d_warMap.setD_status(true);
-                d_warMap.setD_mapName(l_fullName);
-
                 if (l_mapFileNameList.contains(l_fullName)) {
                     try {
                         d_warMap = readMap(l_fullName);
@@ -306,6 +313,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
                             d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                     }
                 } else {
+                    // reset warmap object if user first edit existing map and then try to edit new map
+                    d_warMap = new WarMap();
+                    // Set status and map file name 
+                    d_warMap.setD_status(true);
+                    d_warMap.setD_mapName(l_fullName);
                     d_generalUtil.prepareResponse(true, "Map not found in system, new map is created. Pleaase do not forget to save map file after editing");
                 }
             } catch (IOException ex) {
@@ -326,6 +338,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return object of commandResponse
      */
     public CommandResponse checkCommandSaveMap(String p_fileName) {
+        if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is null or not selected");
+            return d_generalUtil.getResponse();
+        }
         boolean l_fileExtension = false;
         if (p_fileName.contains(".")) {
             String l_fileName = p_fileName.split("\\.")[1];
@@ -369,13 +385,18 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     @Override
     public CommandResponse showMap(WarMap d_warMap) {
-        if (d_warMap == null) {
-            d_generalUtil.prepareResponse(false, "Map is Null");
+        if (d_warMap.getD_continents() == null || !d_warMap.isD_status()) {
+            d_generalUtil.prepareResponse(false, "Map is null or not selected");
             return d_generalUtil.getResponse();
         }
         String l_showMapIn2D = "";
         List<Country> l_countries = getAvailableCountries(d_warMap);
         int l_countrySize = l_countries.size();
+        if (l_countrySize < 1) {
+            d_generalUtil.prepareResponse(false, "Countries not found. Please add countries in the map.");
+
+            return d_generalUtil.getResponse();
+        }
         int l_i, l_j;
         l_countrySize++;
         Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
@@ -394,12 +415,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This function will validate map file
-     *
-     * @param p_warMap use to validate
-     * @return return true if map is valid
+     * {@inheritDoc }
      */
+    @Override
     public boolean validateMap(WarMap p_warMap) {
+        if (d_warMap.getD_continents() == null  || !d_warMap.isD_status()) {
+            return false;
+        }
         boolean l_result = false;
         try {
             // check one or more continent is available in map
@@ -414,7 +436,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     int l_countrySize = l_countries.size();
                     int l_i, l_j;
                     l_countrySize++;
-                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,d_warMap);
+                    Pair<Integer, String[][]> pair = prepareMetricesOfMap(l_countries,p_warMap);
                     String[][] l_mapMetrix = pair.getValue();
 
                     int[][] l_intMetric = new int[l_countrySize - 1][l_countrySize - 1];
@@ -498,6 +520,21 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         l_dCountryResponse.setD_responseString("Country Deleted Sucessfully");
                     }
                 }
+                for(Country l_country: l_countryList){
+                    boolean l_status = false;
+                    List<String> l_neighbourList = l_country.getD_neighbourCountries();
+                    for(String l_neighbour : l_neighbourList){
+                        if(l_neighbour.equals(p_countryName)){
+                            l_status = true;
+                           // l_neighbourList.remove(new String(l_neighbour));
+                        }
+                    }
+                    if (l_status) {
+                        l_neighbourList.remove(new String(p_countryName));
+                    }
+                    l_country.setD_neighbourCountries(l_neighbourList);
+                }
+                l_continent.getValue().setD_countryList(l_countryList);
             }
             l_dCountryResponse.setD_isValid(true);
             if (!l_result) {
@@ -648,6 +685,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method is used to convert map object to metric
      *
      * @param l_countries list of countries
+     * @param d_warMap : object of WarMap model
      * @return return no of countries and metric
      */
     public Pair<Integer, String[][]> prepareMetricesOfMap(List<Country> l_countries,WarMap d_warMap) {
@@ -718,22 +756,26 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                     //here all continets will store into the l_continentStringBuilder
                     l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
-                    List<Country> l_countryList = l_currentContinent.getD_countryList();
-                    for (Country l_country : l_countryList) {
+                    if (l_currentContinent.getD_countryList() != null) {
+                        List<Country> l_countryList = l_currentContinent.getD_countryList();
+                        for (Country l_country : l_countryList) {
 
-                        //here all countries will store into the l_countryStringBuilder
-                        l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " 0 0")
-                                .append(System.lineSeparator());
+                            //here all countries will store into the l_countryStringBuilder
+                            l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " 0 0")
+                                    .append(System.lineSeparator());
 
-                        List<String> l_neighborList = l_country.getD_neighbourCountries();
-                        if (!l_neighborList.isEmpty() && l_neighborList != null) {
-                            l_neighborStringBuilder.append(l_country.getD_countryIndex());
-                            for (String l_neighborName : l_neighborList) {
+                            if (l_country.getD_neighbourCountries() != null) {
+                                List<String> l_neighborList = l_country.getD_neighbourCountries();
+                                if (!l_neighborList.isEmpty() && l_neighborList != null) {
+                                    l_neighborStringBuilder.append(l_country.getD_countryIndex());
+                                    for (String l_neighborName : l_neighborList) {
 
-                                //here all neighbors will store into the l_neighborStringBuilder
-                                l_neighborStringBuilder.append(" " + getCountryIndexByCountrName(p_warMap, l_neighborName));
+                                        //here all neighbors will store into the l_neighborStringBuilder
+                                        l_neighborStringBuilder.append(" " + getCountryIndexByCountryName(p_warMap, l_neighborName));
+                                    }
+                                    l_neighborStringBuilder.append(System.lineSeparator());
+                                }
                             }
-                            l_neighborStringBuilder.append(System.lineSeparator());
                         }
                     }
                 }
@@ -933,19 +975,21 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_countryName is the name of country
      * @return index of country
      */
-    private int getCountryIndexByCountrName(WarMap p_warMap, String p_countryName) {
+    private int getCountryIndexByCountryName(WarMap p_warMap, String p_countryName) {
         int l_countryIndex = 0;
         Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
 
         for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
             Continent l_currentContinent = l_entry.getValue();
 
-            List<Country> l_countryList = l_currentContinent.getD_countryList();
-            for (Country l_country : l_countryList) {
-                if (l_country != null) {
-                    if (l_country.getD_countryName() == p_countryName) {
-                        l_countryIndex = l_country.getD_countryIndex();
-                        break;
+            if (l_currentContinent.getD_countryList() != null) {
+                List<Country> l_countryList = l_currentContinent.getD_countryList();
+                for (Country l_country : l_countryList) {
+                    if (l_country != null) {
+                        if (l_country.getD_countryName() == p_countryName) {
+                            l_countryIndex = l_country.getD_countryIndex();
+                            break;
+                        }
                     }
                 }
             }
@@ -1025,5 +1069,13 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         }
         return  l_continentName;
+    }
+    
+    /**
+     *This method return WarMap object 
+     * @return WarMap model object
+     */
+    public WarMap getWarMapObject(){
+        return d_warMap;
     }
 }

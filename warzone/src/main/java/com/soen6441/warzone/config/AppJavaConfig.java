@@ -33,7 +33,7 @@ public class AppJavaConfig {
      * Stage only created after Spring context bootstrap
      * @param p_stage Given FXML scene
      * @return object of stageManager
-     * @throws IOException
+     * @throws IOException throws input/output exception
      */
     @Bean
     @Lazy(value = true) 

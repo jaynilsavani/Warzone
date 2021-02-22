@@ -23,7 +23,7 @@ public class WarzoneApplication extends Application {
     /**
      * This the main method and the entry point for the class
      *
-     * @param args
+     * @param args : command line arguments
      */
     public static void main(String[] args) {
         Application.launch(args);
@@ -32,7 +32,7 @@ public class WarzoneApplication extends Application {
     /**
      * To assign main method to springBootApplicationContext
      *
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception indicates this function may throw exception
      * @see javafx.application.Application#init()
      */
     @Override
@@ -44,7 +44,7 @@ public class WarzoneApplication extends Application {
      * Initialization of d_stageManager
      *
      * @param p_stage JavaFx view page
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception indicates this function may throw exception
      * @see javafx.application.Application#start(javafx.stage.Stage)
      */
     @Override
