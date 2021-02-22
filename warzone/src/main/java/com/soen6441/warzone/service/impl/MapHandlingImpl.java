@@ -308,7 +308,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (l_mapFileNameList.contains(l_fullName)) {
                     try {
                         d_warMap = readMap(l_fullName);
-                        d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
+                        if(validateMap(d_warMap)){
+                            d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
+                        }else{
+                            d_warMap = new WarMap();
+                            d_generalUtil.prepareResponse(false, "Invalid Map, Please select another Map");
+                        }                       
                     } catch (Exception e) {
                             d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                     }
