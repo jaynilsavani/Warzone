@@ -1,0 +1,17 @@
+name test1
+
+[files]
+pic warzone_pic.png
+
+[continents]
+asia 5
+
+[countries]
+1 india 1 0 0
+2 china 1 0 0
+3 southafrica 2 0 0
+
+[borders]
+1 2
+2 1
+3 2 1
