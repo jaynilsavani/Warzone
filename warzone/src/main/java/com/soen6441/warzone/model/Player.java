@@ -2,6 +2,8 @@ package com.soen6441.warzone.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -77,8 +79,8 @@ public class Player {
      */
     public Order next_order() {
         if (d_orders != null && !d_orders.isEmpty()) {
-            Order d_lastOrder = d_orders.get(d_orders.size() - 1);
-            d_orders.remove(d_lastOrder);
+            Order d_lastOrder = d_orders.get(0);
+            d_orders.remove(0);
             return d_lastOrder;
         } else {
             return null;
@@ -87,9 +89,21 @@ public class Player {
 
     public boolean hasOrder() {
         if (d_orders != null && !d_orders.isEmpty()) {
-            return false;
+            return true;
         }
-        return d_orders.size() > 0;
+        return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return d_noOfArmies == player.d_noOfArmies && d_currentFromCountry == player.d_currentFromCountry && d_currentNoOfArmiesToMove == player.d_currentNoOfArmiesToMove && d_playerName.equals(player.d_playerName) && Objects.equals(d_ownedCountries, player.d_ownedCountries) && Objects.equals(d_orders, player.d_orders) && Objects.equals(d_currentToCountry, player.d_currentToCountry);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(d_playerName, d_ownedCountries, d_orders, d_noOfArmies, d_currentFromCountry, d_currentToCountry, d_currentNoOfArmiesToMove);
+    }
 }

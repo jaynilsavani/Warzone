@@ -33,9 +33,6 @@ public class DeployOrder implements Order {
      */
     @Override
     public boolean executeOrder() {
-        // logic of the Execute order
-        // move armies here
-        // and decrease the number of armies
         for(Country l_country:d_player.getD_ownedCountries())
         {
             if(l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies()>=d_noOfArmies))

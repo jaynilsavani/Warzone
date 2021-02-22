@@ -64,9 +64,7 @@ public class MapHandlingImplTest {
 
     @Before
     public void setUp() throws IOException {
-//        d_warMap = d_mapHandlingImpl.readMap("test.map");
         d_mapHandlingImpl.checkCommandEditMap("editmap test.map");
-
     }
 
     @After
@@ -194,6 +192,42 @@ public class MapHandlingImplTest {
     @Test
     public void testForSaveNeighbour() {
         assertEquals(false, d_mapHandlingImpl.saveNeighbour(1, 2));
+    }
+    
+    /**
+     * Test to check save country operation
+     */
+    @Test
+    public void testForSaveCountry() {
+        boolean l_status =false;
+         d_mapHandlingImpl.saveCountry("japan", 1);
+         d_warMap = d_mapHandlingImpl.getWarMapObject();
+         for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
+            Continent l_currentContinent = l_entry.getValue();
+            for(Country l_currentCountry : l_currentContinent.getD_countryList()){
+                if(l_currentCountry.getD_countryName().equals("japan")){
+                    l_status = true;
+                }
+            }
+         }
+         assertEquals(true,l_status);
+    }
+    
+    /**
+     * Test to check save continent operation
+     */
+    @Test
+    public void testForSaveContinent() {
+        boolean l_status =false;
+         d_mapHandlingImpl.saveContinent("africa", "15");
+         d_warMap = d_mapHandlingImpl.getWarMapObject();
+         for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
+            Continent l_currentContinent = l_entry.getValue();
+            if(l_currentContinent.getD_continentName().equals("africa")){
+                l_status = true;
+            }
+         }
+         assertEquals(true,l_status);
     }
 
 }

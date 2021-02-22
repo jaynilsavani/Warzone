@@ -8,7 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * This is the main suite class for textcases. All testcases files for different
+ * This is the main suite class for testcases. All testcases files for different
  * services will be mentioned here. From here we can run the test case files.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>

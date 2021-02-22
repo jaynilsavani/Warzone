@@ -33,15 +33,23 @@ public interface MapHandlingInterface {
      * @param p_fileName fileName to read Map
      *
      * @return WarMap model
-     * @throws java.io.IOException
+     * @throws java.io.IOException throws input/output exception
      */
     public WarMap readMap(String p_fileName) throws IOException;
 
     /**
      * This method is used to show the map in 2D matrix containing Countries as
      * x-y axis
-     *
+     *@param d_warMap : object of map model
      * @return CommandResponse object
      */
     public CommandResponse showMap(WarMap d_warMap);
+    
+    /**
+     * This function will validate map file
+     *
+     * @param p_warMap use to validate
+     * @return return true if map is valid
+     */
+    public boolean validateMap(WarMap p_warMap);
 }

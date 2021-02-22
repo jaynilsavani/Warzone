@@ -26,7 +26,7 @@ public interface GameConfigService {
     /**
      *
      * @param p_gamePlay gameplay phase of the player
-     * @return
+     * @return object of CommandResponse
      */
     public CommandResponse showPlayerMap(GamePlay p_gamePlay);
     
@@ -34,7 +34,7 @@ public interface GameConfigService {
      * This function is used to load file for game play
      * @param p_fileName : Name of the file that is being loaded
      * @return the loaded map as a command response if it is present
-     * @throws java.io.IOException
+     * @throws java.io.IOException indicates input/output exception
      */
     public WarMap loadMap(String p_fileName)throws IOException;
     
@@ -48,8 +48,10 @@ public interface GameConfigService {
 
 
     /**
-     *   To assign the countries on the first time when map was loaded
+     *To assign the countries on the first time when map was loaded
+     * @param p_gamePlay :  object of GamePlay Model
      * @return commanresponse stating the detail of each player with their countries
+     * @throws java.io.IOException indicates input/output exception
      */
     public CommandResponse assignCountries(GamePlay p_gamePlay) throws IOException;
 }
