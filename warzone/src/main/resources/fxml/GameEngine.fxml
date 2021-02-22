@@ -28,16 +28,16 @@
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
-      <Label fx:id="d_playerTurn" layoutX="72.0" layoutY="157.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
+      <Label fx:id="d_playerTurn" layoutX="60.0" layoutY="157.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="187.0" layoutY="154.0" prefHeight="26.0" prefWidth="497.0" promptText="Please Enter Command for Gameplay Phase" />
-      <Button fx:id="d_FireCommand" layoutX="251.0" layoutY="216.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="283.0" text="Fire Command">
+      <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="187.0" layoutY="154.0" prefHeight="26.0" prefWidth="467.0" promptText="Please Enter Command for Gameplay Phase" />
+      <Button fx:id="d_FireCommand" layoutX="341.0" layoutY="215.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="128.0" text="Fire Command">
          <font>
             <Font name="System Italic" size="14.0" />
          </font></Button>
-      <TextArea fx:id="d_FireCommandList" layoutX="186.0" layoutY="290.0" prefHeight="146.0" prefWidth="498.0" wrapText="true" />
+      <TextArea fx:id="d_FireCommandList" layoutX="186.0" layoutY="290.0" prefHeight="146.0" prefWidth="467.0" wrapText="true" />
    </children>
 </AnchorPane>
