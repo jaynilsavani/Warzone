@@ -2,7 +2,6 @@ package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.model.*;
 import com.soen6441.warzone.service.GameEngineService;
-import com.soen6441.warzone.service.GameConfigService;
 import org.junit.After;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -38,8 +37,6 @@ public class GameEngineServiceTest {
 
     @Autowired
     GamePlay d_gamePlay;
-    @Autowired
-    GameConfigService d_gameconf;
     
     @Autowired
     Player d_player;
@@ -126,9 +123,6 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAssignReinforcements() {
-        CommandResponse c= d_gameconf.showPlayerMap(d_gamePlay);
-        System.out.println(c.getD_responseString());
-        System.out.println(d_gamePlay.getD_playerList().get(0).getD_ownedCountries());
         GamePlay l_gamePlay = d_gameEngineService.assignReinforcements(d_gamePlay);
         int l_actualnoOfArmies = l_gamePlay.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
