@@ -47,7 +47,7 @@ public class MapHandlingImplTest {
     }
 
     /**
-     * This method is used to load Springboot Apllication Context
+     * This method is used to load Springboot Application Context
      */
     @Test
     public void contextLoads() {
@@ -87,13 +87,14 @@ public class MapHandlingImplTest {
     }
 
     /**
-     * Test for check true object is return from readMap method
+     * Test for check true WarMap object is return from readMap method
      */
     @Test
     public void testForReadMapFromFile() {
         try {
             List<Country> l_countryList = new ArrayList();
 
+            //creating a new country object
             Country l_country = new Country();
             l_country.setD_continentIndex(1);
             l_country.setD_countryIndex(1);
@@ -101,9 +102,11 @@ public class MapHandlingImplTest {
             List<String> l_neighborList = new ArrayList();
             l_neighborList.add("china");
 
+            //added neighbour of country 
             l_country.setD_neighbourCountries(l_neighborList);
             l_countryList.add(l_country);
 
+            //creating a new country object
             Country l_country1 = new Country();
             l_country1.setD_continentIndex(1);
             l_country1.setD_countryIndex(2);
@@ -111,9 +114,11 @@ public class MapHandlingImplTest {
             List<String> l_neighborList1 = new ArrayList();
             l_neighborList1.add("india");
 
+            //added neighbour of country 
             l_country1.setD_neighbourCountries(l_neighborList1);
             l_countryList.add(l_country1);
 
+            //creating a new continent object
             Continent l_continent = new Continent();
             l_continent.setD_continentIndex(1);
             l_continent.setD_continentName("asia");

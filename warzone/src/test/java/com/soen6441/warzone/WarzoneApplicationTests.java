@@ -1,6 +1,8 @@
 package com.soen6441.warzone;
 
 import com.soen6441.warzone.serviceImplTest.MapHandlingImplTest;
+import com.soen6441.warzone.serviceImplTest.GameConfigServiceTest;
+import com.soen6441.warzone.serviceImplTest.GameEngineServiceTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -18,11 +20,11 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @RunWith(Suite.class)
-@SuiteClasses({MapHandlingImplTest.class})
+@SuiteClasses({MapHandlingImplTest.class,GameConfigServiceTest.class, GameEngineServiceTest.class})
 public class WarzoneApplicationTests {
 
     /**
-     * This method is used to load Springboot Apllication Context
+     * This method is used to load Springboot Application Context
      */
     @Test
     public void contextLoads() {
