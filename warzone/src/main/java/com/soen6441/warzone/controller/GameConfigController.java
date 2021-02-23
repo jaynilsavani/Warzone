@@ -1,32 +1,29 @@
 package com.soen6441.warzone.controller;
 
-import com.soen6441.warzone.model.Player;
-import com.soen6441.warzone.view.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.model.WarMap;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
-
-import java.io.IOException;
-
+import com.soen6441.warzone.view.FxmlView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import javafx.scene.control.TextArea;
 
 /**
  * This Class is made to handle Game Config controller request
@@ -40,7 +37,7 @@ public class GameConfigController implements Initializable {
     public static final String SHOW_MAP = "showmap";
     public static final String GAME_PLAYER = "gameplayer";
     public static final String ASSIGN_COUNTRY = "assigncountries";
-    public static int AssignCountryFlag = 0;
+    private static int AssignCountryFlag = 0;
 
     @FXML
     private TextField d_CommandLine;
@@ -73,13 +70,13 @@ public class GameConfigController implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param location  of the FXML file
-     * @param resources is properties information
+     * @param p_location  of the FXML file
+     * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL p_location, ResourceBundle p_resources) {
         d_StartGame.setDisable(true);
         d_showPlayPhase.setStyle("-fx-font-family: monospace");
     }
@@ -87,10 +84,10 @@ public class GameConfigController implements Initializable {
     /**
      * This method will redirect user to the Home Screen
      *
-     * @param event represents value send from view
+     * @param p_event represents value send from view
      */
     @FXML
-    void backToWelcome(ActionEvent event) {
+    void backToWelcome(ActionEvent p_event) {
         d_stageManager.switchScene(FxmlView.HOME, null);
         d_gamePlay = new GamePlay();
     }
@@ -98,10 +95,10 @@ public class GameConfigController implements Initializable {
     /**
      * This method will redirect user Game Start Screen
      *
-     * @param event represent value send from view
+     * @param p_event represent value send from view
      */
     @FXML
-    void toStartGame(ActionEvent event) {
+    void toStartGame(ActionEvent p_event) {
 
         d_stageManager.switchScene(FxmlView.GAMEENGINE, d_gamePlay);
     }
@@ -110,28 +107,28 @@ public class GameConfigController implements Initializable {
      * This method is used to get fire command from user and put it as a
      * parameter in validation
      *
-     * @param event : events from view
+     * @param p_event : events from view
      */
-    public void getData(ActionEvent event) {
+    public void getData(ActionEvent p_event) {
         String l_command = d_CommandLine.getText();
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
-        if (l_command.toLowerCase().startsWith(SHOW_MAP)) {
+
+        if (l_command.toLowerCase().startsWith(SHOW_MAP)) {                                                     //condition if user gives input to show the map
             if (d_gamePlay.getD_warMap() != null) {
                 l_gmConfigRes = d_gameConfigService.showPlayerMap(d_gamePlay);
-                //d_showPlayPhase.appendText(l_gmConfigRes.toString());
             } else {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
             }
-        } else if (l_command.toLowerCase().startsWith(LOAD_MAP)) {
-            if (AssignCountryFlag == 1) {
+        } else if (l_command.toLowerCase().startsWith(LOAD_MAP)) {                                               //condition satisfies if user wants to load the map
+            if (AssignCountryFlag == 1) {                                          //if countries are assigned already then ,this condition won't allow to load map again
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("countries are already assigned to each player");
             } else {
                 String l_fileName = (l_commandSegments != null && l_commandSegments.size() == 2) ? l_commandSegments.get(1) : null;
                 if (l_fileName != null) {
-                    if (d_generalUtil.validateIOString(l_fileName, "^[a-zA-Z]+.?[a-zA-Z]+") || d_generalUtil.validateIOString(l_fileName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                    if (d_generalUtil.validateIOString(l_fileName, "^[a-zA-Z]+.?[a-zA-Z]+") || d_generalUtil.validateIOString(l_fileName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {      //validates the filename given by user
                         l_gmConfigRes = loadMap(l_fileName);
                     } else {
                         d_generalUtil.prepareResponse(false, "Please enter valid file name for loadmap command");
@@ -142,35 +139,36 @@ public class GameConfigController implements Initializable {
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
             }
-        } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {
-            if (AssignCountryFlag == 1) {
+        } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {                                  //if user wants to add or remove players
+            if (AssignCountryFlag == 1) {                                                  //if countries are assigned already then ,this condition won't allow to add player again
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("countries are already assigned to each player");
             } else {
                 if (d_gamePlay.getD_warMap() != null) {
-                    if ((l_commandSegments.size() - 1) % 2 == 0) {
+                    if ((l_commandSegments.size() - 1) % 2 == 0) {                                 //validates the command
                         d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
                         String l_playerName = "Players are updated Sucessfully\n[";
-                        for (Player p : d_gamePlay.getPlayerList()) {
-                            l_playerName = l_playerName + " " + p.getD_playerName() + ",";
+                        for (Player l_p : d_gamePlay.getD_playerList()) {
+                            l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";
                         }
                         l_playerName = l_playerName + "]";
+
                         d_generalUtil.prepareResponse(true, l_playerName);
-                    } else {
+                    } else {                                                                    //if command is not valid
                         d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
                     }
                     l_gmConfigRes = d_generalUtil.getResponse();
-                } else {
+                } else {                                                                     //if map of game engine is empty
                     l_gmConfigRes.setD_isValid(false);
                     l_gmConfigRes.setD_responseString("Please load the map first");
                 }
             }
-        } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {
+        } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {                           //if user wants to assigncountries to players
             if (d_gamePlay.getD_warMap() == null) {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
             } else {
-                if (l_commandSegments.size() == 1) {
+                if (l_commandSegments.size() == 1) {                                          //to validate the command
                     try {
                         l_gmConfigRes = d_gameConfigService.assignCountries(d_gamePlay);
                         if (l_gmConfigRes.isD_isValid()) {
@@ -182,14 +180,14 @@ public class GameConfigController implements Initializable {
                         l_gmConfigRes.setD_responseString("Players are not added due to map is not readable");
                     }
 
-                } else {
+                } else {                                                                        //if validation of command fails
                     d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
             }
 
         } else {
-            d_generalUtil.prepareResponse(false, "Please enter valid command");
+            d_generalUtil.prepareResponse(false, "Please enter valid command");              //general command if none of the above condition matches
             l_gmConfigRes = d_generalUtil.getResponse();
 
         }
@@ -198,7 +196,6 @@ public class GameConfigController implements Initializable {
         d_CommandLine.clear();
     }
 
-    //Utility functions For above Command execution 
 
     /**
      * This is used as Sub function for Loading map
@@ -213,21 +210,18 @@ public class GameConfigController implements Initializable {
             l_mapFileNameList = d_generalUtil.getAvailableMapFiles();
 
             String l_fullName;
-            int index = p_fileName.lastIndexOf('.');
-            l_fullName = index > 0
+            int l_index = p_fileName.lastIndexOf('.');
+            l_fullName = l_index > 0
                     ? p_fileName.toLowerCase() : p_fileName.toLowerCase() + ".map";
-            //check whether file is present or not
-            if (l_mapFileNameList.contains(l_fullName)) {
+            if (l_mapFileNameList.contains(l_fullName)) {                                     //check whether file is present or not
                 try {
                     d_warMap = d_gameConfigService.loadMap(l_fullName);
-                    if (d_maphandlinginterface.validateMap(d_warMap)) {
-                        // Set status and map file name 
-                        d_warMap.setD_status(true);
+                    if (d_maphandlinginterface.validateMap(d_warMap)) {                       //validation of file
+                        d_warMap.setD_status(true);                                           // Set status and map file name
                         d_warMap.setD_mapName(l_fullName);
                         d_generalUtil.prepareResponse(true, "Map loaded successfully!");
-                        //set loaded map in the Game play object
-                        d_gamePlay.setD_warMap(d_warMap);
-                        d_gamePlay.setFileName(p_fileName);
+                        d_gamePlay.setD_warMap(d_warMap);                                     //set loaded map in the Game play object
+                        d_gamePlay.setD_fileName(p_fileName);
                         d_warMap.setD_mapName(l_fullName);
                     } else {
                         d_generalUtil.prepareResponse(false, "Map is Invalid, Please select another map");

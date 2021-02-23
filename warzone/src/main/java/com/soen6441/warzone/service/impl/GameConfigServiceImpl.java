@@ -7,7 +7,6 @@ import com.soen6441.warzone.model.WarMap;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
-import com.soen6441.warzone.service.impl.MapHandlingImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class GameConfigServiceImpl implements GameConfigService {
         WarMap l_warMap = p_gamePlay.getD_warMap();
 
         CommandResponse l_showCountris = d_mapConfig.showMap(l_warMap);
-        if (p_gamePlay.getPlayerList() == null) {
+        if (p_gamePlay.getD_playerList() == null) {
             String l_showMapOfCountris = l_showCountris.getD_responseString();
             d_generalUtil.prepareResponse(true, l_showMapOfCountris);
         } else {
@@ -52,7 +51,7 @@ public class GameConfigServiceImpl implements GameConfigService {
             String l_showMapOfCountris = l_showCountris.getD_responseString();
             List<Country> l_countryList = d_mapConfig.getAvailableCountries(l_warMap);
             int l_colSize = l_countryList.size() + 1;
-            int l_rowSize = p_gamePlay.getPlayerList().size() + 1;
+            int l_rowSize = p_gamePlay.getD_playerList().size() + 1;
             String[][] l_playerToCountry = new String[l_rowSize][l_colSize];
             int l_maxLength = 0;
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
@@ -67,16 +66,16 @@ public class GameConfigServiceImpl implements GameConfigService {
                             l_maxLength = l_playerToCountry[l_i][l_j].length();
                         }
                     } else if (l_i != 0 && l_j == 0) {
-                        l_playerToCountry[l_i][l_j] = p_gamePlay.getPlayerList().get(l_i - 1).getD_playerName();
+                        l_playerToCountry[l_i][l_j] = p_gamePlay.getD_playerList().get(l_i - 1).getD_playerName();
                         if (l_maxLength < l_playerToCountry[l_i][l_j].length()) {
                             l_maxLength = l_playerToCountry[l_i][l_j].length();
                         }
                     } else {
-                        if (p_gamePlay.getPlayerList().get(l_i - 1).getD_ownedCountries().contains(l_countryList.get(l_j - 1))) {
+                        if (p_gamePlay.getD_playerList().get(l_i - 1).getD_ownedCountries().contains(l_countryList.get(l_j - 1))) {
 
                             int l_same = 0;
-                            while (l_same < p_gamePlay.getPlayerList().get(l_i - 1).getD_ownedCountries().size()) {
-                                if (l_countryList.get(l_j - 1).getD_countryName().equalsIgnoreCase(p_gamePlay.getPlayerList().get(l_i - 1).getD_ownedCountries().get(l_same).getD_countryName())) {
+                            while (l_same < p_gamePlay.getD_playerList().get(l_i - 1).getD_ownedCountries().size()) {
+                                if (l_countryList.get(l_j - 1).getD_countryName().equalsIgnoreCase(p_gamePlay.getD_playerList().get(l_i - 1).getD_ownedCountries().get(l_same).getD_countryName())) {
                                     l_playerToCountry[l_i][l_j] = String.valueOf(l_countryList.get(l_j - 1).getD_noOfArmies());
                                     break;
                                 }
@@ -137,10 +136,10 @@ public class GameConfigServiceImpl implements GameConfigService {
                             if (getPlayerByName(p_currentGamePlay, l_playerName).isEmpty()) {
                                 Player l_player = new Player();
                                 l_player.setD_playerName(l_playerName);
-                                if (p_currentGamePlay.getPlayerList() == null) {
-                                    p_currentGamePlay.setPlayerList(new ArrayList<>());
+                                if (p_currentGamePlay.getD_playerList() == null) {
+                                    p_currentGamePlay.setD_playerList(new ArrayList<>());
                                 }
-                                p_currentGamePlay.getPlayerList().add(l_player);
+                                p_currentGamePlay.getD_playerList().add(l_player);
                             }
 
                         }
@@ -151,9 +150,9 @@ public class GameConfigServiceImpl implements GameConfigService {
                         {
                             if (getPlayerByName(p_currentGamePlay, l_playerName).size() > 0) {
                                 Player l_removedPlayer = getPlayerByName(p_currentGamePlay, l_playerName).get(0);
-                                if (p_currentGamePlay.getPlayerList() != null || p_currentGamePlay.getPlayerList().size() > 0) {
-                                    p_currentGamePlay.getPlayerList().remove(l_removedPlayer);
-                                    p_currentGamePlay.setPlayerList(p_currentGamePlay.getPlayerList());
+                                if (p_currentGamePlay.getD_playerList() != null || p_currentGamePlay.getD_playerList().size() > 0) {
+                                    p_currentGamePlay.getD_playerList().remove(l_removedPlayer);
+                                    p_currentGamePlay.setD_playerList(p_currentGamePlay.getD_playerList());
                                 }
                             }
 
@@ -167,8 +166,8 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     public List<Player> getPlayerByName(GamePlay p_currentGamePlay, String p_playerName) {
         List<Player> l_players = new ArrayList<Player>();
-        if (p_playerName != null && p_currentGamePlay.getPlayerList() != null) {
-            l_players = p_currentGamePlay.getPlayerList().stream().filter(l_player -> l_player.getD_playerName().equalsIgnoreCase(p_playerName)).collect(Collectors.toList());
+        if (p_playerName != null && p_currentGamePlay.getD_playerList() != null) {
+            l_players = p_currentGamePlay.getD_playerList().stream().filter(l_player -> l_player.getD_playerName().equalsIgnoreCase(p_playerName)).collect(Collectors.toList());
         }
 
         return l_players;
@@ -177,13 +176,13 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Override
     public CommandResponse assignCountries(GamePlay p_gamePlay) throws IOException {
         WarMap l_warMap = p_gamePlay.getD_warMap();
-        if (p_gamePlay.getPlayerList() == null) {
+        if (p_gamePlay.getD_playerList() == null) {
             d_generalUtil.prepareResponse(false, "No player in the game");
 
-        } else if (p_gamePlay.getPlayerList().get(0).getD_ownedCountries().size() != 0) {
+        } else if (p_gamePlay.getD_playerList().get(0).getD_ownedCountries().size() != 0) {
             d_generalUtil.prepareResponse(false, "Countries are already assigned");
         } else {
-            int l_noOfPlayers = p_gamePlay.getPlayerList().size();
+            int l_noOfPlayers = p_gamePlay.getD_playerList().size();
 
             int l_noOfCountries = d_mapConfig.getAvailableCountries(l_warMap).size();
             List<Country> l_country_check = d_mapConfig.getAvailableCountries(l_warMap);
@@ -193,7 +192,7 @@ public class GameConfigServiceImpl implements GameConfigService {
             int l_i = 0, l_j = 0;
             for (l_i = 0; l_i < l_counter; l_i++) {
                 for (l_j = 0; l_j < l_noOfPlayers; l_j++) {
-                    if (p_gamePlay.getPlayerList().get(l_j).getD_ownedCountries() == null) {
+                    if (p_gamePlay.getD_playerList().get(l_j).getD_ownedCountries() == null) {
                         List<Country> l_country = new ArrayList<Country>();
                         while (true) {
                             Random rand = new Random();
@@ -201,7 +200,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                             if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
                                 l_country.add(l_country_check.get(rand_int1));
                                 l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
-                                p_gamePlay.getPlayerList().get(l_j).setD_ownedCountries(l_country);
+                                p_gamePlay.getD_playerList().get(l_j).setD_ownedCountries(l_country);
                                 break;
 
                             }
@@ -212,7 +211,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                             Random rand = new Random();
                             int rand_int1 = rand.nextInt(l_noOfCountries);
                             if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
-                                p_gamePlay.getPlayerList().get(l_j).getD_ownedCountries().add(l_country_check.get(rand_int1));
+                                p_gamePlay.getD_playerList().get(l_j).getD_ownedCountries().add(l_country_check.get(rand_int1));
                                 l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
                                 break;
 
@@ -228,7 +227,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                     Random rand = new Random();
                     int rand_int1 = rand.nextInt(l_noOfCountries);
                     if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
-                        p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().add(l_country_check.get(rand_int1));
+                        p_gamePlay.getD_playerList().get(l_i).getD_ownedCountries().add(l_country_check.get(rand_int1));
                         l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
                         break;
 
@@ -238,12 +237,12 @@ public class GameConfigServiceImpl implements GameConfigService {
             }
             String l_response = "";
             for (l_i = 0; l_i < l_noOfPlayers; l_i++) {
-                l_response = l_response + p_gamePlay.getPlayerList().get(l_i).getD_playerName() + " owns [";
-                for (l_j = 0; l_j < p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().size(); l_j++) {
-                    if (l_j == (p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().size() - 1)) {
-                        l_response = l_response + p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName();
+                l_response = l_response + p_gamePlay.getD_playerList().get(l_i).getD_playerName() + " owns [";
+                for (l_j = 0; l_j < p_gamePlay.getD_playerList().get(l_i).getD_ownedCountries().size(); l_j++) {
+                    if (l_j == (p_gamePlay.getD_playerList().get(l_i).getD_ownedCountries().size() - 1)) {
+                        l_response = l_response + p_gamePlay.getD_playerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName();
                     } else {
-                        l_response = l_response + p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName() + ",";
+                        l_response = l_response + p_gamePlay.getD_playerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName() + ",";
                     }
 
                 }

@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 /**
  * This Class will test business logic of GameEngineService.
  *
@@ -108,8 +106,8 @@ public class GameEngineServiceTest {
         d_player.setD_ownedCountries(l_countryList);
         List<Player> l_playerList = new ArrayList<Player>();
         l_playerList.add(d_player);
-        d_gamePlay.setPlayerList(l_playerList);
-        d_gamePlay.setFileName("test.map");
+        d_gamePlay.setD_playerList(l_playerList);
+        d_gamePlay.setD_fileName("test.map");
         d_gamePlay.setD_warMap(d_warMap);
 
     }
@@ -124,7 +122,7 @@ public class GameEngineServiceTest {
     @Test
     public void testAssignReinforcements() {
         GamePlay l_gamePlay = d_gameEngineService.assignReinforcements(d_gamePlay);
-        int l_actualnoOfArmies = l_gamePlay.getPlayerList().get(0).getD_noOfArmies();
+        int l_actualnoOfArmies = l_gamePlay.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }

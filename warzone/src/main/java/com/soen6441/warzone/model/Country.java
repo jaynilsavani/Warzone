@@ -1,13 +1,12 @@
 package com.soen6441.warzone.model;
 
-import java.util.List;
-import java.util.Objects;
-import lombok.EqualsAndHashCode;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * This class represents Country model and property of country from the map
@@ -48,6 +47,11 @@ public class Country {
      */
     private int d_noOfArmies;
 
+    /**
+     * to use the hashcode for this Model object
+     *
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         int hash = 3;
@@ -55,6 +59,12 @@ public class Country {
         return hash;
     }
 
+    /**
+     * compares the objects
+     *
+     * @param obj object that needs to comapre
+     * @return result of comparision
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -67,11 +77,8 @@ public class Country {
             return false;
         }
         final Country other = (Country) obj;
-        if (!Objects.equals(this.d_countryName, other.d_countryName)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.d_countryName, other.d_countryName);
     }
 
-    
+
 }

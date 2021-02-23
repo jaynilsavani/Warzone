@@ -1,18 +1,17 @@
 package com.soen6441.warzone.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
- *
  * This Class is used for storing and manipulating Player Information
- *
+ * <p>
  * Three annotations (Getter,Setter, toString), you can see on the top of the
  * class are lombok dependencies to automatically generate getter, setter and
  * tostring method in the code.
@@ -74,7 +73,6 @@ public class Player {
     }
 
     /**
-     *
      * @return The last order of order list
      */
     public Order next_order() {
@@ -87,11 +85,13 @@ public class Player {
         }
     }
 
+    /**
+     * checks if player has an order or not
+     *
+     * @return results in form of true/false
+     */
     public boolean hasOrder() {
-        if (d_orders != null && !d_orders.isEmpty()) {
-            return true;
-        }
-        return false;
+        return d_orders != null && !d_orders.isEmpty();
     }
 
     @Override
