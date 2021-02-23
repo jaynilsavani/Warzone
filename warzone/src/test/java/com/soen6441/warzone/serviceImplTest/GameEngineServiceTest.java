@@ -127,13 +127,17 @@ public class GameEngineServiceTest {
     @Test
     public void testExecuteOrder() {
         d_gamePlay.getD_playerList().get(0).setD_noOfArmies(6);
-        d_gamePlay.getD_playerList().get(0).setD_currentToCountry("india");
-        d_gamePlay.getD_playerList().get(0).setD_currentNoOfArmiesToMove(9);
+        d_gamePlay.getD_playerList().get(0).setD_currentToCountry("china");
+        d_gamePlay.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
         d_gamePlay.getD_playerList().get(0).issue_order();
         Order l_order = d_gamePlay.getD_playerList().get(0).getD_orders().get(0);
         ((DeployOrder) l_order).setD_player(d_gamePlay.getD_playerList().get(0));
-        boolean l_actual = l_order.executeOrder();
-        assertEquals(true, l_actual);
+        d_gamePlay.getD_playerList().remove(0);
+        d_gamePlay.getD_playerList().add(0, ((DeployOrder) l_order).getD_player());
+        boolean l_check = l_order.executeOrder();
+        assertEquals(true, l_check);
+        int l_actualArmiesinPlayer = d_gamePlay.getD_playerList().get(0).getD_noOfArmies();
+        assertEquals(0, l_actualArmiesinPlayer);
     }
 
 }
