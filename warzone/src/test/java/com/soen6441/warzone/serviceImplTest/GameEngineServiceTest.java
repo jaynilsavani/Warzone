@@ -37,7 +37,7 @@ public class GameEngineServiceTest {
 
     @Autowired
     GamePlay d_gamePlay;
-    
+
     @Autowired
     Player d_player;
 
