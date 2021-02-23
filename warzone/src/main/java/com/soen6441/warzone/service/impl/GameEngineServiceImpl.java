@@ -25,9 +25,9 @@ public class GameEngineServiceImpl implements GameEngineService {
     @Override
     public GamePlay assignReinforcements(GamePlay p_gamePlay) {
 
-        if (p_gamePlay.getPlayerList() != null && (!p_gamePlay.getPlayerList().isEmpty())) {
+        if (p_gamePlay.getD_playerList() != null && (!p_gamePlay.getD_playerList().isEmpty())) {
 
-            for (Player l_player : p_gamePlay.getPlayerList()) {
+            for (Player l_player : p_gamePlay.getD_playerList()) {
                 if (l_player.getD_ownedCountries() != null && (!l_player.getD_ownedCountries().isEmpty())) {
                     int l_noOfArmy = DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
                     //This is used to check and assign noOf armies According to Warzone rule based on owned countries
@@ -73,7 +73,7 @@ public class GameEngineServiceImpl implements GameEngineService {
     @Override
     public String showReinforcementArmies(GamePlay p_gamePlay) {
         String l_armies = "";
-        for (Player l_p : p_gamePlay.getPlayerList()) {
+        for (Player l_p : p_gamePlay.getD_playerList()) {
             l_armies = l_armies + l_p.getD_playerName() + " : " + l_p.getD_noOfArmies() + "\n";
         }
         return l_armies;

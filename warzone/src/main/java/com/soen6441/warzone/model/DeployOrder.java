@@ -19,9 +19,17 @@ import org.springframework.stereotype.Component;
 @ToString
 @Component
 public class DeployOrder implements Order {
-
+    /**
+     * number of armies in this order
+     */
     private int d_noOfArmies;
+    /**
+     * country in this order
+     */
     private String d_CountryName;
+    /**
+     * player in this order
+     */
     private Player d_player;
 
 
@@ -32,18 +40,20 @@ public class DeployOrder implements Order {
      */
     @Override
     public boolean executeOrder() {
-        for (Country l_country : d_player.getD_ownedCountries()) {
-            if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() >= d_noOfArmies)) {
-                int l_getArmy = l_country.getD_noOfArmies();
+        for (Country l_country : d_player.getD_ownedCountries()) {          //loop for countries owned by player
+            if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() >= d_noOfArmies)) {  //checks the country,and no. of armies from player is greater than armies in the command
+
 
                 int l_playerArmy = d_player.getD_noOfArmies();
-                d_player.setD_noOfArmies(l_playerArmy - d_noOfArmies);
+                d_player.setD_noOfArmies(l_playerArmy - d_noOfArmies);        //reduce the number of armies from player
 
+                int l_getArmy = l_country.getD_noOfArmies();
                 d_noOfArmies = d_noOfArmies + l_getArmy;
-                l_country.setD_noOfArmies(d_noOfArmies);
+                l_country.setD_noOfArmies(d_noOfArmies);                      //add the no. of armies to the country owned by player
 
                 return true;
-            } else if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() < d_noOfArmies) && d_player.getD_noOfArmies() != 0) {
+            } else if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() < d_noOfArmies) && d_player.getD_noOfArmies() != 0) {   //checks the country,and no. of armies from player is lesser than armies in the command
+
                 int l_getArmy = l_country.getD_noOfArmies();
                 d_noOfArmies = d_player.getD_noOfArmies() + l_getArmy;
                 l_country.setD_noOfArmies(d_noOfArmies);
@@ -52,7 +62,7 @@ public class DeployOrder implements Order {
                 return true;
             }
         }
-        d_player.setD_noOfArmies(d_player.getD_noOfArmies() - d_noOfArmies);
+        d_player.setD_noOfArmies(d_player.getD_noOfArmies() - d_noOfArmies);   //deduct the armies from player if the country mentioned inn the order is not owned by player
 
         return false;
 

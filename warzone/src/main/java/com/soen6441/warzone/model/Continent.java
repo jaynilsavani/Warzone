@@ -1,15 +1,16 @@
 package com.soen6441.warzone.model;
-import java.util.List;
-import lombok.EqualsAndHashCode;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * This class represents all the continents in the map and it has a list of territories that continent owned.
- *
+ * <p>
  * Three annotations (Getter, Setter and ToString), you can see on the top of the class are lombok dependencies to
  * automatically generate getter, setter and tostring method in the code.
  *

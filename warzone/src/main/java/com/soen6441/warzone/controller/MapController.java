@@ -1,12 +1,13 @@
 package com.soen6441.warzone.controller;
 
-import com.soen6441.warzone.view.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.service.MapHandlingInterface;
+import com.soen6441.warzone.view.FxmlView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -15,37 +16,31 @@ import org.springframework.stereotype.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.scene.control.TextArea;
-
 
 @Controller
 public class MapController implements Initializable {
 
 
-    @FXML
-    private TextField d_ExecuteCommand;
-
-    @FXML
-    private TextArea d_commandResponse;
-
-
     @Lazy
     @Autowired
     StageManager d_stageManager;
-
+    @FXML
+    private TextField d_ExecuteCommand;
+    @FXML
+    private TextArea d_commandResponse;
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
     /**
      * This is the initialization method of this controller
      *
-     * @param location  of the FXML file
-     * @param resources is properties information
+     * @param p_location  of the FXML file
+     * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL p_location, ResourceBundle p_resources) {
         d_commandResponse.setStyle("-fx-font-family: monospace");
     }
 
@@ -53,10 +48,10 @@ public class MapController implements Initializable {
     /**
      * This method will redirect user to Home page
      *
-     * @param event will represents value sent from view
+     * @param p_event will represents value sent from view
      */
     @FXML
-    void backToWelcome(ActionEvent event) {
+    void backToWelcome(ActionEvent p_event) {
 
         d_stageManager.switchScene(FxmlView.HOME, null);
     }
@@ -64,10 +59,10 @@ public class MapController implements Initializable {
     /**
      * This method is used to get data from user and put it as a parameter in validation
      *
-     * @param event
+     * @param p_event will represents value sent from view
      */
     @FXML
-    void getData(ActionEvent event) {
+    void getData(ActionEvent p_event) {
         String l_s = d_ExecuteCommand.getText();
 
         CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(l_s);

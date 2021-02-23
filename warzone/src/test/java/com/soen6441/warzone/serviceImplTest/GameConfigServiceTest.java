@@ -13,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * This Class will test business logic of GameConfigService.
@@ -73,8 +72,8 @@ public class GameConfigServiceTest {
         Player l_actualPlayer = new Player();
 
         GamePlay l_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, "gameplayer -add " + l_expectedPlayer.getD_playerName());
-        if (!l_gamePlay.getPlayerList().isEmpty()) {
-            l_actualPlayer = l_gamePlay.getPlayerList().get(0);
+        if (!l_gamePlay.getD_playerList().isEmpty()) {
+            l_actualPlayer = l_gamePlay.getD_playerList().get(0);
         }
         assertEquals(l_expectedPlayer, l_actualPlayer);
     }
