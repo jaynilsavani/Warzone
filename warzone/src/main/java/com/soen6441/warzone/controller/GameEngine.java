@@ -26,9 +26,19 @@ import java.util.*;
 @Controller
 public class GameEngine implements Initializable {
 
-
+    /**
+     * array of falg that shows that whether player is done with issuing order or not for particular round
+     */
     private static int[] PlayerFlag;
+
+    /**
+     * counter that invokes after each order issued by player
+     */
     private static int PlayCounter = 0;
+
+    /**
+     * counter that records the number of rounds of issue order
+     */
     private static int CounterRound = 0;
 
     @FXML
