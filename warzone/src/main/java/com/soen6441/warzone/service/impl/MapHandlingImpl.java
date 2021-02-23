@@ -310,7 +310,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (l_mapFileNameList.contains(l_fullName)) {
                     try {
                         d_warMap = readMap(l_fullName);
-                        d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
+                        if(validateMap(d_warMap)){
+                            d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
+                        }else{
+                            d_warMap = new WarMap();
+                            d_generalUtil.prepareResponse(false, "Invalid Map, Please select another Map");
+                        }                       
                     } catch (Exception e) {
                         d_generalUtil.prepareResponse(false, "Exception in EditMap, Invalid Map Please correct Map");
                     }
@@ -424,7 +429,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     @Override
     public boolean validateMap(WarMap p_warMap) {
-        if (d_warMap.getD_continents() == null || !d_warMap.isD_status()) {
+        if (p_warMap.getD_continents() == null  || !p_warMap.isD_status()) {
             return false;
         }
         boolean l_result = false;
@@ -435,7 +440,20 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                 // check one or more country is available in map
                 if (!l_countries.isEmpty()) {
-
+                    
+                    //check continent is avilable for each country
+                    List<Integer> l_continentList = new ArrayList();
+                    for(Map.Entry<Integer, Continent> l_entry : p_warMap.getD_continents().entrySet()){
+                        l_continentList.add(l_entry.getValue().getD_continentIndex());
+                    }
+                    for(Map.Entry<Integer, Continent> l_entry : p_warMap.getD_continents().entrySet()){
+                        List<Country> l_countryList = l_entry.getValue().getD_countryList();
+                        for(Country l_country : l_countryList){
+                            if(!l_continentList.contains(l_country.getD_continentIndex())){
+                                l_result = false;
+                            }
+                        }
+                    }                 
                     // check graph is connected or not
                     l_countries = getAvailableCountries(p_warMap);
                     int l_countrySize = l_countries.size();
