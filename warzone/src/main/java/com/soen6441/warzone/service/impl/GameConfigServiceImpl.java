@@ -259,7 +259,7 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     /**
      *
-     * @param p_currentGamePlay
+     * @param p_currentGamePlay Object Of current gameplay
      * @param p_playerName Player of the
      * @return The List of player with given name
      */
