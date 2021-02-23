@@ -414,8 +414,15 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String[][] l_mapMetrices = pair.getValue();
         for (l_i = 0; l_i < l_countrySize; l_i++) {
             for (l_j = 0; l_j < l_countrySize; l_j++) {
-                String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
-                l_showMapIn2D = l_showMapIn2D + l_stringFrmat;
+                if(l_j==0) {
+                    String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_mapMetrices[l_i][l_j]);
+                    l_showMapIn2D = l_showMapIn2D + l_stringFrmat;
+                }
+                else
+                {
+                    String l_stringFrmat = String.format("%1$" + l_countries.get(l_j-1).getD_countryName().length() + "s", l_mapMetrices[l_i][l_j])+" ";
+                    l_showMapIn2D = l_showMapIn2D + l_stringFrmat;
+                }
             }
             l_showMapIn2D = l_showMapIn2D + "\n";
         }

@@ -177,11 +177,9 @@ public class GameConfigController implements Initializable {
                             d_StartGame.setDisable(false);
                             AssignCountryFlag = 1;
                         }
-                        //d_showPlayPhase.appendText(l_gmConfigRes.toString());
                     } catch (IOException e) {
                         l_gmConfigRes.setD_isValid(false);
-                        l_gmConfigRes.setD_responseString("Players are not added");
-                        //d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                        l_gmConfigRes.setD_responseString("Players are not added due to map is not readable");
                     }
 
                 } else {
