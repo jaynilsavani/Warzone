@@ -8,18 +8,24 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * This is used for loading fxml File
- * 
+ * This is used for loading FXML File
+ *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 @Component
 public class SpringFXMLLoader {
 
+    /**
+     * This is used to get resources from resource Bundle file
+     */
     private final ResourceBundle d_resourceBundle;
+    /**
+     * Application Context
+     */
     private final ApplicationContext d_context;
 
     /**
-     * This is a controller of this class and it initialize context and
+     * This is a constructor of this class and it initialize context and
      * resourceBundle
      *
      * @param p_context is a spring context
@@ -32,7 +38,7 @@ public class SpringFXMLLoader {
     }
 
     /**
-     * This method will load FXML file to the PC after we hit run button
+     * This method will load FXML file
      *
      * @param p_fxmlPath is path of fxml file located
      * @return FXML loader
@@ -40,7 +46,7 @@ public class SpringFXMLLoader {
      */
     public FXMLLoader load(String p_fxmlPath) throws IOException {
         FXMLLoader l_loader = new FXMLLoader();
-        l_loader.setControllerFactory(d_context::getBean); //Spring now FXML Controller Factory
+        l_loader.setControllerFactory(d_context::getBean);
         l_loader.setResources(d_resourceBundle);
         l_loader.setLocation(getClass().getResource(p_fxmlPath));
         return l_loader;
