@@ -11,14 +11,12 @@ import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.text.FontPosture;
+import javafx.scene.control.Alert.AlertType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * This Class is made to handle Game Engine controller request
@@ -69,7 +67,9 @@ public class GameEngine implements Initializable {
      */
     private static int PlayCounter = 0;
 
-    private static int CounterRound=0;
+    private static int CounterRound = 0;
+
+    private static int PreviousCounterRound = 0;
 
 
     /**
@@ -88,7 +88,7 @@ public class GameEngine implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param location of the FXML file
+     * @param location  of the FXML file
      * @param resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
@@ -102,15 +102,15 @@ public class GameEngine implements Initializable {
      * This method is used to get fire command from user and put it as a
      * parameter in validation
      *
-     * @param event  :event from view
+     * @param event handling the user events
      */
     public void getData(ActionEvent event) {
-        String s = d_CommandLine.getText();
-        String []l_validatestr=s.split("\\s");
-        if ((d_generalUtil.validateIOString(s, "deploy\\s[a-zA-Z]+\\s[0-9]+") && l_validatestr.length==3) || s.equalsIgnoreCase("done" )) {
+        String l_s = d_CommandLine.getText();
+        String[] l_validatestr = l_s.split("\\s");
+        if ((d_generalUtil.validateIOString(l_s, "deploy\\s[a-zA-Z]+\\s[0-9]+") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) {
             d_CommandLine.clear();
-            CommandResponse l_commandResponse = issuingPlayer(s);
-            d_FireCommandList.appendText(l_commandResponse.getD_responseString()+"\n");
+            CommandResponse l_commandResponse = issuingPlayer(l_s);
+            d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");
             while (true) {
                 int l_j = 0;
                 for (int l_i = 0; l_i < PlayerFlag.length; l_i++) {
@@ -119,17 +119,22 @@ public class GameEngine implements Initializable {
                     }
                 }
                 if (l_j == PlayerFlag.length) {
-                    d_playerTurn.setText("     Command Line");
-                    d_playerTurn.setDisable(true);
-                    d_FireCommand.setDisable(true);
-                    d_CommandLine.setDisable(true);
-                    List<CommandResponse> l_commandList=executionOfOrders();
-                    for(int l_i=0;l_i<l_commandList.size();l_i++)
-                    {
+                    List<CommandResponse> l_commandList = executionOfOrders();
+                    for (int l_i = 0; l_i < l_commandList.size(); l_i++) {
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
                     }
-                    CommandResponse l_map=d_gameConfig.showPlayerMap(d_gamePlay);
+                    CommandResponse l_map = d_gameConfig.showPlayerMap(d_gamePlay);
                     d_FireCommandList.appendText(l_map.getD_responseString());
+
+                    PlayCounter = 0;
+                    CounterRound = 0;
+                    Arrays.fill(PlayerFlag, 0);
+                    d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
+                    d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gamePlay));
+                    d_playerTurn.setText("Issue an order for " + d_gamePlay.getPlayerList().get(PlayCounter).getD_playerName());
+                    d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+                    d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+                    d_CommandLine.clear();
                     break;
                 }
 
@@ -149,9 +154,10 @@ public class GameEngine implements Initializable {
                 }
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Invalid Commad!!");
-
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Invalid");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid Command!!!");
             alert.showAndWait();
         }
     }
@@ -159,7 +165,7 @@ public class GameEngine implements Initializable {
     /**
      * This is used for setting GameConfig for GameEngine
      *
-     * @param p_gameConfig : object of GamePlay model
+     * @param p_gameConfig game configuration
      */
     public void setGamePlay(GamePlay p_gameConfig) {
         d_gamePlay = p_gameConfig;
@@ -177,32 +183,42 @@ public class GameEngine implements Initializable {
      */
     private void reinforcementArmies() {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
-
+        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gamePlay));
 
     }
 
     /**
-     *
      * This method is used for executing issued Order
      *
      * @return The liast of Command Response of Executed Order
      */
     private List<CommandResponse> executionOfOrders() {
         List<CommandResponse> l_orderStatus = new ArrayList<>();
-        for (int l_i = 0; l_i < CounterRound; l_i++) {
-            for (int l_j=0;l_j<d_gamePlay.getPlayerList().size();l_j++) {
+        for (int l_i = PreviousCounterRound; l_i < CounterRound; l_i++) {
+            for (int l_j = 0; l_j < d_gamePlay.getPlayerList().size(); l_j++) {
                 if (d_gamePlay.getPlayerList().get(l_j).hasOrder()) {
-                    Order l_order=d_gamePlay.getPlayerList().get(l_j).next_order();
+                    Order l_order = d_gamePlay.getPlayerList().get(l_j).next_order();
+                    String l_countryName = ((DeployOrder) l_order).getD_CountryName();
                     ((DeployOrder) l_order).setD_player(d_gamePlay.getPlayerList().get(l_j));
-                    boolean l_executeOrder= l_order.executeOrder();
-                    if(l_executeOrder) {
+                    boolean l_executeOrder = l_order.executeOrder();
+                    if (l_executeOrder) {
                         l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gamePlay.getPlayerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
                         d_gamePlay.getPlayerList().remove(l_j);
-                        d_gamePlay.getPlayerList().add(l_j,((DeployOrder) l_order).getD_player());
-                    }
-                    else
-                    {
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gamePlay.getPlayerList().get(l_j).getD_playerName()+" either country is incorrect or not enough armies\n"));
+                        d_gamePlay.getPlayerList().add(l_j, ((DeployOrder) l_order).getD_player());
+
+                        int l_noOfArmies = ((DeployOrder) l_order).getD_noOfArmies();
+                        if (d_gamePlay.getD_warMap().getD_continents() != null) {
+                            for (Map.Entry<Integer, Continent> l_entry : d_gamePlay.getD_warMap().getD_continents().entrySet()) {
+                                for (Country l_countries : l_entry.getValue().getD_countryList()) {
+                                    if (l_countries.getD_countryName().equalsIgnoreCase(l_countryName)) {
+                                        l_countries.setD_noOfArmies(l_noOfArmies);
+                                    }
+                                }
+                            }
+                        }
+
+                    } else {
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gamePlay.getPlayerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
                     }
                 }
             }
@@ -212,14 +228,14 @@ public class GameEngine implements Initializable {
 
     /**
      * This method is used to store the user input of orders in player's lst of orders
+     *
      * @param p_command String that has been given by user
      * @return return the response in term of wether order is added or player is completed with orders or not
      */
     public CommandResponse issuingPlayer(String p_command) {
         Player l_player = d_gamePlay.getPlayerList().get(PlayCounter);
-        if(CounterRound < l_player.getD_orders().size())
-        {
-            CounterRound=l_player.getD_orders().size();
+        if (CounterRound < l_player.getD_orders().size()) {
+            CounterRound = l_player.getD_orders().size();
         }
         if (p_command.equalsIgnoreCase("done")) {
             PlayerFlag[PlayCounter] = 1;
@@ -234,23 +250,18 @@ public class GameEngine implements Initializable {
                 d_gamePlay.getPlayerList().get(PlayCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[2]));
                 d_gamePlay.getPlayerList().get(PlayCounter).setD_orders(l_order);
                 d_gamePlay.getPlayerList().get(PlayCounter).issue_order();
-            }
-            else
-                {
+            } else {
                 d_gamePlay.getPlayerList().get(PlayCounter).setD_currentToCountry(l_commands[1]);
                 d_gamePlay.getPlayerList().get(PlayCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[2]));
                 d_gamePlay.getPlayerList().get(PlayCounter).issue_order();
 
             }
 
-            d_generalUtil.prepareResponse(true,CounterRound+" | "+p_command+" | "+l_player.getD_playerName());
+            d_generalUtil.prepareResponse(true, CounterRound + " | " + p_command + " | " + l_player.getD_playerName());
             return d_generalUtil.getResponse();
         }
 
 
     }
-
-
-
 
 }

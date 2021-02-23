@@ -1,5 +1,6 @@
 package com.soen6441.warzone.controller;
 
+import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.view.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.model.CommandResponse;
@@ -8,7 +9,9 @@ import com.soen6441.warzone.model.WarMap;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
+
 import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +25,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javafx.scene.control.TextArea;
 
 /**
@@ -36,7 +40,7 @@ public class GameConfigController implements Initializable {
     public static final String SHOW_MAP = "showmap";
     public static final String GAME_PLAYER = "gameplayer";
     public static final String ASSIGN_COUNTRY = "assigncountries";
-    public static int AssignCountryFlag=0;
+    public static int AssignCountryFlag = 0;
 
     @FXML
     private TextField d_CommandLine;
@@ -69,7 +73,7 @@ public class GameConfigController implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param location of the FXML file
+     * @param location  of the FXML file
      * @param resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
@@ -88,8 +92,7 @@ public class GameConfigController implements Initializable {
     @FXML
     void backToWelcome(ActionEvent event) {
         d_stageManager.switchScene(FxmlView.HOME, null);
-        d_warMap = null;
-        d_gamePlay = null;
+        d_gamePlay = new GamePlay();
     }
 
     /**
@@ -114,7 +117,7 @@ public class GameConfigController implements Initializable {
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
         if (l_command.toLowerCase().startsWith(SHOW_MAP)) {
-            if (d_warMap != null) {
+            if (d_gamePlay.getD_warMap() != null) {
                 l_gmConfigRes = d_gameConfigService.showPlayerMap(d_gamePlay);
                 //d_showPlayPhase.appendText(l_gmConfigRes.toString());
             } else {
@@ -122,59 +125,69 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes.setD_responseString("Please load the map first");
             }
         } else if (l_command.toLowerCase().startsWith(LOAD_MAP)) {
-            if(AssignCountryFlag==1)
-            {
+            if (AssignCountryFlag == 1) {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("countries are already assigned to each player");
-            }
-            String l_fileName = (l_commandSegments != null && l_commandSegments.size() == 2) ? l_commandSegments.get(1) : null;
-            if (l_fileName != null) {
-                if (d_generalUtil.validateIOString(l_fileName, "^[a-zA-Z]+.?[a-zA-Z]+") || d_generalUtil.validateIOString(l_fileName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                    l_gmConfigRes = loadMap(l_fileName);
+            } else {
+                String l_fileName = (l_commandSegments != null && l_commandSegments.size() == 2) ? l_commandSegments.get(1) : null;
+                if (l_fileName != null) {
+                    if (d_generalUtil.validateIOString(l_fileName, "^[a-zA-Z]+.?[a-zA-Z]+") || d_generalUtil.validateIOString(l_fileName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                        l_gmConfigRes = loadMap(l_fileName);
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Please enter valid file name for loadmap command");
+                        l_gmConfigRes = d_generalUtil.getResponse();
+                    }
                 } else {
-                    d_generalUtil.prepareResponse(false, "Please enter valid file name for loadmap command");
+                    d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
-            } else {
-                d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
-                l_gmConfigRes = d_generalUtil.getResponse();
             }
-
         } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {
-            if(AssignCountryFlag==1)
-            {
+            if (AssignCountryFlag == 1) {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("countries are already assigned to each player");
-            }
-            if (d_gamePlay.getD_warMap() != null) {
-                if ((l_commandSegments.size() - 1) % 2 == 0) {
-                    d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
-                    d_generalUtil.prepareResponse(true, "Please updated Sucessfully");
-                } else {
-                    d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
-                }
-                l_gmConfigRes = d_generalUtil.getResponse();
-            }
-
-        } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {
-            if (l_commandSegments.size() == 1) {
-                try {
-                    l_gmConfigRes= d_gameConfigService.assignCountries(d_gamePlay);
-                    if(l_gmConfigRes.isD_isValid())
-                    {
-                        d_StartGame.setDisable(false);
-                        AssignCountryFlag=1;
-                    }
-                    //d_showPlayPhase.appendText(l_gmConfigRes.toString());
-                } catch (IOException e) {
-                    l_gmConfigRes.setD_isValid(false);
-                    l_gmConfigRes.setD_responseString("not able to assign countries due to map is not readable");
-                    //d_showPlayPhase.appendText(l_gmConfigRes.toString());
-                }
-
             } else {
-                d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
-                l_gmConfigRes = d_generalUtil.getResponse();
+                if (d_gamePlay.getD_warMap() != null) {
+                    if ((l_commandSegments.size() - 1) % 2 == 0) {
+                        d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
+                        String l_playerName = "Players are updated Sucessfully\n[";
+                        for (Player p : d_gamePlay.getPlayerList()) {
+                            l_playerName = l_playerName + " " + p.getD_playerName() + ",";
+                        }
+                        l_playerName = l_playerName + "]";
+                        d_generalUtil.prepareResponse(true, l_playerName);
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
+                    }
+                    l_gmConfigRes = d_generalUtil.getResponse();
+                } else {
+                    l_gmConfigRes.setD_isValid(false);
+                    l_gmConfigRes.setD_responseString("Please load the map first");
+                }
+            }
+        } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {
+            if (d_gamePlay.getD_warMap() == null) {
+                l_gmConfigRes.setD_isValid(false);
+                l_gmConfigRes.setD_responseString("Please load the map first");
+            } else {
+                if (l_commandSegments.size() == 1) {
+                    try {
+                        l_gmConfigRes = d_gameConfigService.assignCountries(d_gamePlay);
+                        if (l_gmConfigRes.isD_isValid()) {
+                            d_StartGame.setDisable(false);
+                            AssignCountryFlag = 1;
+                        }
+                        //d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                    } catch (IOException e) {
+                        l_gmConfigRes.setD_isValid(false);
+                        l_gmConfigRes.setD_responseString("Players are not added");
+                        //d_showPlayPhase.appendText(l_gmConfigRes.toString());
+                    }
+
+                } else {
+                    d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
+                    l_gmConfigRes = d_generalUtil.getResponse();
+                }
             }
 
         } else {
@@ -188,6 +201,7 @@ public class GameConfigController implements Initializable {
     }
 
     //Utility functions For above Command execution 
+
     /**
      * This is used as Sub function for Loading map
      *
