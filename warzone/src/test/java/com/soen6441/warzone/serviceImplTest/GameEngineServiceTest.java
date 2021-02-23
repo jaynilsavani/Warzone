@@ -2,8 +2,11 @@ package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.model.*;
 import com.soen6441.warzone.service.GameEngineService;
+import com.soen6441.warzone.service.GameConfigService;
 import org.junit.After;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +38,8 @@ public class GameEngineServiceTest {
 
     @Autowired
     GamePlay d_gamePlay;
+    @Autowired
+    GameConfigService d_gameconf;
     
     @Autowired
     Player d_player;
@@ -121,10 +126,26 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAssignReinforcements() {
+        CommandResponse c= d_gameconf.showPlayerMap(d_gamePlay);
+        System.out.println(c.getD_responseString());
+        System.out.println(d_gamePlay.getD_playerList().get(0).getD_ownedCountries());
         GamePlay l_gamePlay = d_gameEngineService.assignReinforcements(d_gamePlay);
         int l_actualnoOfArmies = l_gamePlay.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
+    }
+
+    @Test
+    public void testExecuteOrder()
+    {
+        d_gamePlay.getD_playerList().get(0).setD_noOfArmies(6);
+        d_gamePlay.getD_playerList().get(0).setD_currentToCountry("india");
+        d_gamePlay.getD_playerList().get(0).setD_currentNoOfArmiesToMove(9);
+        d_gamePlay.getD_playerList().get(0).issue_order();
+        Order l_order=d_gamePlay.getD_playerList().get(0).getD_orders().get(0);
+        ((DeployOrder) l_order).setD_player(d_gamePlay.getD_playerList().get(0));
+        boolean l_actual=l_order.executeOrder();
+        assertEquals(true,l_actual);
     }
 
 }
