@@ -2,21 +2,18 @@ package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.model.*;
 import com.soen6441.warzone.service.GameEngineService;
-import org.junit.After;
-import static org.junit.Assert.*;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * This Class will test business logic of GameEngineService.
@@ -35,20 +32,12 @@ public class GameEngineServiceTest {
 
     @Autowired
     GamePlay d_gamePlay;
-    
+
     @Autowired
     Player d_player;
 
     @Autowired
     WarMap d_warMap;
-
-    /**
-     * This method is used to load SpringBoot Application Context
-     */
-    @Test
-    public void contextLoads() {
-
-    }
 
     public GameEngineServiceTest() {
     }
@@ -59,6 +48,14 @@ public class GameEngineServiceTest {
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    /**
+     * This method is used to load SpringBoot Application Context
+     */
+    @Test
+    public void contextLoads() {
+
     }
 
     @Before
@@ -125,6 +122,22 @@ public class GameEngineServiceTest {
         int l_actualnoOfArmies = l_gamePlay.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
+    }
+
+    @Test
+    public void testExecuteOrder() {
+        d_gamePlay.getD_playerList().get(0).setD_noOfArmies(6);
+        d_gamePlay.getD_playerList().get(0).setD_currentToCountry("china");
+        d_gamePlay.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
+        d_gamePlay.getD_playerList().get(0).issue_order();
+        Order l_order = d_gamePlay.getD_playerList().get(0).getD_orders().get(0);
+        ((DeployOrder) l_order).setD_player(d_gamePlay.getD_playerList().get(0));
+        d_gamePlay.getD_playerList().remove(0);
+        d_gamePlay.getD_playerList().add(0, ((DeployOrder) l_order).getD_player());
+        boolean l_check = l_order.executeOrder();
+        assertEquals(true, l_check);
+        int l_actualArmiesinPlayer = d_gamePlay.getD_playerList().get(0).getD_noOfArmies();
+        assertEquals(0, l_actualArmiesinPlayer);
     }
 
 }
