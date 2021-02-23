@@ -48,6 +48,10 @@ public class Country {
      */
     private int d_noOfArmies;
 
+    /**
+     * to use the hashcode for this object
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         int hash = 3;
@@ -55,6 +59,11 @@ public class Country {
         return hash;
     }
 
+    /**
+     * compares the objects
+     * @param obj object that needs to comapre
+     * @return result of comparision
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -73,5 +82,5 @@ public class Country {
         return true;
     }
 
-    
+
 }

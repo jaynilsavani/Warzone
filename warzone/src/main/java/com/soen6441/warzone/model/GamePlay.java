@@ -1,14 +1,14 @@
 package com.soen6441.warzone.model;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
- *
- * This Class is used for String and manipulating Game Play Information 
+ * This Class is used for String and manipulating Game Play Information
  * Three annotations (Getter,Setter, toString), you can see on the top of the class
  * are lombok dependencies to automatically generate getter, setter and tostring
  * method in the code.
@@ -24,18 +24,18 @@ public class GamePlay {
     /**
      * It'll manage list of player in that particular game
      */
-    private List<Player> playerList;
+    private List<Player> d_playerList;
 
     /**
      * It'll store name of game phase i.e. startUp, reinforcement, issue orders
      * , execute orders etc.
      */
-    private String gamePhase;
+    private String d_gamePhase;
 
     /**
      * name of the map file
      */
-    private String fileName;
+    private String d_fileName;
 
     /**
      * Map object for current Game
@@ -44,19 +44,19 @@ public class GamePlay {
     /**
      * number of turn in one game
      */
-    private int maxNumberOfTurns;
+    private int d_maxNumberOfTurns;
     /**
      * index of the current player who is playing the game
      */
-    private int currentPlayerId;
+    private int d_currentPlayerId;
     /**
      * Winner Player Information
      */
-    private Player winner;
+    private Player d_winner;
 
     /**
      * current status of game
      */
-    private String status;
+    private String d_status;
 
 }

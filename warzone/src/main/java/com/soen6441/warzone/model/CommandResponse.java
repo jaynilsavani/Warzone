@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * This class represents structure of response of all the commands .
- *
+ * <p>
  * Three annotations (Getter, Setter and ToString), you can see on the top of
  * the class are lombok dependencies to automatically generate getter, setter
  * and tostring method in the code.
@@ -35,11 +35,22 @@ public class CommandResponse {
      */
     private String d_responseString;
 
-    public CommandResponse(boolean d_isValid, String d_responseString) {
-        this.d_isValid = d_isValid;
-        this.d_responseString = d_responseString;
+    /**
+     * object to the response of the command
+     *
+     * @param p_isValid        validation parameter
+     * @param p_responseString response parameter
+     */
+    public CommandResponse(boolean p_isValid, String p_responseString) {
+        this.d_isValid = p_isValid;
+        this.d_responseString = p_responseString;
     }
 
+    /**
+     * used to get the response and validation together in string
+     *
+     * @return returns the formatted string with the validation of command and response to that validation
+     */
     @Override
     public String toString() {
         String l_validity;

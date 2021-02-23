@@ -1,20 +1,19 @@
 package com.soen6441.warzone.controller;
 
-import com.soen6441.warzone.view.FxmlView;
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.service.MapHandlingInterface;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Controller;
+import com.soen6441.warzone.view.FxmlView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Controller;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * This is for handling welcome controller request
@@ -38,45 +37,44 @@ public class WelcomeController implements Initializable {
      * This method takes a user to map creation, where player can create mad and
      * edit it
      *
-     * @param event will represents value sent from view
+     * @param p_event will represents value sent from view
      */
     @FXML
-    void createMap(ActionEvent event) {
-        d_stageManager.switchScene( FxmlView.MAPMANAGER, null );
+    void createMap(ActionEvent p_event) {
+        d_stageManager.switchScene(FxmlView.MAPMANAGER, null);
     }
 
     /**
      * This method is used to approach a start up phase of game for a player
      *
-     * @param event will represents value sent from view
+     * @param p_event will represents value sent from view
      */
     @FXML
-    void playGame(ActionEvent event) {
-
-        d_stageManager.switchScene( FxmlView.GAMECONFIG, null );
+    void playGame(ActionEvent p_event) {
+        d_stageManager.switchScene(FxmlView.GAMECONFIG, null);
     }
 
     /**
      * This method will exit the game and close the stage
      *
-     * @param event will represents value sent from view
+     * @param p_event will represents value sent from view
      */
     @FXML
-    void exitGame(ActionEvent event) {
-        Stage stage = (Stage) d_BtnExit.getScene().getWindow();
-        stage.close();
+    void exitGame(ActionEvent p_event) {
+        Stage l_stage = (Stage) d_BtnExit.getScene().getWindow();
+        l_stage.close();
     }
 
     /**
      * This is the initialization method of this controller
      *
-     * @param location  of the FXML file
-     * @param resources is properties information
+     * @param p_location  of the FXML file
+     * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL p_location, ResourceBundle p_resources) {
 
     }
 

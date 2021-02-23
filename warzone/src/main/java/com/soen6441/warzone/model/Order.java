@@ -2,7 +2,6 @@ package com.soen6441.warzone.model;
 
 
 /**
- *
  * This interface is used for and OrderImpl is the implementation of it.
  * Three annotations (Getter,Setter, toString), you can see on the top of the class
  * are lombok dependencies to automatically generate getter, setter and tostring
@@ -13,9 +12,8 @@ package com.soen6441.warzone.model;
 public interface Order {
 
     /**
-     *
      * @return Whether Order Executed or not
      */
-    public boolean executeOrder();
+    boolean executeOrder();
 
 }

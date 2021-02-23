@@ -1,18 +1,18 @@
 package com.soen6441.warzone.model;
 
-import java.util.Map;
 import lombok.EqualsAndHashCode;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * WarMap class is the main model for map management. From here the data
  * structure started. This Map is having Map of continents and continent will
  * have countries and those countries will have their adjacent countries.
- *
+ * <p>
  * Three annotations (Getter, Setter, toString), you can see on the top of the
  * class are lombok dependencies to automatically generate getter, setter and
  * tostring method in the code.
