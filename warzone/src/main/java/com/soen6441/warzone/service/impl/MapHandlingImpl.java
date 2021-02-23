@@ -64,7 +64,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     return showMap(d_warMap);
                 } //This Condition is used to check savemap command 
                 else if (p_command.startsWith("savemap")) {
-                    return checkCommandSaveMap(Arrays.asList(p_command.split(" ")).get(1));
+                        return checkCommandSaveMap(p_command);
                 } //This Condition is used to check editmap command
                 else if (p_command.startsWith("editmap")) {
                     return checkCommandEditMap(p_command);
@@ -297,6 +297,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @return Response of execution of command
      */
     public CommandResponse checkCommandEditMap(String p_editMapCommand) {
+        if(Arrays.asList(p_editMapCommand.split(" ")).size() <= 1){
+            d_generalUtil.prepareResponse(false, "Invalid Command");
+            return d_generalUtil.getResponse();
+        }
         String l_fileName = Arrays.asList(p_editMapCommand.split(" ")).get(1);
 
         if (d_generalUtil.validateIOString(l_fileName, "[a-zA-Z]+.?[a-zA-Z]+")) {
@@ -346,11 +350,16 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_fileName name of file that player want to store
      * @return object of commandResponse
      */
-    public CommandResponse checkCommandSaveMap(String p_fileName) {
+    public CommandResponse checkCommandSaveMap(String p_command) {
         if (d_warMap.getD_continents() == null || !d_warMap.isD_status()) {
             d_generalUtil.prepareResponse(false, "Map is empty");
             return d_generalUtil.getResponse();
         }
+        if(Arrays.asList(p_command.split(" ")).size() <= 1){
+             d_generalUtil.prepareResponse(false, "Invalid Command");
+             return d_generalUtil.getResponse();
+        }
+        String p_fileName = Arrays.asList(p_command.split(" ")).get(1);
         boolean l_fileExtension = false;
         if (p_fileName.contains(".")) {
             String l_fileName = p_fileName.split("\\.")[1];
