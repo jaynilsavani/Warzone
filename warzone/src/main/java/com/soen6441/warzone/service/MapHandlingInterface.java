@@ -1,29 +1,32 @@
 package com.soen6441.warzone.service;
 
 import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.model.Country;
 import com.soen6441.warzone.model.WarMap;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
- * Implementation of mapping data
+ * This interface is used for Utility of Map Editor related command and
+ * MapHandlingImpl is the implementation of it
  *
  * @author <a href="mailto:jenilsavani009@gmail.com">Jaynil Savani</a>
  */
 public interface MapHandlingInterface {
 
     /**
-     * This method will validate all command entered by user
+     * This method will validate all command entered by user for MapEditor
      *
      * @param p_command contains command string entered by user
-     * @return true if command is valid
+     * @return CommandResponse pertaining validity and message
      */
     public CommandResponse validateCommand(String p_command);
 
     /**
-     * This method will store WarMap model into file
+     * This method will store WarMap model to file
      *
      * @param p_warMap is the object of WarMap model
-     * @return true if map is successfully write to the file
+     * @return true if map is successfully written to the file
      */
     boolean writeMapToFile(WarMap p_warMap);
 
@@ -31,7 +34,6 @@ public interface MapHandlingInterface {
      * This method will read map file and store data into WarMap model object
      *
      * @param p_fileName fileName to read Map
-     *
      * @return WarMap model
      * @throws java.io.IOException throws input/output exception
      */
@@ -40,16 +42,26 @@ public interface MapHandlingInterface {
     /**
      * This method is used to show the map in 2D matrix containing Countries as
      * x-y axis
-     * @param p_warMap : object of map model
-     * @return CommandResponse object
+     *
+     * @param p_warMap : Object of map
+     * @return CommandResponse formatted in matrix form for better user
+     * understanding
      */
     public CommandResponse showMap(WarMap p_warMap);
-    
+
     /**
      * This function will validate map file
      *
-     * @param p_warMap use to validate
-     * @return return true if map is valid
+     * @param p_warMap Object of warmap
+     * @return return validity of map
      */
     public boolean validateMap(WarMap p_warMap);
+
+    /**
+     * used to get all countries available in the map
+     *
+     * @param p_continentMap is the object of WarMap model
+     * @return array list of the country
+     */
+    public ArrayList<Country> getAvailableCountries(WarMap p_continentMap);
 }

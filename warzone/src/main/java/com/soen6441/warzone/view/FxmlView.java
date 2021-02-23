@@ -1,8 +1,7 @@
 package com.soen6441.warzone.view;
 
-
 /**
- * This is views of application
+ * This are the views of application
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -71,17 +70,18 @@ public enum FxmlView {
     public abstract String getSceneTitle();
 
     /**
-     * This is used for retrieving fxml file
+     * This is used for retrieving fxml file Path
      *
-     * @return fxml file path
+     * @return fxml Relative file path
      */
     public abstract String getFxmlFile();
 
     /**
      *
      * This is used for extracting title from bundle resource
+     *
      * @param p_key : key to extract title
-     * @return title  
+     * @return title of the Screen
      */
     public String getTitleFromResourceBundle(String p_key) {
         if (!p_key.isEmpty()) {
