@@ -8,13 +8,17 @@ import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.service.impl.MapHandlingImpl;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import com.soen6441.warzone.model.*;
+
 import java.util.Arrays;
 import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,79 +41,60 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     @Override
     public CommandResponse showPlayerMap(GamePlay p_gamePlay) {
-            WarMap l_warMap=p_gamePlay.getD_warMap();
+        WarMap l_warMap = p_gamePlay.getD_warMap();
 
-        CommandResponse l_showCountris=d_mapConfig.showMap(l_warMap);
-        if(p_gamePlay.getPlayerList()==null)
-        {
-            String l_showMapOfCountris=l_showCountris.getD_responseString();
-            d_generalUtil.prepareResponse(true,l_showMapOfCountris);
-        }
-        else
-        {
+        CommandResponse l_showCountris = d_mapConfig.showMap(l_warMap);
+        if (p_gamePlay.getPlayerList() == null) {
+            String l_showMapOfCountris = l_showCountris.getD_responseString();
+            d_generalUtil.prepareResponse(true, l_showMapOfCountris);
+        } else {
 
-            String l_showMapOfCountris=l_showCountris.getD_responseString();
-            List<Country> l_countryList=d_mapConfig.getAvailableCountries(l_warMap);
-            int l_colSize=l_countryList.size()+1;
-            int l_rowSize=p_gamePlay.getPlayerList().size()+1;
-            String [][]l_playerToCountry=new String[l_rowSize][l_colSize];
-            int l_maxLength=0;
-            for(int l_i=0;l_i<l_rowSize;l_i++)
-            {
-                for(int l_j=0;l_j<l_colSize;l_j++)
-                {
-                    if(l_i==0 && l_j==0)
-                    {
+            String l_showMapOfCountris = l_showCountris.getD_responseString();
+            List<Country> l_countryList = d_mapConfig.getAvailableCountries(l_warMap);
+            int l_colSize = l_countryList.size() + 1;
+            int l_rowSize = p_gamePlay.getPlayerList().size() + 1;
+            String[][] l_playerToCountry = new String[l_rowSize][l_colSize];
+            int l_maxLength = 0;
+            for (int l_i = 0; l_i < l_rowSize; l_i++) {
+                for (int l_j = 0; l_j < l_colSize; l_j++) {
+                    if (l_i == 0 && l_j == 0) {
 
-                        l_playerToCountry[l_i][l_j]="";
+                        l_playerToCountry[l_i][l_j] = "";
                         continue;
-                    }
-                    else if(l_i==0 && l_j!=0)
-                    {
-                        l_playerToCountry[l_i][l_j]=l_countryList.get(l_j-1).getD_countryName();
+                    } else if (l_i == 0 && l_j != 0) {
+                        l_playerToCountry[l_i][l_j] = l_countryList.get(l_j - 1).getD_countryName();
                         if (l_maxLength < l_playerToCountry[l_i][l_j].length()) {
                             l_maxLength = l_playerToCountry[l_i][l_j].length();
                         }
-                    }
-                    else if(l_i!=0 && l_j==0)
-                    {
-                        l_playerToCountry[l_i][l_j]=p_gamePlay.getPlayerList().get(l_i-1).getD_playerName();
+                    } else if (l_i != 0 && l_j == 0) {
+                        l_playerToCountry[l_i][l_j] = p_gamePlay.getPlayerList().get(l_i - 1).getD_playerName();
                         if (l_maxLength < l_playerToCountry[l_i][l_j].length()) {
                             l_maxLength = l_playerToCountry[l_i][l_j].length();
                         }
-                    }
-                    else
-                    {
-                        if(p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().contains(l_countryList.get(l_j-1)))
-                        {
+                    } else {
+                        if (p_gamePlay.getPlayerList().get(l_i - 1).getD_ownedCountries().contains(l_countryList.get(l_j - 1))) {
 
-                            int l_same=0;
-                            while(l_same<p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().size())
-                            {
-                                if(l_countryList.get(l_j-1).getD_countryName().equalsIgnoreCase(p_gamePlay.getPlayerList().get(l_i-1).getD_ownedCountries().get(l_same).getD_countryName()))
-                                {
-                                    l_playerToCountry[l_i][l_j]= String.valueOf(l_countryList.get(l_j-1).getD_noOfArmies());
+                            int l_same = 0;
+                            while (l_same < p_gamePlay.getPlayerList().get(l_i - 1).getD_ownedCountries().size()) {
+                                if (l_countryList.get(l_j - 1).getD_countryName().equalsIgnoreCase(p_gamePlay.getPlayerList().get(l_i - 1).getD_ownedCountries().get(l_same).getD_countryName())) {
+                                    l_playerToCountry[l_i][l_j] = String.valueOf(l_countryList.get(l_j - 1).getD_noOfArmies());
                                     break;
                                 }
                                 l_same++;
                             }
-                        }
-                        else
-                        {
-                            l_playerToCountry[l_i][l_j]="0";
+                        } else {
+                            l_playerToCountry[l_i][l_j] = "0";
                         }
                     }
                 }
             }
-            l_showMapOfCountris=l_showMapOfCountris+"\n";
-            for (int l_i=0;l_i<l_rowSize;l_i++)
-            {
-                for(int l_j=0;l_j<l_colSize;l_j++)
-                {
+            l_showMapOfCountris = l_showMapOfCountris + "\n";
+            for (int l_i = 0; l_i < l_rowSize; l_i++) {
+                for (int l_j = 0; l_j < l_colSize; l_j++) {
                     String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_playerToCountry[l_i][l_j]);
-                    l_showMapOfCountris=l_showMapOfCountris+l_stringFrmat+"\t";
+                    l_showMapOfCountris = l_showMapOfCountris + l_stringFrmat + " ";
                 }
-                l_showMapOfCountris=l_showMapOfCountris+"\n";
+                l_showMapOfCountris = l_showMapOfCountris + "\n";
             }
             l_showCountris.setD_isValid(true);
             l_showCountris.setD_responseString(l_showMapOfCountris);
@@ -122,7 +107,6 @@ public class GameConfigServiceImpl implements GameConfigService {
     }
 
     /**
-     *
      * {@inheritDoc }
      */
     @Override
@@ -134,7 +118,7 @@ public class GameConfigServiceImpl implements GameConfigService {
      * This function is used to update layer list
      *
      * @param p_currentGamePlay : object of GamePlay model
-     * @param p_command : updation command
+     * @param p_command         : updation command
      * @return Current Updated Gameplay
      */
     @Override
@@ -192,39 +176,29 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     @Override
     public CommandResponse assignCountries(GamePlay p_gamePlay) throws IOException {
-        String l_mapFileName=p_gamePlay.getFileName();
-        WarMap l_warMap=d_mapConfig.readMap(l_mapFileName);
-        if(p_gamePlay.getPlayerList()==null)
-        {
-            d_generalUtil.prepareResponse(false,"No player in the game");
+        WarMap l_warMap = p_gamePlay.getD_warMap();
+        if (p_gamePlay.getPlayerList() == null) {
+            d_generalUtil.prepareResponse(false, "No player in the game");
 
-        }
-        else if(p_gamePlay.getPlayerList().get(0).getD_ownedCountries().size()!=0)
-        {
-            d_generalUtil.prepareResponse(false,"Countries are already assigned");
-        }
-        else {
-            int l_noOfPlayers=p_gamePlay.getPlayerList().size();
+        } else if (p_gamePlay.getPlayerList().get(0).getD_ownedCountries().size() != 0) {
+            d_generalUtil.prepareResponse(false, "Countries are already assigned");
+        } else {
+            int l_noOfPlayers = p_gamePlay.getPlayerList().size();
 
-            int l_noOfCountries=d_mapConfig.getAvailableCountries(l_warMap).size();
-            List<Country> l_country_check=d_mapConfig.getAvailableCountries(l_warMap);
-            List<Player> l_players=p_gamePlay.getPlayerList();
-            int l_counter=l_noOfCountries/l_noOfPlayers;
-            int l_modulus=l_noOfCountries%l_noOfPlayers;
-            List<Country> l_checkCountryOnPlayer=new ArrayList<Country>();
-            int l_i=0,l_j=0;
-            for(l_i=0;l_i<l_counter;l_i++)
-            {
-                for(l_j=0;l_j<l_noOfPlayers;l_j++)
-                {
-                    if(p_gamePlay.getPlayerList().get(l_j).getD_ownedCountries()==null)
-                    {
-                        List<Country> l_country=new ArrayList<Country>();
-                        while(true)
-                        {Random rand = new Random();
+            int l_noOfCountries = d_mapConfig.getAvailableCountries(l_warMap).size();
+            List<Country> l_country_check = d_mapConfig.getAvailableCountries(l_warMap);
+            int l_counter = l_noOfCountries / l_noOfPlayers;
+            int l_modulus = l_noOfCountries % l_noOfPlayers;
+            List<Country> l_checkCountryOnPlayer = new ArrayList<Country>();
+            int l_i = 0, l_j = 0;
+            for (l_i = 0; l_i < l_counter; l_i++) {
+                for (l_j = 0; l_j < l_noOfPlayers; l_j++) {
+                    if (p_gamePlay.getPlayerList().get(l_j).getD_ownedCountries() == null) {
+                        List<Country> l_country = new ArrayList<Country>();
+                        while (true) {
+                            Random rand = new Random();
                             int rand_int1 = rand.nextInt(l_noOfCountries);
-                            if(!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1)))
-                            {
+                            if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
                                 l_country.add(l_country_check.get(rand_int1));
                                 l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
                                 p_gamePlay.getPlayerList().get(l_j).setD_ownedCountries(l_country);
@@ -233,14 +207,11 @@ public class GameConfigServiceImpl implements GameConfigService {
                             }
 
                         }
-                    }
-                    else
-                    {
-                        while(true)
-                        {Random rand = new Random();
+                    } else {
+                        while (true) {
+                            Random rand = new Random();
                             int rand_int1 = rand.nextInt(l_noOfCountries);
-                            if(!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1)))
-                            {
+                            if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
                                 p_gamePlay.getPlayerList().get(l_j).getD_ownedCountries().add(l_country_check.get(rand_int1));
                                 l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
                                 break;
@@ -252,13 +223,11 @@ public class GameConfigServiceImpl implements GameConfigService {
 
                 }
             }
-            for(l_i=0;l_i<l_modulus;l_i++)
-            {
-                while(true)
-                {Random rand = new Random();
+            for (l_i = 0; l_i < l_modulus; l_i++) {
+                while (true) {
+                    Random rand = new Random();
                     int rand_int1 = rand.nextInt(l_noOfCountries);
-                    if(!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1)))
-                    {
+                    if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
                         p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().add(l_country_check.get(rand_int1));
                         l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
                         break;
@@ -267,26 +236,21 @@ public class GameConfigServiceImpl implements GameConfigService {
 
                 }
             }
-            String l_response="";
-            for(l_i=0;l_i<l_noOfPlayers;l_i++)
-            {
-                l_response=l_response+p_gamePlay.getPlayerList().get(l_i).getD_playerName()+" owns [";
-                for(l_j=0;l_j<p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().size();l_j++)
-                {
-                    if(l_j==(p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().size()-1))
-                    {
-                        l_response=l_response+p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName();
-                    }
-                    else
-                    {
-                        l_response=l_response+p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName()+",";
+            String l_response = "";
+            for (l_i = 0; l_i < l_noOfPlayers; l_i++) {
+                l_response = l_response + p_gamePlay.getPlayerList().get(l_i).getD_playerName() + " owns [";
+                for (l_j = 0; l_j < p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().size(); l_j++) {
+                    if (l_j == (p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().size() - 1)) {
+                        l_response = l_response + p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName();
+                    } else {
+                        l_response = l_response + p_gamePlay.getPlayerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName() + ",";
                     }
 
                 }
-                l_response=l_response+"]\n";
+                l_response = l_response + "]\n";
             }
 
-            d_generalUtil.prepareResponse(true,l_response);
+            d_generalUtil.prepareResponse(true, l_response);
         }
 
 
