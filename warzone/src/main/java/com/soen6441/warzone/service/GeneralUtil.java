@@ -61,7 +61,7 @@ public interface GeneralUtil {
      * @param p_source : source node to check graph is connected or not
      * @param p_visited : boolean array to store visited node
      * @param p_noOfCountries : total number of countries in map
-     * @param p_metricesOfMap : metrics of map 
+     * @param p_metricesOfMap : metrics of map
      */
     public void traverse(int p_source, boolean[] p_visited, int p_noOfCountries, int[][] p_metricesOfMap);
 

@@ -11,13 +11,20 @@ import com.soen6441.warzone.config.StageManager;
 /**
  * This is the main entry point for WarzonegameApplication and it extends
  * Application (Which is JavaFx class), as we want it to load through JavaFx.
- * 
+ *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 @SpringBootApplication
 public class WarzoneApplication extends Application {
 
+    /**
+     * This is Configurable Springboot application context
+     */
     protected ConfigurableApplicationContext d_springContext;
+    /**
+     *
+     * This is used to switch to welcome screen on startup
+     */
     protected StageManager d_stageManager;
 
     /**
@@ -65,8 +72,8 @@ public class WarzoneApplication extends Application {
 
     /**
      * Useful to override this method by sub-classes wishing to change the first
-     * Scene to be displayed on startup. 
-     * Example: Functional tests on main window.
+     * Scene to be displayed on startup. Example: Functional tests on main
+     * window.
      */
     protected void displayInitialScene() {
         d_stageManager.switchScene(FxmlView.HOME, null);

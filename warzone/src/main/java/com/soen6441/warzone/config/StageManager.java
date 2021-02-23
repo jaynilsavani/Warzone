@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.soen6441.warzone.config;
 
 import com.soen6441.warzone.controller.GameEngine;
@@ -22,15 +17,21 @@ import javafx.stage.Stage;
  */
 public class StageManager {
 
+    /**
+     * This is used to set current Application view to user
+     */
     private final Stage d_primaryStage;
+    /**
+     *This is used to load FXML View
+     */
     private final SpringFXMLLoader d_springFXMLLoader;
 
     /**
-     * This is a parameterize controller of this class and it'll initialize
-     * given values in args.
+     * This is a parameterize constructor of this class and it'll initialize
+     * given values in arguments.
      *
      * @param p_springFXMLLoader will make object from XML file
-     * @param p_stage is a current view
+     * @param p_stage stage to which user want to switch
      */
     public StageManager(SpringFXMLLoader p_springFXMLLoader, Stage p_stage) {
         this.d_springFXMLLoader = p_springFXMLLoader;
@@ -75,7 +76,7 @@ public class StageManager {
      * This method will prepare scene (view) before loading
      *
      * @param p_rootnode is parent Node of scene
-     * @return scene
+     * @return prepared scene
      */
     private Scene prepareScene(Parent p_rootnode) {
         Scene l_scene = d_primaryStage.getScene();
