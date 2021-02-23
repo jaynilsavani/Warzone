@@ -67,14 +67,14 @@ public class GameConfigServiceTest {
     @Test
     public void testForUpdatePlayer() {
 
-        Player expectedPlayer = new Player();
-        expectedPlayer.setD_playerName("user");
-        Player actualPlayer = new Player();
+        Player l_expectedPlayer = new Player();
+        l_expectedPlayer.setD_playerName("user");
+        Player l_actualPlayer = new Player();
 
-        GamePlay l_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, "gameplayer -add " + expectedPlayer.getD_playerName());
+        GamePlay l_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, "gameplayer -add " + l_expectedPlayer.getD_playerName());
         if (!l_gamePlay.getPlayerList().isEmpty()) {
-            actualPlayer = l_gamePlay.getPlayerList().get(0);
+            l_actualPlayer = l_gamePlay.getPlayerList().get(0);
         }
-        assertEquals(expectedPlayer, actualPlayer);
+        assertEquals(l_expectedPlayer, l_actualPlayer);
     }
 }

@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class WarzoneApplicationTests {
 
     /**
-     * This method is used to load Springboot Apllication Context
+     * This method is used to load Springboot Application Context
      */
     @Test
     public void contextLoads() {
