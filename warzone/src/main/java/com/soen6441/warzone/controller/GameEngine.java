@@ -125,7 +125,7 @@ public class GameEngine implements Initializable {
                     Arrays.fill(PlayerFlag, 0);                                   //flag that resets the issue counter
                     d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);          // to reinforce the armies every time the loop resets
                     d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gamePlay));
-                    d_playerTurn.setText("Issue an order for " + d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName());
+                    d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName()+"'s turn");
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                     d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                     d_CommandLine.clear();
@@ -140,7 +140,7 @@ public class GameEngine implements Initializable {
                 if (PlayerFlag[PlayCounter] == 1) {                                            //it checks that plalyer is done with issues and continue loop
                     continue;
                 } else if (PlayerFlag[PlayCounter] == 0) {                                       //break the loop if finds the next player available to issue an order
-                    d_playerTurn.setText("Issue an order for " + d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName());
+                    d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName()+"'s turn");
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                     d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                     d_CommandLine.clear();
@@ -163,7 +163,7 @@ public class GameEngine implements Initializable {
      */
     public void setGamePlay(GamePlay p_gameConfig) {
         d_gamePlay = p_gameConfig;
-        d_playerTurn.setText("Issue order for " + d_gamePlay.getD_playerList().get(0).getD_playerName());
+        d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName()+"'s turn");
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         PlayerFlag = new int[d_gamePlay.getD_playerList().size()];
