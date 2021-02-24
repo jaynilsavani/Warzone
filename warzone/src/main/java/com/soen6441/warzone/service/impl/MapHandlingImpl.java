@@ -1191,6 +1191,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
         return d_warMap;
     }
 
+    /**
+     * used to give the arraylist of name of continents
+     *
+     * @param p_warMap gives the map object
+     * @return list of the string of continents
+     */
     public ArrayList<String> getAvailableContinentName(WarMap p_warMap) {
         if (p_warMap != null) {
             List<String> l_continent = new ArrayList<String>();
@@ -1204,6 +1210,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
     }
 
+    /**
+     * used to give the arraylist of name of countries
+     *
+     * @param p_warMap gives the map object
+     * @return arralist of the countryNames
+     */
     public ArrayList<String> getAvailableCountryName(WarMap p_warMap) {
         if (p_warMap != null) {
             List<String> l_country = new ArrayList<String>();
