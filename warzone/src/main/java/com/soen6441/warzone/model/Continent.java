@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * This class represents all the continents in the map and it has a list of territories that continent owned.
+ * This class represents all the continents in the map and it has a list of
+ * territories that continent owned.
  * <p>
- * Three annotations (Getter, Setter and ToString), you can see on the top of the class are lombok dependencies to
- * automatically generate getter, setter and tostring method in the code.
+ * Three annotations (Getter, Setter and ToString), you can see on the top of
+ * the class are lombok dependencies to automatically generate getter, setter
+ * and tostring method in the code.
  *
  * @author <a href="mailto:y_vaghan@encs.concordia.ca">Yashkumar Vaghani</a>
  */
@@ -24,8 +26,8 @@ import java.util.List;
 public class Continent {
 
     /**
-     * Four data members of Continent class will be used to store continent data to map.
-     * d_continentIndex will store index of the continent
+     * Four data members of Continent class will be used to store continent data
+     * to map. d_continentIndex will store index of the continent
      */
     private int d_continentIndex;
 
@@ -45,4 +47,3 @@ public class Continent {
     private List<Country> d_countryList;
 
 }
-

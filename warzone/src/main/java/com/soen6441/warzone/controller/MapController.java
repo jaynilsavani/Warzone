@@ -16,10 +16,8 @@ import org.springframework.stereotype.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 @Controller
 public class MapController implements Initializable {
-
 
     @Lazy
     @Autowired
@@ -34,7 +32,7 @@ public class MapController implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param p_location  of the FXML file
+     * @param p_location of the FXML file
      * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
@@ -43,7 +41,6 @@ public class MapController implements Initializable {
     public void initialize(URL p_location, ResourceBundle p_resources) {
         d_commandResponse.setStyle("-fx-font-family: monospace");
     }
-
 
     /**
      * This method will redirect user to Home page
@@ -57,7 +54,8 @@ public class MapController implements Initializable {
     }
 
     /**
-     * This method is used to get data from user and put it as a parameter in validation
+     * This method is used to get data from user and put it as a parameter in
+     * validation
      *
      * @param p_event will represents value sent from view
      */

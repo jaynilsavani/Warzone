@@ -70,7 +70,7 @@ public class GameConfigController implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param p_location  of the FXML file
+     * @param p_location of the FXML file
      * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
@@ -195,7 +195,6 @@ public class GameConfigController implements Initializable {
         d_showPlayPhase.setText(l_gmConfigRes.toString());
         d_CommandLine.clear();
     }
-
 
     /**
      * This is used as Sub function for Loading map

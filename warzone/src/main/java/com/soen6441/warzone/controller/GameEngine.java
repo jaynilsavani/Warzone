@@ -27,7 +27,8 @@ import java.util.*;
 public class GameEngine implements Initializable {
 
     /**
-     * array of falg that shows that whether player is done with issuing order or not for particular round
+     * array of falg that shows that whether player is done with issuing order
+     * or not for particular round
      */
     private static int[] PlayerFlag;
 
@@ -82,7 +83,7 @@ public class GameEngine implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param p_location  of the FXML file
+     * @param p_location of the FXML file
      * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
@@ -125,7 +126,7 @@ public class GameEngine implements Initializable {
                     Arrays.fill(PlayerFlag, 0);                                   //flag that resets the issue counter
                     d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);          // to reinforce the armies every time the loop resets
                     d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gamePlay));
-                    d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName()+"'s turn");
+                    d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName() + "'s turn");
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                     d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                     d_CommandLine.clear();
@@ -140,7 +141,7 @@ public class GameEngine implements Initializable {
                 if (PlayerFlag[PlayCounter] == 1) {                                            //it checks that plalyer is done with issues and continue loop
                     continue;
                 } else if (PlayerFlag[PlayCounter] == 0) {                                       //break the loop if finds the next player available to issue an order
-                    d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName()+"'s turn");
+                    d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName() + "'s turn");
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                     d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                     d_CommandLine.clear();
@@ -163,7 +164,7 @@ public class GameEngine implements Initializable {
      */
     public void setGamePlay(GamePlay p_gameConfig) {
         d_gamePlay = p_gameConfig;
-        d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName()+"'s turn");
+        d_playerTurn.setText(d_gamePlay.getD_playerList().get(PlayCounter).getD_playerName() + "'s turn");
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         PlayerFlag = new int[d_gamePlay.getD_playerList().size()];
@@ -172,8 +173,7 @@ public class GameEngine implements Initializable {
     }
 
     /**
-     * This is used for Main Game loop Which includes
-     * AssignREinforcement
+     * This is used for Main Game loop Which includes AssignREinforcement
      */
     private void reinforcementArmies() {
         d_gamePlay = d_gameEngineSevice.assignReinforcements(d_gamePlay);
@@ -221,10 +221,12 @@ public class GameEngine implements Initializable {
     }
 
     /**
-     * This method is used to store the user input of orders in player's lst of orders
+     * This method is used to store the user input of orders in player's lst of
+     * orders
      *
      * @param p_command String that has been given by user
-     * @return return the response in term of wether order is added or player is completed with orders or not
+     * @return return the response in term of wether order is added or player is
+     * completed with orders or not
      */
     public CommandResponse issuingPlayer(String p_command) {
         Player l_player = d_gamePlay.getD_playerList().get(PlayCounter);              //assigns the current player using the playcounter
@@ -254,7 +256,6 @@ public class GameEngine implements Initializable {
             d_generalUtil.prepareResponse(true, CounterRound + " | " + p_command + " | " + l_player.getD_playerName());
             return d_generalUtil.getResponse();
         }
-
 
     }
 

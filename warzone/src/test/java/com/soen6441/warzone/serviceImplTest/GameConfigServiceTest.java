@@ -31,7 +31,7 @@ public class GameConfigServiceTest {
 
     @Autowired
     GamePlay d_gamePlay;
-    
+
     /**
      * This method is used to load SpringBoot Application Context
      */
@@ -66,7 +66,7 @@ public class GameConfigServiceTest {
      */
     @Test
     public void testForUpdatePlayer() {
-        
+
         Player l_expectedPlayer = new Player();
         l_expectedPlayer.setD_playerName("user");
         Player l_actualPlayer = new Player();

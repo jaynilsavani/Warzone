@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @RunWith(Suite.class)
-@SuiteClasses({MapHandlingImplTest.class,GameConfigServiceTest.class, GameEngineServiceTest.class})
+@SuiteClasses({MapHandlingImplTest.class, GameConfigServiceTest.class, GameEngineServiceTest.class})
 public class WarzoneApplicationTests {
 
     /**

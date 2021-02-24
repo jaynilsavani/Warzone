@@ -50,6 +50,7 @@ public class Country {
 
     /**
      * to use the hashcode for this object
+     *
      * @return hashcode
      */
     @Override
@@ -61,6 +62,7 @@ public class Country {
 
     /**
      * compares the objects
+     *
      * @param obj object that needs to comapre
      * @return result of comparision
      */
@@ -81,6 +83,5 @@ public class Country {
         }
         return true;
     }
-
 
 }

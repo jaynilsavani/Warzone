@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * This Class is used for String and manipulating Game Play Information
- * Three annotations (Getter,Setter, toString), you can see on the top of the class
+ * This Class is used for String and manipulating Game Play Information Three
+ * annotations (Getter,Setter, toString), you can see on the top of the class
  * are lombok dependencies to automatically generate getter, setter and tostring
  * method in the code.
  *

@@ -324,12 +324,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (d_warMap.getD_continents() != null) {
                         int l_countryId = getCountryIndexByCountryName(d_warMap.getD_continents(), l_countryName);
                         int l_neighbourCountryId = getCountryIndexByCountryName(d_warMap.getD_continents(), l_neighbourCountryName);
-                        l_result = saveNeighbour(l_countryId, l_neighbourCountryId);
-                    }
-                    if (l_result) {
-                        d_generalUtil.prepareResponse(true, "Neighbour is added successfully");
-                    } else {
-                        d_generalUtil.prepareResponse(false, "neighbour is not added successfully");
+                        CommandResponse l_addneighbour = saveNeighbour(l_countryId, l_neighbourCountryId);
+                        d_generalUtil.prepareResponse(l_addneighbour.isD_isValid(), l_addneighbour.getD_responseString());
                     }
                 } //For removal of the neighbour
                 else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
@@ -755,11 +751,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * @param p_neighbour is the name of neighbour
      * @return returns true if neighbour is successfully added
      */
-    public boolean saveNeighbour(int p_countryId, int p_neighbour) {
+    public CommandResponse saveNeighbour(int p_countryId, int p_neighbour) {
         if (p_countryId == p_neighbour) {
-            return false;
+            d_generalUtil.prepareResponse(false, "country can not be the neighbour of itself");
+            return d_generalUtil.getResponse();
         }
-
         boolean l_result = false;
         if (d_warMap.getD_continents() != null) {
             //iterate through All continents
@@ -768,29 +764,37 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 for (Country l_country : l_entry.getValue().getD_countryList()) {
                     //For checking country id to store the neighbour
                     if (p_countryId == l_country.getD_countryIndex()) {
+                        l_result = true;
                         String l_neighbourNameToAdd = getCountryNamebyCountryId(d_warMap.getD_continents(), p_neighbour);
                         if (l_country.getD_neighbourCountries() == null) {
                             List<String> addToNeighbourList = new ArrayList<String>();
                             l_country.setD_neighbourCountries(addToNeighbourList);
                             l_country.getD_neighbourCountries().add(l_neighbourNameToAdd);
-                            l_result = true;
+                            d_generalUtil.prepareResponse(true, "neighbourcountry is added successfully");
                             break;
                         } else {
                             if (!l_country.getD_neighbourCountries().contains(l_neighbourNameToAdd)) {
                                 l_country.getD_neighbourCountries().add(l_neighbourNameToAdd);
-                                l_result = true;
+                                d_generalUtil.prepareResponse(true, "neighbourcountry is added successfully");
                                 break;
 
                             } else {
-                                l_result = false;
-                                break;
+
+                                d_generalUtil.prepareResponse(false, "neighbour country is already there");
+                                return d_generalUtil.getResponse();
+
                             }
                         }
                     }
+
                 }
             }
+            if (l_result == false) {
+                d_generalUtil.prepareResponse(false, "Country does not exist!!!");
+                return d_generalUtil.getResponse();
+            }
         }
-        return l_result;
+        return d_generalUtil.getResponse();
     }
 
     //General Util functions for Map Editor commands
