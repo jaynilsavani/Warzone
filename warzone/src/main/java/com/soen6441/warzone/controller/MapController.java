@@ -16,6 +16,11 @@ import org.springframework.stereotype.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * This class provides map management functionalities such as add an existing map, create a new map.
+ *
+ * @author <a href="mailto:patelvicky1995@gmail.com">Vicky Patel</a>
+ */
 @Controller
 public class MapController implements Initializable {
 
