@@ -50,7 +50,7 @@ public class GeneralUtilImpl implements GeneralUtil {
         if (!p_string.isEmpty()) {
             Pattern l_pattern = Pattern.compile(p_regex);
             Matcher l_matcher = l_pattern.matcher(p_string);
-            return l_matcher.find();
+            return l_matcher.matches();
         } else {
             return false;
         }

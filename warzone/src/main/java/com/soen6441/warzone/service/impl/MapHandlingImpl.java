@@ -109,7 +109,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_continentName = "";
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
-
+        if(!d_generalUtil.validateIOString(p_editContinentCommand,"editcontinent((\\s-add\\s[a-z|A-Z]+\\s[0-9]+)+|\\s-remove\\s[a-z|A-Z]+)+"))
+        {
+            d_generalUtil.prepareResponse(false, "Invalid Command!!!@");
+            return d_generalUtil.getResponse();
+        }
         for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
 
             if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
@@ -171,7 +175,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_countryName = "";
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
-
+        if(!d_generalUtil.validateIOString(p_editCountryCommand,"editcountry((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)+|\\s-remove\\s[a-z|A-Z]+)+"))
+        {
+            d_generalUtil.prepareResponse(false, "Invalid Command!!!@");
+            return d_generalUtil.getResponse();
+        }
         for (int i = 0; i < l_editCountryCommandString.size(); i++) {
             if (l_editCountryCommandString.get(i).equalsIgnoreCase("-add")) {
                 l_countryName = l_editCountryCommandString.get(i + 1);
