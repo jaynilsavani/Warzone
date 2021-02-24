@@ -99,7 +99,7 @@ public class GameEngine implements Initializable {
      * @param p_event handling the user events
      */
     public void getData(ActionEvent p_event) {
-        String l_s = d_CommandLine.getText();
+        String l_s = d_CommandLine.getText().trim();
         String[] l_validatestr = l_s.split("\\s");
         if ((d_generalUtil.validateIOString(l_s, "deploy\\s*[a-zA-Z]+\\s*[0-9]+") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
