@@ -1,11 +1,14 @@
 package com.soen6441.warzone.service.impl;
 
 import static com.soen6441.warzone.config.WarzoneConstants.*;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
+
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.model.*;
 import com.soen6441.warzone.service.GeneralUtil;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.AbstractMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +45,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int NeighbourId = 1;
 
     /**
-     *
      * {@inheritDoc }
      */
     @Override
@@ -57,7 +60,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 else if (p_command.startsWith("editcountry")) {
                     return checkCommandEditCountry(p_command);
                 } //This Condition is used to check editneighbor command
-                else if (p_command.startsWith("editneighbor") || p_command.startsWith("editneighbour")) {
+                else if (p_command.startsWith("editneighbour")) {
                     return checkCommandEditNeighbours(p_command);
                 } //This Condition is used to check showmap command
                 else if (p_command.startsWith("showmap")) {
@@ -109,8 +112,18 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_continentName = "";
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
-        if(!d_generalUtil.validateIOString(p_editContinentCommand,"editcontinent((\\s-add\\s[a-z|A-Z]+\\s[0-9]+)+|\\s-remove\\s[a-z|A-Z]+)+"))
-        {
+        if (d_generalUtil.validateIOString(p_editContinentCommand, "editcontinent((\\s-add\\s[a-z|A-Z]+\\s[0-9]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
+            List<String> l_continentNames = getAvailableContinentName(d_warMap);
+            for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
+                if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
+                    if (!l_continentNames.contains(l_commandString.get(l_i + 1))) {
+                        d_generalUtil.prepareResponse(false, l_commandString.get(l_i + 1) + " is not present in the map!!!");
+                        return d_generalUtil.getResponse();
+                    }
+                }
+            }
+
+        } else {
             d_generalUtil.prepareResponse(false, "Invalid Command!!!");
             return d_generalUtil.getResponse();
         }
@@ -175,8 +188,28 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_countryName = "";
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
-        if(!d_generalUtil.validateIOString(p_editCountryCommand,"editcountry((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)+|\\s-remove\\s[a-z|A-Z]+)+"))
-        {
+        if (d_generalUtil.validateIOString(p_editCountryCommand, "editcountry((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
+            List<String> l_continentNames = getAvailableContinentName(d_warMap);
+            List<String> l_cName=getAvailableCountryName(d_warMap);
+            for (int l_i = 0; l_i < l_editCountryCommandString.size(); l_i++) {
+                if(l_editCountryCommandString.get(l_i).equalsIgnoreCase("-add"))
+                {
+                    if(!l_continentNames.contains(l_editCountryCommandString.get(l_i+2)))
+                    {
+                        d_generalUtil.prepareResponse(false, l_editCountryCommandString.get(l_i + 2) + " is not present in the map");
+                        return d_generalUtil.getResponse();
+                    }
+
+                }
+                if (l_editCountryCommandString.get(l_i).equalsIgnoreCase("-remove")) {
+                    if (!l_cName.contains(l_editCountryCommandString.get(l_i + 1))) {
+                        d_generalUtil.prepareResponse(false, l_editCountryCommandString.get(l_i + 1) + " is not present in the map");
+                        return d_generalUtil.getResponse();
+                    }
+                }
+            }
+
+        } else {
             d_generalUtil.prepareResponse(false, "Invalid Command!!!@");
             return d_generalUtil.getResponse();
         }
@@ -253,7 +286,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * remove as per the user command
      *
      * @param p_neighbour is the command to add neighbour in specific country's
-     * neighbour list
+     *                    neighbour list
      * @return CommandResponse object
      */
     public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
@@ -266,8 +299,23 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_neighbourCountryName = "";
         boolean l_result = false;
         List<String> l_commandString = Arrays.asList(p_neighbour.split(" "));
-        if (l_commandString.size() == 1 || (l_commandString.size() % 3) != 1) {
-            d_generalUtil.prepareResponse(false, "Invalid Coommand");
+        if (d_generalUtil.validateIOString(p_neighbour, "editneighbour((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+\\s[a-z|A-Z]+))+")) {
+            List<String> l_cName=getAvailableCountryName(d_warMap);
+            for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
+                if(l_commandString.get(l_i).equalsIgnoreCase("-add") || l_commandString.get(l_i).equalsIgnoreCase("-remove"))
+                {
+                    if(!l_cName.contains(l_commandString.get(l_i+2)))
+                    {
+                        d_generalUtil.prepareResponse(false, l_commandString.get(l_i + 2) + " is not present in the map");
+                        return d_generalUtil.getResponse();
+                    }
+
+                }
+
+            }
+
+        } else {
+            d_generalUtil.prepareResponse(false, "Invalid Command!!!@");
             return d_generalUtil.getResponse();
         }
         //loop iterate over command segments
@@ -306,7 +354,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * read the data of existing map file otherwise it will create new map file
      *
      * @param p_editMapCommand is command to edit a existing map or create new
-     * map
+     *                         map
      * @return Response of execution of command
      */
     public CommandResponse checkCommandEditMap(String p_editMapCommand) {
@@ -523,6 +571,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     //-----------------Below Functions are utility function for above commands----------//
     //  Delete commands Function
+
     /**
      * This method will return true and break if continent is deleted and this
      * method is common for both terminal and GUI
@@ -603,7 +652,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method will return true and break if neighbor got removed and this
      * method is used for removal of country's neighbor
      *
-     * @param p_countryName name of the country you want to delete for
+     * @param p_countryName         name of the country you want to delete for
      * @param p_neighborCountryName name of the neighbor you want to delete
      * @return false if not possible to delete or does not exist
      */
@@ -642,11 +691,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     // //Add Commands Function
+
     /**
      * This method will save continent for both terminal and GUI
      *
      * @param p_continentName name of continent
-     * @param p_value value of Continent
+     * @param p_value         value of Continent
      */
     public void saveContinent(String p_continentName, String p_value) {
         if (d_warMap.getD_continents() != null) {
@@ -670,7 +720,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method will save country given from both GUI and command line
      *
-     * @param p_countryName name of the country
+     * @param p_countryName    name of the country
      * @param p_continentIndex index of continent
      */
     public void saveCountry(String p_countryName, int p_continentIndex) {
@@ -698,7 +748,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method is used to add the neighbour
      *
      * @param p_countryId is unique ID of country in which we want to add
-     * neighbour
+     *                    neighbour
      * @param p_neighbour is the name of neighbour
      * @return returns true if neighbour is successfully added
      */
@@ -741,11 +791,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     //General Util functions for Map Editor commands
+
     /**
      * This method is used to convert map object to metric
      *
      * @param p_countries list of countries
-     * @param p_warMap : object of WarMap model
+     * @param p_warMap    : object of WarMap model
      * @return return no of countries and metric
      */
     public AbstractMap.SimpleEntry<Integer, String[][]> prepareMetricesOfMap(List<Country> p_countries, WarMap p_warMap) {
@@ -794,7 +845,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     /**
      * {@inheritDoc }
-     *
      */
     @Override
     public boolean writeMapToFile(WarMap p_warMap) {
@@ -1039,7 +1089,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method will return country index from country name
      *
-     * @param p_warMap is object of WarMap model
+     * @param p_warMap      is object of WarMap model
      * @param p_countryName is the name of country
      * @return index of country
      */
@@ -1113,7 +1163,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method will return the continent name by continent id if finding the
      * continent from country model
      *
-     * @param p_continentMap is a map of continents
+     * @param p_continentMap   is a map of continents
      * @param p_continentIndex is neighbor index
      * @return Continent name
      */
@@ -1143,5 +1193,32 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     public WarMap getWarMapObject() {
         return d_warMap;
+    }
+
+    public ArrayList<String> getAvailableContinentName(WarMap p_warMap) {
+        if (p_warMap != null) {
+            List<String> l_continent = new ArrayList<String>();
+            for (Map.Entry<Integer, Continent> l_entries : p_warMap.getD_continents().entrySet()) {
+                l_continent.add(l_entries.getValue().getD_continentName());
+            }
+            System.out.println(l_continent);
+            return (ArrayList<String>) l_continent;
+        } else {
+            return null;
+        }
+    }
+
+    public ArrayList<String> getAvailableCountryName(WarMap p_warMap) {
+        if (p_warMap != null) {
+            List<String> l_country = new ArrayList<String>();
+            for(Country l_c:getAvailableCountries(d_warMap))
+            {
+                l_country.add(l_c.getD_countryName());
+            }
+            System.out.println("** "+l_country);
+            return (ArrayList<String>) l_country;
+        } else {
+            return null;
+        }
     }
 }
