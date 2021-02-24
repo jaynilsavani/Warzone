@@ -111,7 +111,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
         if(!d_generalUtil.validateIOString(p_editContinentCommand,"editcontinent((\\s-add\\s[a-z|A-Z]+\\s[0-9]+)+|\\s-remove\\s[a-z|A-Z]+)+"))
         {
-            d_generalUtil.prepareResponse(false, "Invalid Command!!!@");
+            d_generalUtil.prepareResponse(false, "Invalid Command!!!");
             return d_generalUtil.getResponse();
         }
         for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
