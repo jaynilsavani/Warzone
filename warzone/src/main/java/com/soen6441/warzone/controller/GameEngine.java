@@ -101,7 +101,7 @@ public class GameEngine implements Initializable {
     public void getData(ActionEvent p_event) {
         String l_s = d_CommandLine.getText().trim();
         String[] l_validatestr = l_s.split("\\s");
-        if ((d_generalUtil.validateIOString(l_s, "deploy\\s*[a-zA-Z]+\\s*[0-9]+") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
+        if ((d_generalUtil.validateIOString(l_s, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             CommandResponse l_commandResponse = issuingPlayer(l_s);                   //to invoke the issue order after player gives the command
             d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");
