@@ -129,7 +129,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                 if (l_playerCommand.equalsIgnoreCase("-add")) {
                     l_playerName = l_commandSegments.get(i + 1);
                     //Validation of the player name
-                    if (d_generalUtil.validateIOString(l_playerName, "[a-z|A-Z]+")) {
+                    if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                         {
                             //To check if player Exist Or not 
                             if (getPlayerByName(p_currentGamePlay, l_playerName).isEmpty()) {
@@ -147,7 +147,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                 else if (l_playerCommand.equalsIgnoreCase("-remove")) {
                     l_playerName = l_commandSegments.get(i + 1);
                     //Validation of the player name
-                    if (d_generalUtil.validateIOString(l_playerName, "[a-z|A-Z]+")) {
+                    if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                         {
                             //To check Whether Player exist or not
                             if (getPlayerByName(p_currentGamePlay, l_playerName).size() > 0) {
