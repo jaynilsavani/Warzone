@@ -195,7 +195,7 @@ public class MapHandlingImplTest {
      */
     @Test
     public void testForSaveNeighbour() {
-        assertEquals(false, d_mapHandlingImpl.saveNeighbour(1, 2));
+        assertEquals(false, d_mapHandlingImpl.saveNeighbour(1, 2).isD_isValid());
     }
     
     /**
