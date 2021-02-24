@@ -190,12 +190,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
         if (d_generalUtil.validateIOString(p_editCountryCommand, "editcountry((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
             List<String> l_continentNames = getAvailableContinentName(d_warMap);
-            List<String> l_cName=getAvailableCountryName(d_warMap);
+            List<String> l_cName = getAvailableCountryName(d_warMap);
             for (int l_i = 0; l_i < l_editCountryCommandString.size(); l_i++) {
-                if(l_editCountryCommandString.get(l_i).equalsIgnoreCase("-add"))
-                {
-                    if(!l_continentNames.contains(l_editCountryCommandString.get(l_i+2)))
-                    {
+                if (l_editCountryCommandString.get(l_i).equalsIgnoreCase("-add")) {
+                    if (!l_continentNames.contains(l_editCountryCommandString.get(l_i + 2))) {
                         d_generalUtil.prepareResponse(false, l_editCountryCommandString.get(l_i + 2) + " is not present in the map");
                         return d_generalUtil.getResponse();
                     }
@@ -300,12 +298,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
         boolean l_result = false;
         List<String> l_commandString = Arrays.asList(p_neighbour.split(" "));
         if (d_generalUtil.validateIOString(p_neighbour, "editneighbour((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+\\s[a-z|A-Z]+))+")) {
-            List<String> l_cName=getAvailableCountryName(d_warMap);
+            List<String> l_cName = getAvailableCountryName(d_warMap);
             for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
-                if(l_commandString.get(l_i).equalsIgnoreCase("-add") || l_commandString.get(l_i).equalsIgnoreCase("-remove"))
-                {
-                    if(!l_cName.contains(l_commandString.get(l_i+2)))
-                    {
+                if (l_commandString.get(l_i).equalsIgnoreCase("-add") || l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
+                    if (!l_cName.contains(l_commandString.get(l_i + 2))) {
                         d_generalUtil.prepareResponse(false, l_commandString.get(l_i + 2) + " is not present in the map");
                         return d_generalUtil.getResponse();
                     }
@@ -1211,11 +1207,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public ArrayList<String> getAvailableCountryName(WarMap p_warMap) {
         if (p_warMap != null) {
             List<String> l_country = new ArrayList<String>();
-            for(Country l_c:getAvailableCountries(d_warMap))
-            {
+            for (Country l_c : getAvailableCountries(d_warMap)) {
                 l_country.add(l_c.getD_countryName());
             }
-            System.out.println("** "+l_country);
+            System.out.println("** " + l_country);
             return (ArrayList<String>) l_country;
         } else {
             return null;
