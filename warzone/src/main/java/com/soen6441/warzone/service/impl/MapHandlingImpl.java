@@ -1203,7 +1203,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
             for (Map.Entry<Integer, Continent> l_entries : p_warMap.getD_continents().entrySet()) {
                 l_continent.add(l_entries.getValue().getD_continentName());
             }
-            System.out.println(l_continent);
             return (ArrayList<String>) l_continent;
         } else {
             return null;
@@ -1222,7 +1221,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
             for (Country l_c : getAvailableCountries(d_warMap)) {
                 l_country.add(l_c.getD_countryName());
             }
-            System.out.println("** " + l_country);
             return (ArrayList<String>) l_country;
         } else {
             return null;
