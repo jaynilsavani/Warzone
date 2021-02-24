@@ -110,7 +110,7 @@ public class GameConfigController implements Initializable {
      * @param p_event : events from view
      */
     public void getData(ActionEvent p_event) {
-        String l_command = d_CommandLine.getText();
+        String l_command = d_CommandLine.getText().trim();
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
 
