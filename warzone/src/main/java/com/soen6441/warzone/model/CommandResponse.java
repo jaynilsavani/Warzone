@@ -38,7 +38,7 @@ public class CommandResponse {
     /**
      * object to the response of the command
      *
-     * @param p_isValid        validation parameter
+     * @param p_isValid validation parameter
      * @param p_responseString response parameter
      */
     public CommandResponse(boolean p_isValid, String p_responseString) {
@@ -49,7 +49,8 @@ public class CommandResponse {
     /**
      * used to get the response and validation together in string
      *
-     * @return returns the formatted string with the validation of command and response to that validation
+     * @return returns the formatted string with the validation of command and
+     * response to that validation
      */
     @Override
     public String toString() {

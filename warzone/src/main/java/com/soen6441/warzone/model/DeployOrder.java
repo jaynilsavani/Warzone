@@ -5,10 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
-
 /**
- * This Class is used for The deploy order Command
- * Three annotations (Getter,Setter, toString), you can see on the top of the class are lombok
+ * This Class is used for The deploy order Command Three annotations
+ * (Getter,Setter, toString), you can see on the top of the class are lombok
  * dependencies to automatically generate getter, setter and tostring method in
  * the code.
  *
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Component;
 @ToString
 @Component
 public class DeployOrder implements Order {
+
     /**
      * number of armies in this order
      */
@@ -32,7 +32,6 @@ public class DeployOrder implements Order {
      */
     private Player d_player;
 
-
     /**
      * {@inheritDoc }
      * <p>
@@ -42,7 +41,6 @@ public class DeployOrder implements Order {
     public boolean executeOrder() {
         for (Country l_country : d_player.getD_ownedCountries()) {          //loop for countries owned by player
             if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() >= d_noOfArmies)) {  //checks the country,and no. of armies from player is greater than armies in the command
-
 
                 int l_playerArmy = d_player.getD_noOfArmies();
                 d_player.setD_noOfArmies(l_playerArmy - d_noOfArmies);        //reduce the number of armies from player

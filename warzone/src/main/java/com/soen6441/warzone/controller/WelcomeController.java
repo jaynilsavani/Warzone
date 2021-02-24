@@ -68,7 +68,7 @@ public class WelcomeController implements Initializable {
     /**
      * This is the initialization method of this controller
      *
-     * @param p_location  of the FXML file
+     * @param p_location of the FXML file
      * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)

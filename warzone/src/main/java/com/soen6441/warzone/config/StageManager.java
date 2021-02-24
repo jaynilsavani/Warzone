@@ -22,7 +22,7 @@ public class StageManager {
      */
     private final Stage d_primaryStage;
     /**
-     *This is used to load FXML View
+     * This is used to load FXML View
      */
     private final SpringFXMLLoader d_springFXMLLoader;
 
