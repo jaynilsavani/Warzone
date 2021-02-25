@@ -150,7 +150,7 @@ public class GameConfigController implements Initializable {
 
                         if (l_updatedGamePlay.getValue().isD_isValid()) {
                             d_gamePlay = l_updatedGamePlay.getKey();
-                            String l_playerName = "Players : \n[";
+                            String l_playerName = "\n Players : \n[";
                             if (d_gamePlay.getD_playerList() != null) {
                                 for (Player l_p : d_gamePlay.getD_playerList()) {
                                     l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";

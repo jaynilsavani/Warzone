@@ -146,9 +146,9 @@ public class GameConfigServiceImpl implements GameConfigService {
                                 l_currentGamePlay.setD_playerList(new ArrayList<>());
                             }
                             l_currentGamePlay.getD_playerList().add(l_player);
-                            d_generalUtil.prepareResponse(true, "Player name added sucessfully");
+                            d_generalUtil.prepareResponse(true, "Player added sucessfully");
                         } else {
-                            d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " already exist");
+                            d_generalUtil.prepareResponse(false, "Player " + l_playerName + " already exist");
                             break;
                         }
 
@@ -168,10 +168,10 @@ public class GameConfigServiceImpl implements GameConfigService {
                             if (l_currentGamePlay.getD_playerList() != null || l_currentGamePlay.getD_playerList().size() > 0) {
                                 l_currentGamePlay.getD_playerList().remove(l_removedPlayer);
                                 l_currentGamePlay.setD_playerList(l_currentGamePlay.getD_playerList());
-                                d_generalUtil.prepareResponse(true, "Player name removed sucessfully");
+                                d_generalUtil.prepareResponse(true, "Player removed sucessfully");
                             }
                         } else {
-                            d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " does not exist");
+                            d_generalUtil.prepareResponse(false, "Player " + l_playerName + " does not exist");
                             break;
                         }
 

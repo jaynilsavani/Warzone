@@ -110,9 +110,15 @@ public class MapHandlingImpl implements MapHandlingInterface {
         if (d_generalUtil.validateIOString(p_editContinentCommand, "editcontinent((\\s-add\\s[a-z|A-Z]+\\s[0-9]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
             List<String> l_continentNames = getAvailableContinentName(d_warMap);
             for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
+
                 if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
-                    if (!l_continentNames.contains(l_commandString.get(l_i + 1))) {
+                    if (!l_continentNames.contains(l_commandString.get(l_i + 1).toLowerCase())) {
                         d_generalUtil.prepareResponse(false, l_commandString.get(l_i + 1) + " is not present in the map!!!");
+                        return d_generalUtil.getResponse();
+                    }
+                } else if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
+                    if (l_continentNames.contains(l_commandString.get(l_i + 1).toLowerCase())) {
+                        d_generalUtil.prepareResponse(false, l_commandString.get(l_i + 1) + " is already  present in the map!!!");
                         return d_generalUtil.getResponse();
                     }
                 }
@@ -188,14 +194,18 @@ public class MapHandlingImpl implements MapHandlingInterface {
             List<String> l_cName = getAvailableCountryName(d_warMap);
             for (int l_i = 0; l_i < l_editCountryCommandString.size(); l_i++) {
                 if (l_editCountryCommandString.get(l_i).equalsIgnoreCase("-add")) {
-                    if (!l_continentNames.contains(l_editCountryCommandString.get(l_i + 2))) {
+                    if (!l_continentNames.contains(l_editCountryCommandString.get(l_i + 2).toLowerCase())) {
                         d_generalUtil.prepareResponse(false, l_editCountryCommandString.get(l_i + 2) + " is not present in the map");
+                        return d_generalUtil.getResponse();
+                    }
+                    if (l_cName.contains(l_editCountryCommandString.get(l_i + 1).toLowerCase())) {
+                        d_generalUtil.prepareResponse(false, l_editCountryCommandString.get(l_i + 1) + " is already present in the map");
                         return d_generalUtil.getResponse();
                     }
 
                 }
                 if (l_editCountryCommandString.get(l_i).equalsIgnoreCase("-remove")) {
-                    if (!l_cName.contains(l_editCountryCommandString.get(l_i + 1))) {
+                    if (!l_cName.contains(l_editCountryCommandString.get(l_i + 1).toLowerCase())) {
                         d_generalUtil.prepareResponse(false, l_editCountryCommandString.get(l_i + 1) + " is not present in the map");
                         return d_generalUtil.getResponse();
                     }
@@ -203,7 +213,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             }
 
         } else {
-            d_generalUtil.prepareResponse(false, "Invalid Command!!!@");
+            d_generalUtil.prepareResponse(false, "Invalid Command!!!");
             return d_generalUtil.getResponse();
         }
         for (int i = 0; i < l_editCountryCommandString.size(); i++) {
@@ -293,17 +303,16 @@ public class MapHandlingImpl implements MapHandlingInterface {
             List<String> l_cName = getAvailableCountryName(d_warMap);
             for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
                 if (l_commandString.get(l_i).equalsIgnoreCase("-add") || l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
-                    if (!l_cName.contains(l_commandString.get(l_i + 2))) {
-                        d_generalUtil.prepareResponse(false, l_commandString.get(l_i + 2) + " is not present in the map");
+                    if ((!l_cName.contains(l_commandString.get(l_i + 1).toLowerCase())) || (!l_cName.contains(l_commandString.get(l_i + 2).toLowerCase()))) {
+                        d_generalUtil.prepareResponse(false, l_commandString.get(l_i + 1) + " OR " + l_commandString.get(l_i + 2) + " is not present in the map");
                         return d_generalUtil.getResponse();
                     }
-
                 }
 
             }
 
         } else {
-            d_generalUtil.prepareResponse(false, "Invalid Command!!!@");
+            d_generalUtil.prepareResponse(false, "Invalid Command!!!");
             return d_generalUtil.getResponse();
         }
         //loop iterate over command segments
@@ -579,7 +588,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         //to store country of deleting continent
         for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
             if (p_continentName.equalsIgnoreCase(l_continent.getValue().getD_continentName())) {
-                if (l_continent.getValue() != null) {
+                if (l_continent.getValue() != null && l_continent.getValue().getD_countryList() != null) {
                     for (Country l_country : l_continent.getValue().getD_countryList()) {
                         l_countryOfContinent.add(l_country.getD_countryName());
                     }
@@ -741,7 +750,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     public void saveContinent(String p_continentName, String p_value) {
         if (d_warMap.getD_continents() != null) {
-            ContinentId = d_warMap.getD_continents().size() + 1;
+            ContinentId = getContientMaximumIndex(d_warMap.getD_continents()) + 1;
         }
         //create the new continent object
         Continent l_continent = new Continent();
@@ -767,7 +776,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public void saveCountry(String p_countryName, int p_continentIndex) {
         ArrayList<Country> l_countries = getAvailableCountries(d_warMap);
         if (!l_countries.isEmpty()) {
-            CountryId = l_countries.size() + 1;
+            CountryId = getCountryMaximumIndex(l_countries) + 1;
         }
         //create the country object
         Country l_country = new Country();
@@ -823,7 +832,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
                                 } else {
 
-                                    d_generalUtil.prepareResponse(false, "neighbour country is already there");
+                                    d_generalUtil.prepareResponse(false, "neighbour country is already exist");
                                     return d_generalUtil.getResponse();
 
                                 }
@@ -1286,5 +1295,41 @@ public class MapHandlingImpl implements MapHandlingInterface {
         } else {
             return null;
         }
+    }
+
+    /**
+     * This is used to get maximum length of continents
+     *
+     * @param p_continents : List of the continents
+     * @return MAximum Index of continents
+     */
+    public int getContientMaximumIndex(Map<Integer, Continent> p_continents) {
+        int l_maxLength = 0;
+        if (p_continents != null) {
+            for (Map.Entry<Integer, Continent> l_entries : p_continents.entrySet()) {
+                if (l_entries.getValue().getD_continentIndex() > l_maxLength) {
+                    l_maxLength = l_entries.getValue().getD_continentIndex();
+                }
+            }
+        }
+        return l_maxLength;
+    }
+
+    /**
+     * This is used to get maximum length of countries
+     *
+     * @param p_country : List of the countries
+     * @return MAximum Index of Country
+     */
+    public int getCountryMaximumIndex(List<Country> p_country) {
+        int l_maxLength = 0;
+        if (p_country != null) {
+            for (Country l_country : p_country) {
+                if (l_country.getD_countryIndex()> l_maxLength) {
+                    l_maxLength = l_country.getD_countryIndex();
+                }
+            }
+        }
+        return l_maxLength;
     }
 }

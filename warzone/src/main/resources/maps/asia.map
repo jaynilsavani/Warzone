@@ -11,14 +11,14 @@ map risk_map.gif
 [continents]
 europe 5
 asia 10
-north 6
+Africa 6
 
 [countries]
-1 aa 1 10 10
-2 bb 1 11 11
-3 cc 2 12 12
-4 dd 2 13 13
-5 ee 3 14 14
+1 America 1 10 10
+2 Canada 1 11 11
+3 India 2 12 12
+4 Pakistan 2 13 13
+5 SouthAfrica 3 14 14
 
 [borders]
 1 2 3
