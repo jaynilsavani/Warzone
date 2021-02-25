@@ -276,7 +276,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * remove as per the user command
      *
      * @param p_neighbour is the command to add neighbour in specific country's
-     *                    neighbour list
+     * neighbour list
      * @return CommandResponse object
      */
     public CommandResponse checkCommandEditNeighbours(String p_neighbour) {
@@ -338,7 +338,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * read the data of existing map file otherwise it will create new map file
      *
      * @param p_editMapCommand is command to edit a existing map or create new
-     *                         map
+     * map
      * @return Response of execution of command
      */
     public CommandResponse checkCommandEditMap(String p_editMapCommand) {
@@ -564,7 +564,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
     //-----------------Below Functions are utility function for above commands----------//
     //  Delete commands Function
-
     /**
      * This method will return true and break if continent is deleted and this
      * method is common for both terminal and GUI
@@ -575,6 +574,50 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public boolean deleteContinent(String p_continentName) {
         boolean l_result = false;
         int l_continentId;
+        List<String> l_countryOfContinent = new ArrayList();
+
+        //to store country of deleting continent
+        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+            if (p_continentName.equalsIgnoreCase(l_continent.getValue().getD_continentName())) {
+                if (l_continent.getValue() != null) {
+                    for (Country l_country : l_continent.getValue().getD_countryList()) {
+                        l_countryOfContinent.add(l_country.getD_countryName());
+                    }
+                }
+            }
+        }
+        //to remove country of deleting continent from other countries neighbour list
+        for (Map.Entry<Integer, Continent> l_continent : d_warMap.getD_continents().entrySet()) {
+            if (l_countryOfContinent != null) {
+                List<Country> l_countryList = l_continent.getValue().getD_countryList();
+                if (l_countryList != null) {
+                    for (Country l_country : l_countryList) {
+                        boolean l_status = false;
+                        List<String> l_neighbourList = new ArrayList<>();
+                        List<String> l_neighbourForDelete = new ArrayList<>();
+                        l_neighbourList = l_country.getD_neighbourCountries();
+                        if (l_neighbourList != null) {
+                            for (String l_neighbour : l_neighbourList) {
+                                if (l_countryOfContinent.contains(l_neighbour)) {
+                                    l_neighbourForDelete.add(l_neighbour);
+                                    l_status = true;
+                                }
+                            }
+                        }
+                        if (l_status) {
+                            if (l_neighbourForDelete != null) {
+                                for (String l_neighbourDelete : l_neighbourForDelete) {
+                                    l_neighbourList.remove(new String(l_neighbourDelete));
+                                }
+                            }
+                        }
+                        l_country.setD_neighbourCountries(l_neighbourList);
+                    }
+                }
+                l_continent.getValue().setD_countryList(l_countryList);
+            }
+        }
+        //to delete continent
         if (d_warMap.getD_continents() != null) {
             for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
                 if (l_entry.getValue() != null && p_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
@@ -613,7 +656,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         l_dCountryResponse.setD_responseString("Country Deleted Sucessfully");
                     }
                 }
-                // remove the deleted country from other countr's neighbour
+                // remove the deleted country from other country's neighbour
                 if (l_countryList != null) {
                     for (Country l_country : l_countryList) {
                         boolean l_status = false;
@@ -651,7 +694,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method will return true and break if neighbor got removed and this
      * method is used for removal of country's neighbor
      *
-     * @param p_countryName         name of the country you want to delete for
+     * @param p_countryName name of the country you want to delete for
      * @param p_neighborCountryName name of the neighbor you want to delete
      * @return false if not possible to delete or does not exist
      */
@@ -690,12 +733,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     // //Add Commands Function
-
     /**
      * This method will save continent for both terminal and GUI
      *
      * @param p_continentName name of continent
-     * @param p_value         value of Continent
+     * @param p_value value of Continent
      */
     public void saveContinent(String p_continentName, String p_value) {
         if (d_warMap.getD_continents() != null) {
@@ -719,7 +761,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method will save country given from both GUI and command line
      *
-     * @param p_countryName    name of the country
+     * @param p_countryName name of the country
      * @param p_continentIndex index of continent
      */
     public void saveCountry(String p_countryName, int p_continentIndex) {
@@ -747,7 +789,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method is used to add the neighbour
      *
      * @param p_countryId is unique ID of country in which we want to add
-     *                    neighbour
+     * neighbour
      * @param p_neighbour is the name of neighbour
      * @return returns true if neighbour is successfully added
      */
@@ -800,12 +842,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     //General Util functions for Map Editor commands
-
     /**
      * This method is used to convert map object to metric
      *
      * @param p_countries list of countries
-     * @param p_warMap    : object of WarMap model
+     * @param p_warMap : object of WarMap model
      * @return return no of countries and metric
      */
     public AbstractMap.SimpleEntry<Integer, String[][]> prepareMetricesOfMap(List<Country> p_countries, WarMap p_warMap) {
@@ -1102,7 +1143,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method will return country index from country name
      *
-     * @param p_warMap      is object of WarMap model
+     * @param p_warMap is object of WarMap model
      * @param p_countryName is the name of country
      * @return index of country
      */
@@ -1179,7 +1220,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
      * This method will return the continent name by continent id if finding the
      * continent from country model
      *
-     * @param p_continentMap   is a map of continents
+     * @param p_continentMap is a map of continents
      * @param p_continentIndex is neighbor index
      * @return Continent name
      */
