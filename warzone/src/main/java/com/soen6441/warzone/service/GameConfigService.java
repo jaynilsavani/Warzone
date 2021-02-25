@@ -47,7 +47,7 @@ public interface GameConfigService {
      * @param p_gamePlay : object of GamePlay Model
      * @return commanresponse stating the detail of each player with their
      * countries
-     * @throws java.io.IOException indicates input/output exception
+     *
      */
-    public CommandResponse assignCountries(GamePlay p_gamePlay) throws IOException;
+    public CommandResponse assignCountries(GamePlay p_gamePlay);
 }

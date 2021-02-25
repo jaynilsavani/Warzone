@@ -58,7 +58,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 else if (p_command.startsWith("editneighbour")) {
                     return checkCommandEditNeighbours(p_command);
                 } //This Condition is used to check showmap command
-                else if (p_command.startsWith("showmap")) {
+                else if (p_command.equalsIgnoreCase("showmap")) {
                     return showMap(d_warMap);
                 } //This Condition is used to check savemap command 
                 else if (p_command.startsWith("savemap")) {
@@ -67,7 +67,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 else if (p_command.startsWith("editmap")) {
                     return checkCommandEditMap(p_command);
                 } //This Condition is used to check validatemap command
-                else if (p_command.startsWith("validatemap")) {
+                else if (p_command.equalsIgnoreCase("validatemap")) {
                     if (validateMap(d_warMap)) {
                         d_generalUtil.prepareResponse(true, "Map is valid");
                     } else {
@@ -420,9 +420,9 @@ public class MapHandlingImpl implements MapHandlingInterface {
         boolean l_fileExtension = false;
         //For managing extension of .map in given name
         if (l_fileName.contains(".")) {
-            l_fileName = l_fileName.split("\\.")[1];
+           String l_extension = l_fileName.split("\\.")[1];
 
-            if (l_fileName.equals("map")) {
+            if (l_extension.equals("map")) {
                 l_fileExtension = true;
             } else {
                 l_fileExtension = false;
@@ -440,7 +440,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     //Validate the map
                     if (validateMap(d_warMap)) {
                         if (!d_warMap.getD_mapName().equalsIgnoreCase(l_fileName)) {
-                            d_warMap.setD_mapName(l_fileName);
+                            d_warMap.setD_mapName(l_fileName.toLowerCase());
                         }
                         //save the map in system
                         writeMapToFile(d_warMap);

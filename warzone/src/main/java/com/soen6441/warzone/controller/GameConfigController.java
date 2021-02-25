@@ -175,17 +175,11 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes.setD_responseString("Please load the map first");
             } else {
                 if (l_commandSegments.size() == 1) {                                          //to validate the command
-                    try {
-                        l_gmConfigRes = d_gameConfigService.assignCountries(d_gamePlay);
-                        if (l_gmConfigRes.isD_isValid()) {
-                            d_StartGame.setDisable(false);
-                            AssignCountryFlag = 1;
-                        }
-                    } catch (IOException e) {
-                        l_gmConfigRes.setD_isValid(false);
-                        l_gmConfigRes.setD_responseString("Players are not added due to map is not readable");
+                    l_gmConfigRes = d_gameConfigService.assignCountries(d_gamePlay);
+                    if (l_gmConfigRes.isD_isValid()) {
+                        d_StartGame.setDisable(false);
+                        AssignCountryFlag = 1;
                     }
-
                 } else {                                                                        //if validation of command fails
                     d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
                     l_gmConfigRes = d_generalUtil.getResponse();

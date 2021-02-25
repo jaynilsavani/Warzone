@@ -195,7 +195,7 @@ public class GameConfigServiceImpl implements GameConfigService {
      * {@inheritDoc }
      */
     @Override
-    public CommandResponse assignCountries(GamePlay p_gamePlay) throws IOException {
+    public CommandResponse assignCountries(GamePlay p_gamePlay) {
         WarMap l_warMap = p_gamePlay.getD_warMap();
         //Check Whether player is available in Gameplay or not
         if (p_gamePlay.getD_playerList() == null) {

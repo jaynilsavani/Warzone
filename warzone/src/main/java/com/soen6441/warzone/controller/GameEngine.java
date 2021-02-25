@@ -4,6 +4,7 @@ import com.soen6441.warzone.model.*;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.GeneralUtil;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This Class is made to handle Game Engine controller request
@@ -118,6 +121,7 @@ public class GameEngine implements Initializable {
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
                     }
+                    d_FireCommandList.appendText(playerOwnedCountries(d_gamePlay));
                     CommandResponse l_map = d_gameConfig.showPlayerMap(d_gamePlay);           //to show the map and player*country table
                     d_FireCommandList.appendText(l_map.getD_responseString());
 
@@ -169,6 +173,7 @@ public class GameEngine implements Initializable {
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         PlayerFlag = new int[d_gamePlay.getD_playerList().size()];
         Arrays.fill(PlayerFlag, 0);
+        d_FireCommandList.appendText(playerOwnedCountries(d_gamePlay));
         reinforcementArmies();
     }
 
@@ -257,6 +262,18 @@ public class GameEngine implements Initializable {
             return d_generalUtil.getResponse();
         }
 
+    }
+
+    public String playerOwnedCountries(GamePlay p_gamePlay) {
+        String l_responseString = "\n";
+        for (Player l_player : p_gamePlay.getD_playerList()) {
+            l_responseString += l_player.getD_playerName() + " : [";
+            for (Country l_cn : l_player.getD_ownedCountries()) {
+                l_responseString += l_cn.getD_countryName() + " , ";
+            }
+            l_responseString += " ] \n ";
+        }
+        return l_responseString;
     }
 
 }
