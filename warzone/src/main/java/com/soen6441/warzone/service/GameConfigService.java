@@ -4,6 +4,7 @@ import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GamePlay;
 import com.soen6441.warzone.model.WarMap;
 import java.io.IOException;
+import java.util.AbstractMap;
 
 /**
  *
@@ -36,9 +37,9 @@ public interface GameConfigService {
      *
      * @param p_currentGamePlay cuurent Gameplay Object
      * @param p_commnd player updation command
-     * @return updated GamePlay
+     * @return updated GamePlay and command response
      */
-    public GamePlay updatePlayer(GamePlay p_currentGamePlay, String p_commnd);
+    public AbstractMap.Entry<GamePlay, CommandResponse> updatePlayer(GamePlay p_currentGamePlay, String p_commnd);
 
     /**
      * To assign the countries on the first time when map was loaded
