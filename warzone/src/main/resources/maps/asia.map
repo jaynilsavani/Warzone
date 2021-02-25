@@ -11,7 +11,7 @@ map risk_map.gif
 [continents]
 europe 5
 asia 10
-noth 6
+north 6
 
 [countries]
 1 aa 1 10 10
