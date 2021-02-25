@@ -130,7 +130,6 @@ public class GameConfigServiceImpl implements GameConfigService {
         List<String> l_commandSegments = Arrays.asList(p_command.split(" "));
         String l_playerName;
         GamePlay l_currentGamePlay = new GamePlay(p_currentGamePlay);
-//        l_currentGamePlay.setD_playerList(p_currentGamePlay.getD_playerList());
 
         for (int i = 0; i < l_commandSegments.size(); i++) {
             String l_playerCommand = l_commandSegments.get(i);
