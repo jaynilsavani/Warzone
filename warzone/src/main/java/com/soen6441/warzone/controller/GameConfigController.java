@@ -18,11 +18,11 @@ import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -146,14 +146,20 @@ public class GameConfigController implements Initializable {
             } else {
                 if (d_gamePlay.getD_warMap() != null) {
                     if ((l_commandSegments.size() - 1) % 2 == 0) {                                 //validates the command
-                        d_gamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
-                        String l_playerName = "Players are updated Sucessfully\n[";
-                        for (Player l_p : d_gamePlay.getD_playerList()) {
-                            l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";
-                        }
-                        l_playerName = l_playerName + "]";
+                        Map.Entry<GamePlay, CommandResponse> l_updatedGamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
 
-                        d_generalUtil.prepareResponse(true, l_playerName);
+                        if (l_updatedGamePlay.getValue().isD_isValid()) {
+                            d_gamePlay = l_updatedGamePlay.getKey();
+                            String l_playerName = "Players : \n[";
+                            if (d_gamePlay.getD_playerList() != null) {
+                                for (Player l_p : d_gamePlay.getD_playerList()) {
+                                    l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";
+                                }
+                                l_playerName = l_playerName + "]";
+                            }
+                            l_updatedGamePlay.getValue().setD_responseString(l_updatedGamePlay.getValue().getD_responseString() + l_playerName);
+                        }
+                        d_generalUtil.prepareResponse(l_updatedGamePlay.getValue().isD_isValid(), l_updatedGamePlay.getValue().getD_responseString());
                     } else {                                                                    //if command is not valid
                         d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
                     }

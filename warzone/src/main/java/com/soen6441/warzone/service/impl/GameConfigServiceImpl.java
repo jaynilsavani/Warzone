@@ -37,6 +37,10 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Autowired
     private GeneralUtil d_generalUtil;
 
+    /**
+     * {@inheritDoc }
+     *
+     */
     @Override
     public CommandResponse showPlayerMap(GamePlay p_gamePlay) {
         WarMap l_warMap = p_gamePlay.getD_warMap();
@@ -46,14 +50,16 @@ public class GameConfigServiceImpl implements GameConfigService {
             String l_showMapOfCountris = l_showCountris.getD_responseString();
             d_generalUtil.prepareResponse(true, l_showMapOfCountris);
         } else {
-
+            //getting country list and player list with nullable condition
             String l_showMapOfCountris = l_showCountris.getD_responseString();
             List<Country> l_countryList = d_mapHandlingImpl.getAvailableCountries(l_warMap);
             int l_colSize = l_countryList.size() + 1;
             int l_rowSize = p_gamePlay.getD_playerList().size() + 1;
             String[][] l_playerToCountry = new String[l_rowSize][l_colSize];
             int l_maxLength = 0;
+            //Iterate over player list
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
+                //Iterate over country list
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     if (l_i == 0 && l_j == 0) {
 
@@ -87,6 +93,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                 }
             }
             l_showMapOfCountris = l_showMapOfCountris + "\n";
+            //formattig matrix
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_playerToCountry[l_i][l_j]);
@@ -116,12 +123,13 @@ public class GameConfigServiceImpl implements GameConfigService {
      *
      * @param p_currentGamePlay : object of GamePlay model
      * @param p_command : updation command
-     * @return Current Updated Gameplay
+     * @return Current Updated Gameplay and command response
      */
     @Override
-    public GamePlay updatePlayer(GamePlay p_currentGamePlay, String p_command) {
+    public AbstractMap.Entry<GamePlay, CommandResponse> updatePlayer(GamePlay p_currentGamePlay, String p_command) {
         List<String> l_commandSegments = Arrays.asList(p_command.split(" "));
         String l_playerName;
+        GamePlay l_currentGamePlay = new GamePlay(p_currentGamePlay);
 
         for (int i = 0; i < l_commandSegments.size(); i++) {
             String l_playerCommand = l_commandSegments.get(i);
@@ -130,40 +138,57 @@ public class GameConfigServiceImpl implements GameConfigService {
                     l_playerName = l_commandSegments.get(i + 1);
                     //Validation of the player name
                     if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                        {
-                            //To check if player Exist Or not 
-                            if (getPlayerByName(p_currentGamePlay, l_playerName).isEmpty()) {
-                                Player l_player = new Player();
-                                l_player.setD_playerName(l_playerName);
-                                if (p_currentGamePlay.getD_playerList() == null) {
-                                    p_currentGamePlay.setD_playerList(new ArrayList<>());
-                                }
-                                p_currentGamePlay.getD_playerList().add(l_player);
+                        //To check if player Exist Or not 
+                        if (getPlayerByName(l_currentGamePlay, l_playerName).isEmpty()) {
+                            Player l_player = new Player();
+                            l_player.setD_playerName(l_playerName);
+                            if (l_currentGamePlay.getD_playerList() == null) {
+                                l_currentGamePlay.setD_playerList(new ArrayList<>());
                             }
-
+                            l_currentGamePlay.getD_playerList().add(l_player);
+                            d_generalUtil.prepareResponse(true, "Player name added sucessfully");
+                        } else {
+                            d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " already exist");
+                            break;
                         }
+
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " is not valid");
+                        break;
                     }
                 } //For checking REmove condition of the player command
                 else if (l_playerCommand.equalsIgnoreCase("-remove")) {
                     l_playerName = l_commandSegments.get(i + 1);
                     //Validation of the player name
                     if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
-                        {
-                            //To check Whether Player exist or not
-                            if (getPlayerByName(p_currentGamePlay, l_playerName).size() > 0) {
-                                Player l_removedPlayer = getPlayerByName(p_currentGamePlay, l_playerName).get(0);
-                                if (p_currentGamePlay.getD_playerList() != null || p_currentGamePlay.getD_playerList().size() > 0) {
-                                    p_currentGamePlay.getD_playerList().remove(l_removedPlayer);
-                                    p_currentGamePlay.setD_playerList(p_currentGamePlay.getD_playerList());
-                                }
-                            }
 
+                        //To check Whether Player exist or not
+                        if (getPlayerByName(l_currentGamePlay, l_playerName).size() > 0) {
+                            Player l_removedPlayer = getPlayerByName(l_currentGamePlay, l_playerName).get(0);
+                            if (l_currentGamePlay.getD_playerList() != null || l_currentGamePlay.getD_playerList().size() > 0) {
+                                l_currentGamePlay.getD_playerList().remove(l_removedPlayer);
+                                l_currentGamePlay.setD_playerList(l_currentGamePlay.getD_playerList());
+                                d_generalUtil.prepareResponse(true, "Player name removed sucessfully");
+                            }
+                        } else {
+                            d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " does not exist");
+                            break;
                         }
+
+                    } else {
+                        d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " is not valid");
+                        break;
                     }
                 }
             }
         }
-        return p_currentGamePlay;
+        //to merge updated player list to original gameplay
+        if (d_generalUtil.getResponse().isD_isValid()) {
+            List<Player> l_playerList = l_currentGamePlay.getD_playerList();
+            p_currentGamePlay.setD_playerList(l_playerList);
+        }
+        AbstractMap.Entry<GamePlay, CommandResponse> l_playerResponse = new AbstractMap.SimpleEntry<>(p_currentGamePlay, d_generalUtil.getResponse());
+        return l_playerResponse;
     }
 
     /**
@@ -260,7 +285,7 @@ public class GameConfigServiceImpl implements GameConfigService {
     /**
      *
      * @param p_currentGamePlay Object Of current gameplay
-     * @param p_playerName Player of the
+     * @param p_playerName Player name
      * @return The List of player with given name
      */
     public List<Player> getPlayerByName(GamePlay p_currentGamePlay, String p_playerName) {
