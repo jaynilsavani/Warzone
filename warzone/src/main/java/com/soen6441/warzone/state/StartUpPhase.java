@@ -18,7 +18,7 @@ public class StartUpPhase extends GamePlay {
     /**
      *  This parameterized constructor is used to invoke GameEngine Constructor and
      *  set the reference variable to GameEngine object for the state transition.
-     * @param p_gameEngine Object of GameEngine
+     *  @param p_gameEngine Object of GameEngine
      */
     public StartUpPhase(GameEngine p_gameEngine) {
         super(p_gameEngine);
