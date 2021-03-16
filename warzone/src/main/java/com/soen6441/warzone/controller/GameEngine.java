@@ -7,6 +7,7 @@ import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.state.GamePlay;
+import com.soen6441.warzone.state.IssueOrderPhase;
 import com.soen6441.warzone.state.MapPhase;
 import com.soen6441.warzone.state.Phase;
 import com.soen6441.warzone.state.StartUpPhase;
@@ -45,11 +46,6 @@ public class GameEngine implements Initializable {
      * counter that invokes after each order issued by player
      */
     private static int PlayCounter = 0;
-
-    /**
-     * counter that records the number of rounds of issue order
-     */
-    private static int CounterRound = 0;
 
     @FXML
     public TextArea d_TerritoryListText;
@@ -95,10 +91,8 @@ public class GameEngine implements Initializable {
      */
     @FXML
     public void exitGame(ActionEvent p_event) {
-
         Stage l_stage = (Stage) d_BtnExit.getScene().getWindow();
         l_stage.close();
-
     }
 
     public void setPhase(Phase p_phase) {
@@ -118,7 +112,7 @@ public class GameEngine implements Initializable {
         return d_stageManager;
     }
 
-    public Parent setSomeThing(String p_phaseName) {
+    public Parent setInitialPhase(String p_phaseName) {
         switch (p_phaseName) {
             case PHASE_MAP:
                 gamePhase = new MapPhase(this);
@@ -164,8 +158,15 @@ public class GameEngine implements Initializable {
                         l_j++;
                     }
                 }
-                if (l_j == PlayerFlag.length) {                                //to reset the round after each player is done with issuing orders
-                    List<CommandResponse> l_commandList = executionOfOrders();
+                if (l_j == PlayerFlag.length) {
+                    //to reset the round after each player is done with issuing orders
+                    IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
+                    l_issueorder.d_gameData = d_gameData;
+                    l_issueorder.next("");
+                    IssueOrderPhase l_issuephase = (IssueOrderPhase) gamePhase;
+                    List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
+//                    List<CommandResponse > l_commandList = executionOfOrders();
+//                    List<CommandResponse> l_commandList = executionOfOrders();
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
                     }
@@ -174,7 +175,7 @@ public class GameEngine implements Initializable {
                     d_FireCommandList.appendText(l_map.getD_responseString());
 
                     PlayCounter = 0;
-                    CounterRound = 0;
+                    d_gameData.setD_maxNumberOfTurns(0);
                     Arrays.fill(PlayerFlag, 0);                                   //flag that resets the issue counter
                     d_gameData = d_gameEngineSevice.assignReinforcements(d_gameData);          // to reinforce the armies every time the loop resets
                     d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gameData));
@@ -212,10 +213,11 @@ public class GameEngine implements Initializable {
     /**
      * This is used for setting GameConfig for GameEngine
      *
-     * @param p_gameConfig game configuration
+     * @param p_gameEngine
      */
-    public void setGamePlay(GameData p_gameConfig) {
-        d_gameData = p_gameConfig;
+    public void setGamePlay() {
+        GamePlay l_gamePlay = (GamePlay) gamePhase;
+        d_gameData = l_gamePlay.d_gameData;
         d_playerTurn.setText(d_gameData.getD_playerList().get(PlayCounter).getD_playerName() + "'s turn");
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
@@ -239,40 +241,39 @@ public class GameEngine implements Initializable {
      *
      * @return The liast of Command Response of Executed Order
      */
-    private List<CommandResponse> executionOfOrders() {
-        List<CommandResponse> l_orderStatus = new ArrayList<>();
-        for (int l_i = 0; l_i < CounterRound; l_i++) {                       //main loop for giving the turn to player in round-robin
-            for (int l_j = 0; l_j < d_gameData.getD_playerList().size(); l_j++) {
-                if (d_gameData.getD_playerList().get(l_j).hasOrder()) {             //checks if the player has an order or not
-                    Order l_order = d_gameData.getD_playerList().get(l_j).next_order();
-                    String l_countryName = ((DeployOrder) l_order).getD_CountryName();
-                    ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(l_j));         //to add the player to use in execution
-                    boolean l_executeOrder = l_order.executeOrder();                           //invokes the order
-                    if (l_executeOrder) {
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
-                        d_gameData.getD_playerList().remove(l_j);                                          //replaces the player with the updated player from order
-                        d_gameData.getD_playerList().add(l_j, ((DeployOrder) l_order).getD_player());
-
-                        int l_noOfArmies = ((DeployOrder) l_order).getD_noOfArmies();
-                        if (d_gameData.getD_warMap().getD_continents() != null) {
-                            for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
-                                for (Country l_countries : l_entry.getValue().getD_countryList()) {
-                                    if (l_countries.getD_countryName().equalsIgnoreCase(l_countryName)) {
-                                        l_countries.setD_noOfArmies(l_noOfArmies);                              //sets the no. of armies to the country of map
-                                    }
-                                }
-                            }
-                        }
-
-                    } else {                                                              //return false ,if the deployment is failed
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
-                    }
-                }
-            }
-        }
-        return l_orderStatus;
-    }
-
+//    private List<CommandResponse> executionOfOrders() {
+//        List<CommandResponse> l_orderStatus = new ArrayList<>();
+//        for (int l_i = 0; l_i < CounterRound; l_i++) {                       //main loop for giving the turn to player in round-robin
+//            for (int l_j = 0; l_j < d_gameData.getD_playerList().size(); l_j++) {
+//                if (d_gameData.getD_playerList().get(l_j).hasOrder()) {             //checks if the player has an order or not
+//                    Order l_order = d_gameData.getD_playerList().get(l_j).next_order();
+//                    String l_countryName = ((DeployOrder) l_order).getD_CountryName();
+//                    ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(l_j));         //to add the player to use in execution
+//                    boolean l_executeOrder = l_order.executeOrder();                           //invokes the order
+//                    if (l_executeOrder) {
+//                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
+//                        d_gameData.getD_playerList().remove(l_j);                                          //replaces the player with the updated player from order
+//                        d_gameData.getD_playerList().add(l_j, ((DeployOrder) l_order).getD_player());
+//
+//                        int l_noOfArmies = ((DeployOrder) l_order).getD_noOfArmies();
+//                        if (d_gameData.getD_warMap().getD_continents() != null) {
+//                            for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
+//                                for (Country l_countries : l_entry.getValue().getD_countryList()) {
+//                                    if (l_countries.getD_countryName().equalsIgnoreCase(l_countryName)) {
+//                                        l_countries.setD_noOfArmies(l_noOfArmies);                              //sets the no. of armies to the country of map
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                    } else {                                                              //return false ,if the deployment is failed
+//                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
+//                    }
+//                }
+//            }
+//        }
+//        return l_orderStatus;
+//    }
     /**
      * This method is used to store the user input of orders in player's lst of
      * orders
@@ -283,8 +284,8 @@ public class GameEngine implements Initializable {
      */
     public CommandResponse issuingPlayer(String p_command) {
         Player l_player = d_gameData.getD_playerList().get(PlayCounter);              //assigns the current player using the playcounter
-        if (CounterRound < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
-            CounterRound = l_player.getD_orders().size();
+        if (d_gameData.getD_maxNumberOfTurns() < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
+            d_gameData.setD_maxNumberOfTurns(l_player.getD_orders().size());
         }
         if (p_command.equalsIgnoreCase("done")) {                        //stops the player to get further chance to issue an order
             PlayerFlag[PlayCounter] = 1;
@@ -306,7 +307,7 @@ public class GameEngine implements Initializable {
 
             }
 
-            d_generalUtil.prepareResponse(true, CounterRound + " | " + p_command + " | " + l_player.getD_playerName());
+            d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
             return d_generalUtil.getResponse();
         }
 

@@ -1,10 +1,8 @@
 package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
-import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.view.FxmlView;
-import java.util.List;
 import javafx.scene.Parent;
 
 /**
@@ -15,29 +13,27 @@ import javafx.scene.Parent;
  */
 public class StartUpPhase extends GamePlay {
 
-    GameEngine d_gameEngine;
-
-    public StartUpPhase(GameEngine p_ge) {
-        super(p_ge);
+    public StartUpPhase(GameEngine p_gameEngine) {
+        super(p_gameEngine);
     }
 
     @Override
     public Parent execute() {
-        return ge.getStageManager().loadViewNodeHierarchy(FxmlView.GAMECONFIG.getFxmlFile(), ge, "");
+        return d_gameEngine.getStageManager().loadViewNodeHierarchy(FxmlView.GAMECONFIG.getFxmlFile(), d_gameEngine, "");
     }
 
     @Override
     public void next(Object p_nextObject) {
-        IssueOrderPhase sueOrderPhase = new IssueOrderPhase(ge);
-        sueOrderPhase.d_gameData=(GameData) p_nextObject;
-        ge.setPhase(sueOrderPhase);
-        ge.getStageManager().switchScene(FxmlView.GAMEX, ge, "");
+        IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase(d_gameEngine);
+        l_isueOrderPhase.d_gameData = (GameData) p_nextObject;
+        d_gameEngine.setPhase(l_isueOrderPhase);
+        d_gameEngine.getStageManager().switchScene(FxmlView.GAMEENGINE, null, "");
 
     }
 
     @Override
-    public void executeOrder(Object p_gameData) {
-
+    public void executeOrder() {
+        this.printInvalidCommandMessage();
     }
 
 }

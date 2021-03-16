@@ -9,19 +9,19 @@ import javafx.scene.Parent;
 
 /**
  *
- * This Class is used for 
- * 
+ * This Class is used for
+ *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public abstract class GamePlay extends Phase {
-    
-    GameEngine d_gameEngine;
+
     public GameData d_gameData;
     public List<CommandResponse> d_commandResponses = new ArrayList<>();
 
-    public GamePlay(GameEngine p_ge) {
-        super(p_ge);
+    public GamePlay(GameEngine p_gameEngine) {
+        super(p_gameEngine);
     }
 
-    abstract  public Parent execute();
+    @Override
+    abstract public Parent execute();
 }

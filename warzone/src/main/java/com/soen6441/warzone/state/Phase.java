@@ -1,14 +1,12 @@
 package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
-import com.soen6441.warzone.model.CommandResponse;
-import java.util.List;
 import javafx.scene.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
- * This Class is used for
+ * This Class is used as State Class in State Pattern
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -20,21 +18,33 @@ public abstract class Phase {
      * states.
      */
     @Autowired
-    public GameEngine ge;
+    public GameEngine d_gameEngine;
 
-    public Phase(GameEngine p_ge) {
-        ge = p_ge;
+    public Phase(GameEngine p_gameEngine) {
+        d_gameEngine = p_gameEngine;
     }
 
-    abstract public void executeOrder(Object p_gameData);
-
-
-    abstract public void next(Object p_nextObject);
-
+    /**
+     * This is used to to initialize the Current Phase
+     *
+     * @return Root object of current Phase screen
+     */
     abstract public Parent execute();
 
     /**
-     * Common method to all States.
+     * This is used to switch to next phase
+     *
+     * @param p_nextObject Object that is being passed to next phase
+     */
+    abstract public void next(Object p_nextObject);
+
+    /**
+     * This is used for Execution of order in Execute Order Phase
+     */
+    abstract public void executeOrder();
+
+    /**
+     * Common method to all Phases.
      */
     public void printInvalidCommandMessage() {
         System.out.println("Invalid command in state " + this.getClass().getSimpleName());

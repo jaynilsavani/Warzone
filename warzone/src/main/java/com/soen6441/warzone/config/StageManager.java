@@ -2,8 +2,6 @@ package com.soen6441.warzone.config;
 
 import com.soen6441.warzone.controller.GameConfigController;
 import com.soen6441.warzone.controller.GameEngine;
-import com.soen6441.warzone.controller.GameX;
-import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.view.FxmlView;
 import java.io.IOException;
 import javafx.application.Platform;
@@ -101,18 +99,18 @@ public class StageManager {
         Parent l_rootNode = null;
         try {
             FXMLLoader l_loader = d_springFXMLLoader.load(p_fxmlFilePath);
-            if (p_fxmlFilePath.contains(FxmlView.GAMEENGINE.getFxmlFile())) {
+            if (p_fxmlFilePath.contains(FxmlView.GAMEENGINE.getFxmlFile()) && (!p_phaseName.isBlank())) {
                 l_rootNode = l_loader.load();
                 GameEngine l_gameEngine = l_loader.getController();
-                return l_gameEngine.setSomeThing(p_phaseName);
+                return l_gameEngine.setInitialPhase(p_phaseName);
             } else if (p_fxmlFilePath.contains(FxmlView.GAMECONFIG.getFxmlFile())) {
                 l_rootNode = l_loader.load();
                 GameConfigController l_gameConfig = l_loader.getController();
                 l_gameConfig.setGameEngine((GameEngine) p_object);
-            } else if (p_fxmlFilePath.contains(FxmlView.GAMEX.getFxmlFile())) {
+            } else if (p_fxmlFilePath.contains(FxmlView.GAMEENGINE.getFxmlFile()) && p_phaseName.isBlank() ) {
                 l_rootNode = l_loader.load();
-                GameX l_gameConfig = l_loader.getController();
-                l_gameConfig.setGamePlay((GameEngine) p_object);
+                GameEngine l_gameEngine = l_loader.getController();
+                l_gameEngine.setGamePlay();
             } else {
                 l_rootNode = l_loader.load();
             }

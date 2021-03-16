@@ -7,7 +7,6 @@ import com.soen6441.warzone.model.Country;
 import com.soen6441.warzone.model.DeployOrder;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Order;
-import com.soen6441.warzone.view.FxmlView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,25 +20,26 @@ import javafx.scene.Parent;
  */
 public class ExecuteOrderPhase extends GamePlay {
 
-    GameEngine ge1;
-
-    public ExecuteOrderPhase(GameEngine p_ge) {
-        super(p_ge);
+    public ExecuteOrderPhase(GameEngine p_gameEngine) {
+        super(p_gameEngine);
     }
-
 
     @Override
     public Parent execute() {
+        this.printInvalidCommandMessage();
         return null;
     }
 
     @Override
     public void next(Object p_nextObject) {
+        IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase(d_gameEngine);
+        l_isueOrderPhase.d_gameData = (GameData) d_gameData;
+        l_isueOrderPhase.d_commandResponses = d_commandResponses;
+        d_gameEngine.setPhase(l_isueOrderPhase);
     }
-    
+
     @Override
-    public void executeOrder(Object p_gameData) {
-        //Implement logic here
+    public void executeOrder() {
         List<CommandResponse> l_orderStatus = new ArrayList<>();
         for (int l_i = 0; l_i < d_gameData.getD_maxNumberOfTurns(); l_i++) {                       //main loop for giving the turn to player in round-robin
             for (int l_j = 0; l_j < d_gameData.getD_playerList().size(); l_j++) {
@@ -70,16 +70,9 @@ public class ExecuteOrderPhase extends GamePlay {
                 }
             }
         }
-        //update here
-       //d_gameData = p_gameData;
-        d_commandResponses=l_orderStatus;
-        IssueOrderPhase sueOrderPhase = new IssueOrderPhase(ge);
-        sueOrderPhase.d_gameData=(GameData) d_gameData;
-        sueOrderPhase.d_commandResponses=d_commandResponses;
-        ge.setPhase(sueOrderPhase);
 
-
+        d_commandResponses = l_orderStatus;
+        this.next(null);
     }
-
 
 }

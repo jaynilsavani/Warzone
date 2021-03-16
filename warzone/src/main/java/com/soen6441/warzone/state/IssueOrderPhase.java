@@ -1,11 +1,6 @@
 package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
-import com.soen6441.warzone.model.CommandResponse;
-import com.soen6441.warzone.model.GameData;
-import com.soen6441.warzone.view.FxmlView;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.Parent;
 
 /**
@@ -16,28 +11,28 @@ import javafx.scene.Parent;
  */
 public class IssueOrderPhase extends GamePlay {
 
-    GameEngine d_gameEngine;
 
-    public IssueOrderPhase(GameEngine p_ge) {
-        super(p_ge);
+    public IssueOrderPhase(GameEngine p_gameEngine) {
+        super(p_gameEngine);
     }
 
     @Override
     public Parent execute() {
+        this.printInvalidCommandMessage();
         return null;
     }
 
     @Override
     public void next(Object p_nextObject) {
-        ExecuteOrderPhase executeOrderPhase = new ExecuteOrderPhase(ge);
+        ExecuteOrderPhase executeOrderPhase = new ExecuteOrderPhase(d_gameEngine);
         executeOrderPhase.d_gameData = this.d_gameData;
-        ge.setPhase(executeOrderPhase);
-        ge.getPhase().executeOrder(p_nextObject);
+        d_gameEngine.setPhase(executeOrderPhase);
+        d_gameEngine.getPhase().executeOrder();
     }
 
     @Override
-    public void executeOrder(Object p_gameData) {
-       
+    public void executeOrder() {
+        this.printInvalidCommandMessage();
     }
 
 }

@@ -46,22 +46,7 @@ public enum FxmlView {
         }
 
     },
-    GAMEX {
-
-        @Override
-        public String getSceneTitle() {
-
-            return getTitleFromResourceBundle("gamex");
-        }
-
-        @Override
-        public String getFxmlFile() {
-
-            return "/fxml/GameX.fxml";
-        }
-
-    },
-     GAMEENGINE {
+    GAMEENGINE {
 
         @Override
         public String getSceneTitle() {
@@ -76,7 +61,6 @@ public enum FxmlView {
         }
 
     };
-    
 
     /**
      * This is used for retrieving scene title
