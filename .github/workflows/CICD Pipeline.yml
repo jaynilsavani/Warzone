@@ -5,13 +5,9 @@ name: Warzone CICD Pipeline
 
 on:
   push:
-    branches: 
-    - master
-    - refactoring
+    branches: [ master, refactoring  ]
   pull_request:
-    branches: 
-    - master
-    - refactoring
+    branches: [ master,refactoring  ]
 
 jobs:
   build:
