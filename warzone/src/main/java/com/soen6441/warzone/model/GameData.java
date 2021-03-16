@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @ToString
 @Component
 @NoArgsConstructor
-public class GamePlay {
+public class GameData {
 
     /**
      * It'll manage list of player in that particular game
@@ -62,18 +62,18 @@ public class GamePlay {
      */
     private String d_status;
 
-    public GamePlay(GamePlay p_gamePlay) {
+    public GameData(GameData p_gameData) {
 
-        this.d_gamePhase = p_gamePlay.d_gamePhase;
-        this.d_fileName = p_gamePlay.d_fileName;
-        this.d_warMap = p_gamePlay.d_warMap;
-        this.d_maxNumberOfTurns = p_gamePlay.d_maxNumberOfTurns;
-        this.d_currentPlayerId = p_gamePlay.d_currentPlayerId;
-        this.d_winner = p_gamePlay.d_winner;
-        this.d_status = p_gamePlay.d_status;
+        this.d_gamePhase = p_gameData.d_gamePhase;
+        this.d_fileName = p_gameData.d_fileName;
+        this.d_warMap = p_gameData.d_warMap;
+        this.d_maxNumberOfTurns = p_gameData.d_maxNumberOfTurns;
+        this.d_currentPlayerId = p_gameData.d_currentPlayerId;
+        this.d_winner = p_gameData.d_winner;
+        this.d_status = p_gameData.d_status;
         this.d_playerList = new ArrayList<Player>();
-        if (p_gamePlay.d_playerList != null) {
-            p_gamePlay.d_playerList.forEach(player -> {
+        if (p_gameData.d_playerList != null) {
+            p_gameData.d_playerList.forEach(player -> {
                 this.d_playerList.add(player);
             });
         }

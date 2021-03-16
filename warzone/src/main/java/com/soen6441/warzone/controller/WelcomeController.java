@@ -1,6 +1,7 @@
 package com.soen6441.warzone.controller;
 
 import com.soen6441.warzone.config.StageManager;
+import static com.soen6441.warzone.config.WarzoneConstants.*;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.view.FxmlView;
 import javafx.event.ActionEvent;
@@ -41,7 +42,8 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void createMap(ActionEvent p_event) {
-        d_stageManager.switchScene(FxmlView.MAPMANAGER, null);
+        d_stageManager.switchScene(FxmlView.GAMEENGINE, null,PHASE_MAP);
+
     }
 
     /**
@@ -51,7 +53,7 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void playGame(ActionEvent p_event) {
-        d_stageManager.switchScene(FxmlView.GAMECONFIG, null);
+        d_stageManager.switchScene(FxmlView.GAMEENGINE, null,PHASE_GAME_START_UP);
     }
 
     /**

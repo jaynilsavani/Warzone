@@ -1,7 +1,7 @@
 package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.model.CommandResponse;
-import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameConfigService;
 import org.junit.After;
@@ -33,7 +33,7 @@ public class GameConfigServiceTest {
     GameConfigService d_gameConfigService;
 
     @Autowired
-    GamePlay d_gamePlay;
+    GameData d_gameData;
 
     /**
      * This method is used to load SpringBoot Application Context
@@ -56,7 +56,7 @@ public class GameConfigServiceTest {
 
     @Before
     public void setUp() {
-        d_gamePlay = new GamePlay();
+        d_gameData = new GameData();
     }
 
     @After
@@ -74,11 +74,11 @@ public class GameConfigServiceTest {
         l_expectedPlayer.setD_playerName("user");
         Player l_actualPlayer = new Player();
 
-        Map.Entry<GamePlay, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gamePlay, "gameplayer -add " + l_expectedPlayer.getD_playerName());
+        Map.Entry<GameData, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gameData, "gameplayer -add " + l_expectedPlayer.getD_playerName());
         if (l_gamePlayCommandResponseEntry.getValue().isD_isValid()) {
-            GamePlay l_gamePlay = l_gamePlayCommandResponseEntry.getKey();
-            if (!l_gamePlay.getD_playerList().isEmpty()) {
-                l_actualPlayer = l_gamePlay.getD_playerList().get(0);
+            GameData l_gameData = l_gamePlayCommandResponseEntry.getKey();
+            if (!l_gameData.getD_playerList().isEmpty()) {
+                l_actualPlayer = l_gameData.getD_playerList().get(0);
             }
         }
         assertEquals(l_expectedPlayer, l_actualPlayer);

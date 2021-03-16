@@ -31,7 +31,7 @@ public class GameEngineServiceTest {
     GameEngineService d_gameEngineService;
 
     @Autowired
-    GamePlay d_gamePlay;
+    GameData d_gameData;
 
     @Autowired
     Player d_player;
@@ -103,9 +103,9 @@ public class GameEngineServiceTest {
         d_player.setD_ownedCountries(l_countryList);
         List<Player> l_playerList = new ArrayList<Player>();
         l_playerList.add(d_player);
-        d_gamePlay.setD_playerList(l_playerList);
-        d_gamePlay.setD_fileName("test.map");
-        d_gamePlay.setD_warMap(d_warMap);
+        d_gameData.setD_playerList(l_playerList);
+        d_gameData.setD_fileName("test.map");
+        d_gameData.setD_warMap(d_warMap);
 
     }
 
@@ -118,25 +118,25 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAssignReinforcements() {
-        GamePlay l_gamePlay = d_gameEngineService.assignReinforcements(d_gamePlay);
-        int l_actualnoOfArmies = l_gamePlay.getD_playerList().get(0).getD_noOfArmies();
+        GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
+        int l_actualnoOfArmies = l_gameData.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }
 
     @Test
     public void testExecuteOrder() {
-        d_gamePlay.getD_playerList().get(0).setD_noOfArmies(6);
-        d_gamePlay.getD_playerList().get(0).setD_currentToCountry("china");
-        d_gamePlay.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
-        d_gamePlay.getD_playerList().get(0).issue_order();
-        Order l_order = d_gamePlay.getD_playerList().get(0).getD_orders().get(0);
-        ((DeployOrder) l_order).setD_player(d_gamePlay.getD_playerList().get(0));
-        d_gamePlay.getD_playerList().remove(0);
-        d_gamePlay.getD_playerList().add(0, ((DeployOrder) l_order).getD_player());
+        d_gameData.getD_playerList().get(0).setD_noOfArmies(6);
+        d_gameData.getD_playerList().get(0).setD_currentToCountry("china");
+        d_gameData.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).getD_orders().get(0);
+        ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(0));
+        d_gameData.getD_playerList().remove(0);
+        d_gameData.getD_playerList().add(0, ((DeployOrder) l_order).getD_player());
         boolean l_check = l_order.executeOrder();
         assertEquals(true, l_check);
-        int l_actualArmiesinPlayer = d_gamePlay.getD_playerList().get(0).getD_noOfArmies();
+        int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
         assertEquals(0, l_actualArmiesinPlayer);
     }
 

@@ -1,7 +1,9 @@
 package com.soen6441.warzone.config;
 
+import com.soen6441.warzone.controller.GameConfigController;
 import com.soen6441.warzone.controller.GameEngine;
-import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.controller.GameX;
+import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.view.FxmlView;
 import java.io.IOException;
 import javafx.application.Platform;
@@ -43,9 +45,10 @@ public class StageManager {
      *
      * @param p_view is scene to show
      * @param p_object: object
+     * @param p_msg : Phase Name
      */
-    public void switchScene(final FxmlView p_view, Object p_object) {
-        Parent l_viewRootNodeHierarchy = loadViewNodeHierarchy(p_view.getFxmlFile(), p_object);
+    public void switchScene(final FxmlView p_view, Object p_object, String p_msg) {
+        Parent l_viewRootNodeHierarchy = loadViewNodeHierarchy(p_view.getFxmlFile(), p_object, p_msg);
         show(l_viewRootNodeHierarchy, p_view.getSceneTitle());
     }
 
@@ -94,14 +97,22 @@ public class StageManager {
      *
      * @return Parent root node of the FXML document hierarchy
      */
-    private Parent loadViewNodeHierarchy(String p_fxmlFilePath, Object p_object) {
+    public Parent loadViewNodeHierarchy(String p_fxmlFilePath, Object p_object, String p_phaseName) {
         Parent l_rootNode = null;
         try {
             FXMLLoader l_loader = d_springFXMLLoader.load(p_fxmlFilePath);
             if (p_fxmlFilePath.contains(FxmlView.GAMEENGINE.getFxmlFile())) {
                 l_rootNode = l_loader.load();
                 GameEngine l_gameEngine = l_loader.getController();
-                l_gameEngine.setGamePlay((GamePlay) p_object);
+                return l_gameEngine.setSomeThing(p_phaseName);
+            } else if (p_fxmlFilePath.contains(FxmlView.GAMECONFIG.getFxmlFile())) {
+                l_rootNode = l_loader.load();
+                GameConfigController l_gameConfig = l_loader.getController();
+                l_gameConfig.setGameEngine((GameEngine) p_object);
+            } else if (p_fxmlFilePath.contains(FxmlView.GAMEX.getFxmlFile())) {
+                l_rootNode = l_loader.load();
+                GameX l_gameConfig = l_loader.getController();
+                l_gameConfig.setGamePlay((GameEngine) p_object);
             } else {
                 l_rootNode = l_loader.load();
             }

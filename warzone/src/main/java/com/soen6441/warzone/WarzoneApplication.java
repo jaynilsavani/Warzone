@@ -76,7 +76,7 @@ public class WarzoneApplication extends Application {
      * window.
      */
     protected void displayInitialScene() {
-        d_stageManager.switchScene(FxmlView.HOME, null);
+        d_stageManager.switchScene(FxmlView.HOME, null,"");
     }
 
     /**

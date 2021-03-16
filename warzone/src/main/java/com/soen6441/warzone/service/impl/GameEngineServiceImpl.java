@@ -2,7 +2,7 @@ package com.soen6441.warzone.service.impl;
 
 import static com.soen6441.warzone.config.WarzoneConstants.*;
 import com.soen6441.warzone.model.Continent;
-import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameEngineService;
 import java.util.ArrayList;
@@ -23,18 +23,18 @@ public class GameEngineServiceImpl implements GameEngineService {
      * {@inheritDoc }
      */
     @Override
-    public GamePlay assignReinforcements(GamePlay p_gamePlay) {
+    public GameData assignReinforcements(GameData p_gameData) {
 
-        if (p_gamePlay.getD_playerList() != null && (!p_gamePlay.getD_playerList().isEmpty())) {
+        if (p_gameData.getD_playerList() != null && (!p_gameData.getD_playerList().isEmpty())) {
 
-            for (Player l_player : p_gamePlay.getD_playerList()) {
+            for (Player l_player : p_gameData.getD_playerList()) {
                 if (l_player.getD_ownedCountries() != null && (!l_player.getD_ownedCountries().isEmpty())) {
                     int l_noOfArmy = DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
                     //This is used to check and assign noOf armies According to Warzone rule based on owned countries
                     if ((l_player.getD_ownedCountries().size() / DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER) > DEFAULT_ASSIGN_REINFORCEMENT_INITIAL) {
                         l_noOfArmy = (l_player.getD_ownedCountries().size() / DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER);
                     }
-                    List<Continent> l_continentsOwnedByPlayer = continentsOwnedByPlayer(l_player, p_gamePlay);
+                    List<Continent> l_continentsOwnedByPlayer = continentsOwnedByPlayer(l_player, p_gameData);
                     //This is used to check and assign countries for control value addition 
                     if (l_continentsOwnedByPlayer.size() > 0) {
                         for (Continent continent : l_continentsOwnedByPlayer) {
@@ -46,17 +46,17 @@ public class GameEngineServiceImpl implements GameEngineService {
                 }
             }
         }
-        return p_gamePlay;
+        return p_gameData;
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public List<Continent> continentsOwnedByPlayer(Player p_player, GamePlay p_gamePlay) {
+    public List<Continent> continentsOwnedByPlayer(Player p_player, GameData p_gameData) {
         List<Continent> l_continents = new ArrayList<>();
-        if (p_gamePlay.getD_warMap().getD_continents() != null) {
-            for (Map.Entry<Integer, Continent> l_continentEntry : p_gamePlay.getD_warMap().getD_continents().entrySet()) {
+        if (p_gameData.getD_warMap().getD_continents() != null) {
+            for (Map.Entry<Integer, Continent> l_continentEntry : p_gameData.getD_warMap().getD_continents().entrySet()) {
                 Continent l_continent = l_continentEntry.getValue();
                 //Check whether player owned all countries of continent or not
                 if (p_player.getD_ownedCountries().containsAll(l_continent.getD_countryList())) {
@@ -71,9 +71,9 @@ public class GameEngineServiceImpl implements GameEngineService {
      * {@inheritDoc }
      */
     @Override
-    public String showReinforcementArmies(GamePlay p_gamePlay) {
+    public String showReinforcementArmies(GameData p_gameData) {
         String l_armies = "";
-        for (Player l_p : p_gamePlay.getD_playerList()) {
+        for (Player l_p : p_gameData.getD_playerList()) {
             l_armies = l_armies + l_p.getD_playerName() + " : " + l_p.getD_noOfArmies() + "\n";
         }
         return l_armies;

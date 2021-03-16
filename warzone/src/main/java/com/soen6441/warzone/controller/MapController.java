@@ -34,6 +34,8 @@ public class MapController implements Initializable {
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
+  
+
     /**
      * This is the initialization method of this controller
      *
@@ -54,8 +56,7 @@ public class MapController implements Initializable {
      */
     @FXML
     void backToWelcome(ActionEvent p_event) {
-
-        d_stageManager.switchScene(FxmlView.HOME, null);
+        d_stageManager.switchScene(FxmlView.HOME, null,"");
     }
 
     /**
@@ -65,7 +66,7 @@ public class MapController implements Initializable {
      * @param p_event will represents value sent from view
      */
     @FXML
-    void getData(ActionEvent p_event) {
+    public void getData(ActionEvent p_event) {
         String l_s = d_ExecuteCommand.getText().trim();
 
         CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(l_s);

@@ -1,13 +1,19 @@
 package com.soen6441.warzone.controller;
 
 import com.soen6441.warzone.config.StageManager;
+import static com.soen6441.warzone.config.WarzoneConstants.PHASE_GAME_START_UP;
+import static com.soen6441.warzone.config.WarzoneConstants.PHASE_MAP;
 import com.soen6441.warzone.model.CommandResponse;
-import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.model.WarMap;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
+import com.soen6441.warzone.state.IssueOrderPhase;
+import com.soen6441.warzone.state.MapPhase;
+import com.soen6441.warzone.state.Phase;
+import com.soen6441.warzone.state.StartUpPhase;
 import com.soen6441.warzone.view.FxmlView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -48,6 +54,9 @@ public class GameConfigController implements Initializable {
     @FXML
     private Button d_StartGame;
 
+    @FXML
+    private Button d_FireCommand;
+
     @Autowired
     private WarMap d_warMap;
 
@@ -58,7 +67,7 @@ public class GameConfigController implements Initializable {
     private GeneralUtil d_generalUtil;
 
     @Autowired
-    private GamePlay d_gamePlay;
+    private GameData d_gameData;
 
     @Lazy
     @Autowired
@@ -66,6 +75,9 @@ public class GameConfigController implements Initializable {
 
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
+
+    @Autowired
+    private GameEngine d_gameEngine;
 
     /**
      * This is the initialization method of this controller
@@ -88,8 +100,13 @@ public class GameConfigController implements Initializable {
      */
     @FXML
     void backToWelcome(ActionEvent p_event) {
-        d_stageManager.switchScene(FxmlView.HOME, null);
-        d_gamePlay = new GamePlay();
+        d_stageManager.switchScene(FxmlView.HOME, null, "");
+        d_gameData = new GameData();
+    }
+
+    public void setGameEngine(GameEngine p_gameEngine) {
+        d_gameEngine = p_gameEngine;
+
     }
 
     /**
@@ -99,8 +116,8 @@ public class GameConfigController implements Initializable {
      */
     @FXML
     void toStartGame(ActionEvent p_event) {
-
-        d_stageManager.switchScene(FxmlView.GAMEENGINE, d_gamePlay);
+        StartUpPhase st = (StartUpPhase) d_gameEngine.getPhase();
+        st.next(d_gameData);
     }
 
     /**
@@ -115,8 +132,8 @@ public class GameConfigController implements Initializable {
         CommandResponse l_gmConfigRes = new CommandResponse();
 
         if (l_command.toLowerCase().startsWith(SHOW_MAP)) {                                                     //condition if user gives input to show the map
-            if (d_gamePlay.getD_warMap() != null) {
-                l_gmConfigRes = d_gameConfigService.showPlayerMap(d_gamePlay);
+            if (d_gameData.getD_warMap() != null) {
+                l_gmConfigRes = d_gameConfigService.showPlayerMap(d_gameData);
             } else {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
@@ -144,15 +161,15 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("countries are already assigned to each player");
             } else {
-                if (d_gamePlay.getD_warMap() != null) {
+                if (d_gameData.getD_warMap() != null) {
                     if ((l_commandSegments.size() - 1) % 2 == 0) {                                 //validates the command
-                        Map.Entry<GamePlay, CommandResponse> l_updatedGamePlay = d_gameConfigService.updatePlayer(d_gamePlay, l_command);
+                        Map.Entry<GameData, CommandResponse> l_updatedGamePlay = d_gameConfigService.updatePlayer(d_gameData, l_command);
 
                         if (l_updatedGamePlay.getValue().isD_isValid()) {
-                            d_gamePlay = l_updatedGamePlay.getKey();
+                            d_gameData = l_updatedGamePlay.getKey();
                             String l_playerName = "\n Players : \n[";
-                            if (d_gamePlay.getD_playerList() != null) {
-                                for (Player l_p : d_gamePlay.getD_playerList()) {
+                            if (d_gameData.getD_playerList() != null) {
+                                for (Player l_p : d_gameData.getD_playerList()) {
                                     l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";
                                 }
                                 l_playerName = l_playerName + "]";
@@ -170,12 +187,12 @@ public class GameConfigController implements Initializable {
                 }
             }
         } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY)) {                           //if user wants to assigncountries to players
-            if (d_gamePlay.getD_warMap() == null) {
+            if (d_gameData.getD_warMap() == null) {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
             } else {
                 if (l_commandSegments.size() == 1) {                                          //to validate the command
-                    l_gmConfigRes = d_gameConfigService.assignCountries(d_gamePlay);
+                    l_gmConfigRes = d_gameConfigService.assignCountries(d_gameData);
                     if (l_gmConfigRes.isD_isValid()) {
                         d_StartGame.setDisable(false);
                         AssignCountryFlag = 1;
@@ -219,8 +236,8 @@ public class GameConfigController implements Initializable {
                         d_warMap.setD_status(true);                                           // Set status and map file name
                         d_warMap.setD_mapName(l_fullName);
                         d_generalUtil.prepareResponse(true, "Map loaded successfully!");
-                        d_gamePlay.setD_warMap(d_warMap);                                     //set loaded map in the Game play object
-                        d_gamePlay.setD_fileName(p_fileName);
+                        d_gameData.setD_warMap(d_warMap);                                     //set loaded map in the Game play object
+                        d_gameData.setD_fileName(p_fileName);
                         d_warMap.setD_mapName(l_fullName);
                     } else {
                         d_generalUtil.prepareResponse(false, "Map is Invalid, Please select another map");
