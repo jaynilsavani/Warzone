@@ -20,6 +20,11 @@ public abstract class Phase {
     @Autowired
     public GameEngine d_gameEngine;
 
+    /**
+     * Constructor to set the reference variable to GameEngine object for the
+     * state transition
+     * @param p_gameEngine This is the reference variable to set state.
+     */
     public Phase(GameEngine p_gameEngine) {
         d_gameEngine = p_gameEngine;
     }

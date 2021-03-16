@@ -14,22 +14,34 @@ import javafx.scene.Parent;
 
 /**
  *
- * This Class is used for
+ * This Class is used to take order from each players
+ * in round robin manner and then executes those orders.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class ExecuteOrderPhase extends GamePlay {
-
+    /**
+     *  This is a constructor which is used to invoke GamePlay Constructor
+     * @param p_gameEngine Object of GameEngine
+     */
     public ExecuteOrderPhase(GameEngine p_gameEngine) {
         super(p_gameEngine);
     }
 
+    /**
+     * {@inheritDoc }
+     * @return the null value
+     */
     @Override
     public Parent execute() {
         this.printInvalidCommandMessage();
         return null;
     }
 
+    /**
+     * {@inheritDoc }
+     * @param p_nextObject Object that is being passed to next phase
+     */
     @Override
     public void next(Object p_nextObject) {
         IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase(d_gameEngine);
@@ -38,6 +50,9 @@ public class ExecuteOrderPhase extends GamePlay {
         d_gameEngine.setPhase(l_isueOrderPhase);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void executeOrder() {
         List<CommandResponse> l_orderStatus = new ArrayList<>();
