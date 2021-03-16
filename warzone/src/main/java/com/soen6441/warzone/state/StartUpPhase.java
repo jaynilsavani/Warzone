@@ -7,16 +7,17 @@ import javafx.scene.Parent;
 
 /**
  *
- * This Class is used for start up phase in state pattern to execute
- * load map, add and remove players and populate countries between
- * those players commands before the actual game start.
+ * ConcreteState of the State pattern.This Phase is used for start up phase
+ * commands i.e. load map, add and remove players and populate countries
+ * between those players in state pattern before the actual game start.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class StartUpPhase extends GamePlay {
 
     /**
-     *  This is a constructor which is used to invoke GamePlay Constructor
+     *  This parameterized constructor is used to invoke GameEngine Constructor and
+     *  set the reference variable to GameEngine object for the state transition.
      * @param p_gameEngine Object of GameEngine
      */
     public StartUpPhase(GameEngine p_gameEngine) {

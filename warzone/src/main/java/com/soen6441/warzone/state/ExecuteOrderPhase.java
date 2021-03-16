@@ -14,15 +14,17 @@ import javafx.scene.Parent;
 
 /**
  *
- * This Class is used to take order from each players
- * in round robin manner and then executes those orders.
+ * ConcreteState of the State pattern.This Phase is used to execute orders
+ * which are issued by players in previous phase.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class ExecuteOrderPhase extends GamePlay {
     /**
-     *  This is a constructor which is used to invoke GamePlay Constructor
+     * This parameterized constructor is used to invoke GameEngine Constructor
+     * and set the reference variable to GameEngine object for the state transition.
      * @param p_gameEngine Object of GameEngine
+     *
      */
     public ExecuteOrderPhase(GameEngine p_gameEngine) {
         super(p_gameEngine);

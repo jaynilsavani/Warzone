@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
- * This Class is used as State Class in State Pattern
+ * This abstract class is used as State Class in State Pattern and defines
+ * the behavior that is common to all the states in its group (MapPhase).
+ * All the states in its group need to extend this class.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -21,8 +23,8 @@ public abstract class Phase {
     public GameEngine d_gameEngine;
 
     /**
-     * Constructor to set the reference variable to GameEngine object for the
-     * state transition
+     * This constructor is used to set the reference variable to GameEngine object
+     * for the state transition
      * @param p_gameEngine This is the reference variable to set state.
      */
     public Phase(GameEngine p_gameEngine) {
