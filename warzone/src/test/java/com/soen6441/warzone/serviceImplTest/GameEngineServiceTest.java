@@ -35,7 +35,7 @@ public class GameEngineServiceTest {
 
     @Autowired
     Player d_player;
-
+    
     @Autowired
     WarMap d_warMap;
 
@@ -79,6 +79,7 @@ public class GameEngineServiceTest {
         l_country1.setD_continentIndex(1);
         l_country1.setD_countryIndex(2);
         l_country1.setD_countryName("china");
+        l_country1.setD_noOfArmies(10);
         List<String> l_neighborList1 = new ArrayList();
         l_neighborList1.add("india");
 
@@ -138,6 +139,43 @@ public class GameEngineServiceTest {
         assertEquals(true, l_check);
         int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
         assertEquals(0, l_actualArmiesinPlayer);
+    }
+    
+    @Test
+    public void testBombCommand(){
+        List<Country> l_countryList = new ArrayList();
+
+        //creating a new country object
+        Country l_country = new Country();
+        l_country.setD_continentIndex(1);
+        l_country.setD_countryIndex(1);
+        l_country.setD_countryName("india");
+        List<String> l_neighborList = new ArrayList();
+        l_neighborList.add("china");
+
+        //added neighbour of country 
+        l_country.setD_neighbourCountries(l_neighborList);
+        l_countryList.add(l_country);
+        d_player.setD_ownedCountries(l_countryList);
+        
+        
+        BombOrder d_order = new BombOrder();
+        d_order.setD_countryName("china");
+        d_order.setD_player(d_player);
+        d_order.setD_gameData(d_gameData);
+        
+        assertEquals(true, d_order.executeOrder());
+        
+        //cheking number of armies after using bomb card
+        for(Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()){
+            for(Country l_countryName  : l_continent.getValue().getD_countryList()){
+                   if(l_countryName.getD_countryName().equals("china")){
+                       assertEquals(5, l_countryName.getD_noOfArmies());
+                   }
+            }
+        }
+        
+       
     }
 
 }
