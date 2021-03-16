@@ -17,6 +17,7 @@ public abstract class GamePlay extends Phase {
 
     public GameData d_gameData;
     public List<CommandResponse> d_commandResponses = new ArrayList<>();
+    public CommandResponse d_issueResponse;
 
     public GamePlay(GameEngine p_gameEngine) {
         super(p_gameEngine);
