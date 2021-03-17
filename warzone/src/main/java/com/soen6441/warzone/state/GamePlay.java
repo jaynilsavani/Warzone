@@ -27,6 +27,7 @@ public abstract class GamePlay extends Phase {
      *  It'll manage list of command response in that particular phase.
      */
     public List<CommandResponse> d_commandResponses = new ArrayList<>();
+    public CommandResponse d_issueResponse;
 
     /**
      * This parameterized constructor is used to invoke Phase Constructor

@@ -5,9 +5,9 @@ name: Warzone CICD Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, refactoring  ]
   pull_request:
-    branches: [ master ]
+    branches: [ master,refactoring  ]
 
 jobs:
   build:
@@ -24,5 +24,5 @@ jobs:
       run: cd warzone && mvn clean install -DskipTests
     - name: Test with Maven
       run: cd warzone && mvn -Dtest=WarzoneApplicationTests test
-    - name: Generte javadoc
+    - name: Generate javadoc
       run: cd warzone && mvn javadoc:javadoc

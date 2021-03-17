@@ -40,12 +40,12 @@ public class GameEngine implements Initializable {
      * array of falg that shows that whether player is done with issuing order
      * or not for particular round
      */
-    private static int[] PlayerFlag;
+    public  int[] PlayerFlag;
 
     /**
      * counter that invokes after each order issued by player
      */
-    private static int PlayCounter = 0;
+    public  int PlayCounter = 0;
 
     @FXML
     public TextArea d_TerritoryListText;
@@ -64,7 +64,7 @@ public class GameEngine implements Initializable {
     private GameData d_gameData;
 
     @Autowired
-    GeneralUtil d_generalUtil;
+    public GeneralUtil d_generalUtil;
 
     @FXML
     private TextField d_CommandLine;
@@ -149,7 +149,11 @@ public class GameEngine implements Initializable {
         String[] l_validatestr = l_s.split("\\s");
         if ((d_generalUtil.validateIOString(l_s, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
-            CommandResponse l_commandResponse = issuingPlayer(l_s);                   //to invoke the issue order after player gives the command
+            IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
+            l_issueorder.d_gameData = d_gameData;
+            l_issueorder.issuingPlayer(l_s);                    //to invoke the issue order after player gives the command
+            CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
+            d_gameData = l_issueorder.d_gameData;
             d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");
             while (true) {                                                       //loop to check for which player gets a turn
                 int l_j = 0;
@@ -160,17 +164,18 @@ public class GameEngine implements Initializable {
                 }
                 if (l_j == PlayerFlag.length) {
                     //to reset the round after each player is done with issuing orders
-                    IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
+                    l_issueorder = (IssueOrderPhase) gamePhase;
                     l_issueorder.d_gameData = d_gameData;
                     l_issueorder.next("");
                     IssueOrderPhase l_issuephase = (IssueOrderPhase) gamePhase;
+                    d_gameData = l_issueorder.d_gameData;
                     List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
 //                    List<CommandResponse > l_commandList = executionOfOrders();
 //                    List<CommandResponse> l_commandList = executionOfOrders();
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
                     }
-                    d_FireCommandList.appendText(playerOwnedCountries(d_gameData));
+                    d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
                     CommandResponse l_map = d_gameConfig.showPlayerMap(d_gameData);           //to show the map and player*country table
                     d_FireCommandList.appendText(l_map.getD_responseString());
 
@@ -222,7 +227,7 @@ public class GameEngine implements Initializable {
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         PlayerFlag = new int[d_gameData.getD_playerList().size()];
         Arrays.fill(PlayerFlag, 0);
-        d_FireCommandList.appendText(playerOwnedCountries(d_gameData));
+        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
         reinforcementArmies();
     }
 
@@ -273,15 +278,8 @@ public class GameEngine implements Initializable {
 //        }
 //        return l_orderStatus;
 //    }
-    /**
-     * This method is used to store the user input of orders in player's lst of
-     * orders
-     *
-     * @param p_command String that has been given by user
-     * @return return the response in term of wether order is added or player is
-     * completed with orders or not
-     */
-    public CommandResponse issuingPlayer(String p_command) {
+
+   /* public CommandResponse issuingPlayer(String p_command) {
         Player l_player = d_gameData.getD_playerList().get(PlayCounter);              //assigns the current player using the playcounter
         if (d_gameData.getD_maxNumberOfTurns() < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
             d_gameData.setD_maxNumberOfTurns(l_player.getD_orders().size());
@@ -311,17 +309,8 @@ public class GameEngine implements Initializable {
         }
 
     }
+    */
 
-    public String playerOwnedCountries(GameData p_gameData) {
-        String l_responseString = "\n";
-        for (Player l_player : p_gameData.getD_playerList()) {
-            l_responseString += l_player.getD_playerName() + " : [";
-            for (Country l_cn : l_player.getD_ownedCountries()) {
-                l_responseString += l_cn.getD_countryName() + " , ";
-            }
-            l_responseString += " ] \n ";
-        }
-        return l_responseString;
-    }
+
 
 }
