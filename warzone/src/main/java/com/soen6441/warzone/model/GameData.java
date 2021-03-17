@@ -65,7 +65,6 @@ public class GameData {
     public GameData(GameData p_gameData) {
 
         this.d_gamePhase = p_gameData.d_gamePhase;
-
         this.d_fileName = p_gameData.d_fileName;
         this.d_warMap = p_gameData.d_warMap;
         this.d_maxNumberOfTurns = p_gameData.d_maxNumberOfTurns;
