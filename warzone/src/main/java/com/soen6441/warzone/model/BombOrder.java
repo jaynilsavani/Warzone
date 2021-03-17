@@ -7,7 +7,7 @@ import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * This Class is used for The deploy order Command Three annotations
+ * This Class is used for The Bomb order Command Three annotations
  * (Getter,Setter, toString), you can see on the top of the class are lombok
  * dependencies to automatically generate getter, setter and tostring method in
  * the code.
@@ -19,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @ToString
 public class BombOrder implements Order {
 
-    GameData d_gameData;
+    /**
+     * GameData in current Game
+     */
+    private GameData d_gameData;
     /**
      * Country in this order
      */
@@ -32,19 +35,21 @@ public class BombOrder implements Order {
     /**
      * {@inheritDoc }
      * <p>
-     * This method deploy armies to the country
+     * This method reduce 50% armies of the targeted country(Bomb Command)
      */
     @Override
     public boolean executeOrder() {
         Country l_countryName;
+        //checking that target country is opponent country
         for (Country l_country : d_player.getD_ownedCountries()) {
             if (l_country.getD_countryName().equals(d_countryName)) {
                 return false;
             } else {
+                //chekcing adjacency 
                 for (String l_neighbour : l_country.getD_neighbourCountries()) {
                     if (d_countryName.equalsIgnoreCase(l_neighbour)) {
                         l_countryName = getCountryObjectByCountryName(d_countryName);
-                        if (l_countryName != null && !(l_countryName.getD_noOfArmies() == 0)) {
+                        if (l_countryName != null && l_countryName.getD_noOfArmies() > 0) {
                             int l_army = l_countryName.getD_noOfArmies();
                             l_army = l_army / 2;
                             l_countryName.setD_noOfArmies(l_army);
@@ -58,10 +63,10 @@ public class BombOrder implements Order {
     }
 
     /**
-     * This method return Country Model Object
+     * This method return Country Object
      *
      * @param p_countryName : name of the country
-     * @return Country model object
+     * @return Country object
      */
     public Country getCountryObjectByCountryName(String p_countryName) {
         Country l_countryName = null;

@@ -125,6 +125,9 @@ public class GameEngineServiceTest {
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }
 
+    /**
+     * Test to check Deploy Command
+     */
     @Test
     public void testExecuteOrder() {
         d_gameData.getD_playerList().get(0).setD_noOfArmies(6);
@@ -141,6 +144,9 @@ public class GameEngineServiceTest {
         assertEquals(0, l_actualArmiesinPlayer);
     }
     
+    /**
+     * Test to check Bomb Command
+     */
     @Test
     public void testBombCommand(){
         List<Country> l_countryList = new ArrayList();
