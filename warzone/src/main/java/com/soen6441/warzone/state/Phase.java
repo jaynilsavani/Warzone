@@ -1,12 +1,16 @@
 package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
+import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.model.GameData;
 import javafx.scene.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
- * This Class is used as State Class in State Pattern
+ * This abstract class is used as State Class in State Pattern and defines
+ * the behavior that is common to all the states in its group (MapPhase).
+ * All the states in its group need to extend this class.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -20,6 +24,11 @@ public abstract class Phase {
     @Autowired
     public GameEngine d_gameEngine;
 
+    /**
+     * This constructor is used to set the reference variable to GameEngine object
+     * for the state transition
+     * @param p_gameEngine This is the reference variable to set state.
+     */
     public Phase(GameEngine p_gameEngine) {
         d_gameEngine = p_gameEngine;
     }
@@ -42,6 +51,19 @@ public abstract class Phase {
      * This is used for Execution of order in Execute Order Phase
      */
     abstract public void executeOrder();
+
+    /**
+     *This method is used to store the user input of orders in player's lst of
+     *orders
+     * @param p_command command given by user
+     */
+    abstract public void issueOrder(String p_command);
+
+    /**
+     * This method used to apply assign Reinforcement on provided GameData
+     * Object
+     */
+    public abstract void assignReinforcements();
 
     /**
      * Common method to all Phases.

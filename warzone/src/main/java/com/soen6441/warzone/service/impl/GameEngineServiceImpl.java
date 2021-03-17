@@ -2,6 +2,7 @@ package com.soen6441.warzone.service.impl;
 
 import static com.soen6441.warzone.config.WarzoneConstants.*;
 import com.soen6441.warzone.model.Continent;
+import com.soen6441.warzone.model.Country;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameEngineService;
@@ -22,7 +23,7 @@ public class GameEngineServiceImpl implements GameEngineService {
     /**
      * {@inheritDoc }
      */
-    @Override
+   /* @Override
     public GameData assignReinforcements(GameData p_gameData) {
 
         if (p_gameData.getD_playerList() != null && (!p_gameData.getD_playerList().isEmpty())) {
@@ -48,6 +49,7 @@ public class GameEngineServiceImpl implements GameEngineService {
         }
         return p_gameData;
     }
+    /*
 
     /**
      * {@inheritDoc }
@@ -77,5 +79,21 @@ public class GameEngineServiceImpl implements GameEngineService {
             l_armies = l_armies + l_p.getD_playerName() + " : " + l_p.getD_noOfArmies() + "\n";
         }
         return l_armies;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public String playerOwnedCountries(GameData p_gameData) {
+        String l_responseString = "\n";
+        for (Player l_player : p_gameData.getD_playerList()) {
+            l_responseString += l_player.getD_playerName() + " : [";
+            for (Country l_cn : l_player.getD_ownedCountries()) {
+                l_responseString += l_cn.getD_countryName() + " , ";
+            }
+            l_responseString += " ] \n ";
+        }
+        return l_responseString;
     }
 }

@@ -63,13 +63,43 @@ public class Player {
     private int d_currentNoOfArmiesToMove;
 
     /**
+     * number of the command to set the order f that type
+     */
+    private int d_commandtype;
+
+    /**
      * add the order to the list of orders
      */
     public void issue_order() {
-        DeployOrder d_deplyOrder = new DeployOrder();
-        d_deplyOrder.setD_CountryName(d_currentToCountry);
-        d_deplyOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
-        d_orders.add(d_deplyOrder);
+        switch (d_commandtype)
+        {
+            case 1:
+                {
+                DeployOrder l_deplyOrder = new DeployOrder();
+                l_deplyOrder.setD_CountryName(d_currentToCountry);
+                l_deplyOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
+                d_orders.add(l_deplyOrder);
+                }
+            case 2:
+                {
+                }
+            case 3:
+                {
+                    BombOrder l_bombOrder=new BombOrder();
+                    l_bombOrder.setD_countryName(d_currentToCountry);
+                    d_orders.add(l_bombOrder);
+                }
+            case 4:
+                {
+                }
+            case 5:
+                {
+                }
+            case 6:
+                {
+                }
+
+        }
     }
 
     /**
