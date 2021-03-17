@@ -97,6 +97,8 @@ public class IssueOrderPhase extends GamePlay {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
             }
+
+
             else if(l_commands[0].equalsIgnoreCase("blockade"))
             {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(4);
