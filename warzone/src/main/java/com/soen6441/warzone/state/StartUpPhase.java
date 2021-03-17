@@ -8,21 +8,36 @@ import javafx.scene.Parent;
 
 /**
  *
- * This Class is used for
+ * ConcreteState of the State pattern.This Phase is used for start up phase
+ * commands i.e. load map, add and remove players and populate countries
+ * between those players in state pattern before the actual game start.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class StartUpPhase extends GamePlay {
 
+    /**
+     *  This parameterized constructor is used to invoke Phase Constructor and
+     *  set the reference variable to GameEngine object for the state transition.
+     *  @param p_gameEngine Object of GameEngine
+     */
     public StartUpPhase(GameEngine p_gameEngine) {
         super(p_gameEngine);
     }
 
+    /**
+     * {@inheritDoc }
+     *
+     */
     @Override
     public Parent execute() {
         return d_gameEngine.getStageManager().loadViewNodeHierarchy(FxmlView.GAMECONFIG.getFxmlFile(), d_gameEngine, "");
     }
 
+    /**
+     * {@inheritDoc }
+     *
+     */
     @Override
     public void next(Object p_nextObject) {
         IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase(d_gameEngine);
@@ -32,6 +47,10 @@ public class StartUpPhase extends GamePlay {
 
     }
 
+    /**
+     * {@inheritDoc }
+     *
+     */
     @Override
     public void executeOrder() {
         this.printInvalidCommandMessage();
