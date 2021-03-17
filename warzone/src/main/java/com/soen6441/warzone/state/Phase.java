@@ -1,6 +1,7 @@
 package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
+import com.soen6441.warzone.model.CommandResponse;
 import javafx.scene.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +43,13 @@ public abstract class Phase {
      * This is used for Execution of order in Execute Order Phase
      */
     abstract public void executeOrder();
+
+    /**
+     *This method is used to store the user input of orders in player's lst of
+     *orders
+     * @param p_command command given by user
+     */
+    abstract public void issuingPlayer(String p_command);
 
     /**
      * Common method to all Phases.

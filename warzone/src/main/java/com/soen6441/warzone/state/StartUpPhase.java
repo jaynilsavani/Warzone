@@ -1,6 +1,7 @@
 package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
+import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.view.FxmlView;
 import javafx.scene.Parent;
@@ -35,5 +36,11 @@ public class StartUpPhase extends GamePlay {
     public void executeOrder() {
         this.printInvalidCommandMessage();
     }
+
+    @Override
+    public void issuingPlayer(String p_command) {
+        this.printInvalidCommandMessage();
+    }
+
 
 }

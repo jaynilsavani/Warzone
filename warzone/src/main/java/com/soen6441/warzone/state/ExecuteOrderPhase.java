@@ -75,4 +75,10 @@ public class ExecuteOrderPhase extends GamePlay {
         this.next(null);
     }
 
+    @Override
+    public void issuingPlayer(String p_command) {
+        this.printInvalidCommandMessage();
+    }
+
+
 }
