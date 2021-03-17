@@ -128,6 +128,7 @@ public class IssueOrderPhase extends GamePlay {
         if (d_gameData.getD_playerList() != null && (!d_gameData.getD_playerList().isEmpty())) {
 
             for (Player l_player : d_gameData.getD_playerList()) {
+
                 if (l_player.getD_ownedCountries() != null && (!l_player.getD_ownedCountries().isEmpty())) {
                     int l_noOfArmy = DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
                     //This is used to check and assign noOf armies According to Warzone rule based on owned countries
