@@ -94,7 +94,8 @@ public class IssueOrderPhase extends GamePlay {
             else if(l_commands[0].equalsIgnoreCase("bomb"))
             {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(3);
-                //implement issue_order once model is created
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
             }
             else if(l_commands[0].equalsIgnoreCase("blockade"))
             {

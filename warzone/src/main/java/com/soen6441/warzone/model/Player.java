@@ -75,16 +75,19 @@ public class Player {
         {
             case 1:
                 {
-                DeployOrder d_deplyOrder = new DeployOrder();
-                d_deplyOrder.setD_CountryName(d_currentToCountry);
-                d_deplyOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
-                d_orders.add(d_deplyOrder);
+                DeployOrder l_deplyOrder = new DeployOrder();
+                l_deplyOrder.setD_CountryName(d_currentToCountry);
+                l_deplyOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
+                d_orders.add(l_deplyOrder);
                 }
             case 2:
                 {
                 }
             case 3:
                 {
+                    BombOrder l_bombOrder=new BombOrder();
+                    l_bombOrder.setD_countryName(d_currentToCountry);
+                    d_orders.add(l_bombOrder);
                 }
             case 4:
                 {
