@@ -22,7 +22,7 @@ public interface GameEngineService {
      * @return updated Gameplay Which has assigned reinforcement army to
      * countries
      */
-    public GameData assignReinforcements(GameData p_gameData);
+    //public GameData assignReinforcements(GameData p_gameData);
 
     /**
      * @param p_gameData gives the gameengine to retrieve player data

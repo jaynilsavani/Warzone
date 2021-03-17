@@ -38,7 +38,12 @@ public class StartUpPhase extends GamePlay {
     }
 
     @Override
-    public void issuingPlayer(String p_command) {
+    public void issueOrder(String p_command) {
+        this.printInvalidCommandMessage();
+    }
+
+    @Override
+    public void assignReinforcements() {
         this.printInvalidCommandMessage();
     }
 

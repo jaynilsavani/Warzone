@@ -23,7 +23,7 @@ public class GameEngineServiceImpl implements GameEngineService {
     /**
      * {@inheritDoc }
      */
-    @Override
+   /* @Override
     public GameData assignReinforcements(GameData p_gameData) {
 
         if (p_gameData.getD_playerList() != null && (!p_gameData.getD_playerList().isEmpty())) {
@@ -49,6 +49,7 @@ public class GameEngineServiceImpl implements GameEngineService {
         }
         return p_gameData;
     }
+    /*
 
     /**
      * {@inheritDoc }
@@ -80,6 +81,10 @@ public class GameEngineServiceImpl implements GameEngineService {
         return l_armies;
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public String playerOwnedCountries(GameData p_gameData) {
         String l_responseString = "\n";
         for (Player l_player : p_gameData.getD_playerList()) {

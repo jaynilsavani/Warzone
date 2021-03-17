@@ -1,7 +1,9 @@
 package com.soen6441.warzone.serviceImplTest;
 
+import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.*;
 import com.soen6441.warzone.service.GameEngineService;
+import com.soen6441.warzone.state.IssueOrderPhase;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class GameEngineServiceTest {
 
     @Autowired
     WarMap d_warMap;
+
+    @Autowired
+    GameEngine d_gameEngine;
 
     public GameEngineServiceTest() {
     }
@@ -118,9 +123,14 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAssignReinforcements() {
-        GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
-        int l_actualnoOfArmies = l_gameData.getD_playerList().get(0).getD_noOfArmies();
+        IssueOrderPhase l_issueOrder=new IssueOrderPhase(d_gameEngine);
+        l_issueOrder.d_gameData=d_gameData;
+        l_issueOrder.assignReinforcements();
+        d_gameData=l_issueOrder.d_gameData;
+        //GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
+        int l_actualnoOfArmies = d_gameData.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
+        System.out.println(l_expectednoOfArmies +" and "+ l_actualnoOfArmies);
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }
 

@@ -40,12 +40,12 @@ public class GameEngine implements Initializable {
      * array of falg that shows that whether player is done with issuing order
      * or not for particular round
      */
-    public  int[] PlayerFlag;
+    public  int[] d_playerFlag;
 
     /**
      * counter that invokes after each order issued by player
      */
-    public  int PlayCounter = 0;
+    public  int d_playCounter = 0;
 
     @FXML
     public TextArea d_TerritoryListText;
@@ -79,7 +79,7 @@ public class GameEngine implements Initializable {
     private Label d_playerTurn;
 
     @Autowired
-    private GameEngineService d_gameEngineSevice;
+    public GameEngineService d_gameEngineSevice;
 
     @Autowired
     private GameConfigService d_gameConfig;
@@ -147,22 +147,22 @@ public class GameEngine implements Initializable {
     public void getData(ActionEvent p_event) {
         String l_s = d_CommandLine.getText().trim();
         String[] l_validatestr = l_s.split("\\s");
-        if ((d_generalUtil.validateIOString(l_s, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
+        if ((d_generalUtil.validateIOString(l_s, "(advance|airlift)\\s+[a-zA-Z]+\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 4)||(d_generalUtil.validateIOString(l_s, "(bomb|blockade|negotiate)\\s+[a-zA-Z]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_s, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
             l_issueorder.d_gameData = d_gameData;
-            l_issueorder.issuingPlayer(l_s);                    //to invoke the issue order after player gives the command
+            l_issueorder.issueOrder(l_s);                    //to invoke the issue order after player gives the command
             CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
             d_gameData = l_issueorder.d_gameData;
             d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");
             while (true) {                                                       //loop to check for which player gets a turn
                 int l_j = 0;
-                for (int l_i = 0; l_i < PlayerFlag.length; l_i++) {
-                    if (PlayerFlag[l_i] == 1) {
+                for (int l_i = 0; l_i < d_playerFlag.length; l_i++) {
+                    if (d_playerFlag[l_i] == 1) {
                         l_j++;
                     }
                 }
-                if (l_j == PlayerFlag.length) {
+                if (l_j == d_playerFlag.length) {
                     //to reset the round after each player is done with issuing orders
                     l_issueorder = (IssueOrderPhase) gamePhase;
                     l_issueorder.d_gameData = d_gameData;
@@ -179,27 +179,30 @@ public class GameEngine implements Initializable {
                     CommandResponse l_map = d_gameConfig.showPlayerMap(d_gameData);           //to show the map and player*country table
                     d_FireCommandList.appendText(l_map.getD_responseString());
 
-                    PlayCounter = 0;
+                    d_playCounter = 0;
                     d_gameData.setD_maxNumberOfTurns(0);
-                    Arrays.fill(PlayerFlag, 0);                                   //flag that resets the issue counter
-                    d_gameData = d_gameEngineSevice.assignReinforcements(d_gameData);          // to reinforce the armies every time the loop resets
+                    Arrays.fill(d_playerFlag, 0);                                   //flag that resets the issue counter
+                    l_issueorder.d_gameData = d_gameData;
+                    l_issueorder.assignReinforcements();                    //for reinforcement
+                    d_gameData = l_issueorder.d_gameData;
+                    //d_gameData = d_gameEngineSevice.assignReinforcements(d_gameData);          // to reinforce the armies every time the loop resets
                     d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gameData));
-                    d_playerTurn.setText(d_gameData.getD_playerList().get(PlayCounter).getD_playerName() + "'s turn");
+                    d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                     d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                     d_CommandLine.clear();
                     break;
                 }
 
-                PlayCounter++;
-                if (PlayCounter == PlayerFlag.length) {                                   //to reset the counter if it matches the number of player
-                    PlayCounter = 0;
+                d_playCounter++;
+                if (d_playCounter == d_playerFlag.length) {                                   //to reset the counter if it matches the number of player
+                    d_playCounter = 0;
                 }
 
-                if (PlayerFlag[PlayCounter] == 1) {                                            //it checks that plalyer is done with issues and continue loop
+                if (d_playerFlag[d_playCounter] == 1) {                                            //it checks that plalyer is done with issues and continue loop
                     continue;
-                } else if (PlayerFlag[PlayCounter] == 0) {                                       //break the loop if finds the next player available to issue an order
-                    d_playerTurn.setText(d_gameData.getD_playerList().get(PlayCounter).getD_playerName() + "'s turn");
+                } else if (d_playerFlag[d_playCounter] == 0) {                                       //break the loop if finds the next player available to issue an order
+                    d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                     d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                     d_CommandLine.clear();
@@ -223,23 +226,28 @@ public class GameEngine implements Initializable {
     public void setGamePlay() {
         GamePlay l_gamePlay = (GamePlay) gamePhase;
         d_gameData = l_gamePlay.d_gameData;
-        d_playerTurn.setText(d_gameData.getD_playerList().get(PlayCounter).getD_playerName() + "'s turn");
+        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
-        PlayerFlag = new int[d_gameData.getD_playerList().size()];
-        Arrays.fill(PlayerFlag, 0);
+        d_playerFlag = new int[d_gameData.getD_playerList().size()];
+        Arrays.fill(d_playerFlag, 0);
         d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
-        reinforcementArmies();
+        IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
+        l_issueorder.d_gameData = d_gameData;
+        l_issueorder.assignReinforcements();                    //for reinforcement
+        d_gameData = l_issueorder.d_gameData;
+        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
+        //reinforcementArmies();
     }
 
     /**
      * This is used for Main Game loop Which includes AssignREinforcement
      */
-    private void reinforcementArmies() {
+    /*private void reinforcementArmies() {
         d_gameData = d_gameEngineSevice.assignReinforcements(d_gameData);
-        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
 
-    }
+
+    }*/
 
     /**
      * This method is used for executing issued Order
