@@ -60,7 +60,15 @@ public class DeployOrder implements Order {
                 return true;
             }
         }
-        d_player.setD_noOfArmies(d_player.getD_noOfArmies() - d_noOfArmies);   //deduct the armies from player if the country mentioned inn the order is not owned by player
+        if(d_noOfArmies > d_player.getD_noOfArmies())  //deduct the armies from player if the country mentioned inn the order is not owned by player
+        {
+            d_player.setD_noOfArmies(0);
+        }
+        else
+        {
+            d_player.setD_noOfArmies(d_player.getD_noOfArmies() - d_noOfArmies);
+
+        }
 
         return false;
 
