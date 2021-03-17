@@ -23,6 +23,7 @@ public class BombOrder implements Order {
      * GameData in current Game
      */
     private GameData d_gameData;
+
     /**
      * Country in this order
      */
