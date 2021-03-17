@@ -13,7 +13,7 @@ import javafx.scene.Parent;
 public class IssueOrderPhase extends GamePlay {
 
     /**
-     * This parameterized constructor is used to invoke GameEngine Constructor and set the
+     * This parameterized constructor is used to invoke Phase Constructor and set the
      * reference variable to GameEngine object for the state transition
      * @param p_gameEngine Object of GameEngine
      *

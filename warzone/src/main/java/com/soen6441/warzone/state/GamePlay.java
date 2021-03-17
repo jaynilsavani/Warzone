@@ -18,7 +18,7 @@ import javafx.scene.Parent;
  */
 public abstract class GamePlay extends Phase {
     /**
-     *  Gamedata object which store information like player list,name of
+     *  GameData object which store information like player list,name of
      *  game phase, name of map file
      *
      */
@@ -29,9 +29,8 @@ public abstract class GamePlay extends Phase {
     public List<CommandResponse> d_commandResponses = new ArrayList<>();
 
     /**
-     * This
-     * parameterized constructor is used to invoke GameEngine Constructor and set the
-     * reference variable to GameEngine object for the state transition
+     * This parameterized constructor is used to invoke GameEngine Constructor
+     * and set the reference variable to GameEngine object for the state transition
      * @param p_gameEngine Object of GameEngine
      *
      */
