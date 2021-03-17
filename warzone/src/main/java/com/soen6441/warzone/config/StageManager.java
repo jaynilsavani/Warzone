@@ -92,7 +92,9 @@ public class StageManager {
     /**
      * Loads the object hierarchy from a FXML document and returns to root node
      * of that hierarchy.
-     *
+     * @param p_fxmlFilePath is path of fxml file located
+     * @param p_object is an Object of a current State
+     * @param p_phaseName  is a name of a current Phase
      * @return Parent root node of the FXML document hierarchy
      */
     public Parent loadViewNodeHierarchy(String p_fxmlFilePath, Object p_object, String p_phaseName) {

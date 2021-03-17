@@ -218,7 +218,6 @@ public class GameEngine implements Initializable {
     /**
      * This is used for setting GameConfig for GameEngine
      *
-     *
      */
     public void setGamePlay() {
         GamePlay l_gamePlay = (GamePlay) gamePhase;
