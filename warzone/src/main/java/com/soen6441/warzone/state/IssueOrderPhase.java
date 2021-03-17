@@ -112,6 +112,8 @@ public class IssueOrderPhase extends GamePlay {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(6);
                 //implement issue_order once model is created
             }
+
+
             d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
             d_issueResponse=d_gameEngine.d_generalUtil.getResponse();
         }
