@@ -138,6 +138,7 @@ public class IssueOrderPhase extends GamePlay {
                     //This is used to check and assign countries for control value addition
                     if (l_continentsOwnedByPlayer.size() > 0) {
                         for (Continent continent : l_continentsOwnedByPlayer) {
+
                             l_noOfArmy += continent.getD_continentValue();
                         }
                     }
