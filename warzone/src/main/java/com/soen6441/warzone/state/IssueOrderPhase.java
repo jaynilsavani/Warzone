@@ -106,6 +106,8 @@ public class IssueOrderPhase extends GamePlay {
             }
             else if(l_commands[0].equalsIgnoreCase("airlift"))
             {
+
+
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(5);
                 //implement issue_order once model is created
             }
