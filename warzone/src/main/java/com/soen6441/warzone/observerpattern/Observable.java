@@ -37,11 +37,10 @@ public class Observable {
      * Notify all the views attached to the model.
      *
      * @param p_observable object that contains the information to be observed.
-     * @param message message about event
      */
-    public void notifyObservers(Observable p_observable, String message) {
-        for (Observer observer : d_observersList) {
-            observer.update(p_observable, message);
+    public void notifyObservers(Observable p_observable) {
+        for (Observer l_observer : d_observersList) {
+            l_observer.update(p_observable);
         }
     }
 }

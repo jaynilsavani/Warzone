@@ -40,7 +40,7 @@ public class WelcomeController implements Initializable {
 
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
-    public boolean printTimeStamp = true;
+    public boolean d_printTimeStamp = true;
 
     /**
      * This method takes a user to map creation, where player can create mad and
@@ -86,9 +86,9 @@ public class WelcomeController implements Initializable {
      */
     @Override
     public void initialize(URL p_location, ResourceBundle p_resources) {
-        if(printTimeStamp) {
-            d_logEntryBuffer.setLogEntryBuffer("=============" + new Date().toString() + "=============");
-            printTimeStamp = false;
+        if(d_printTimeStamp) {
+            d_logEntryBuffer.setLogEntryBuffer("\n======================================" + new Date().toString() + "======================================");
+            d_printTimeStamp = false;
         }
     }
 
