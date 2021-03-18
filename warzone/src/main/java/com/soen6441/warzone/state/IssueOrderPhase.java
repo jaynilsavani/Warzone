@@ -89,7 +89,10 @@ public class IssueOrderPhase extends GamePlay {
             else if(l_commands[0].equalsIgnoreCase("advance"))
             {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(2);
-                //implement issue_order once model is created
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
             }
             else if(l_commands[0].equalsIgnoreCase("bomb"))
             {
@@ -100,17 +103,23 @@ public class IssueOrderPhase extends GamePlay {
             else if(l_commands[0].equalsIgnoreCase("blockade"))
             {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(4);
-                //implement issue_order once model is created
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+
             }
             else if(l_commands[0].equalsIgnoreCase("airlift"))
             {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(5);
-                //implement issue_order once model is created
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
             }
             else if(l_commands[0].equalsIgnoreCase("negotiate"))
             {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(6);
-                //implement issue_order once model is created
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_negotiatePlayer(l_commands[1]);
+                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
             }
             d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
             d_issueResponse=d_gameEngine.d_generalUtil.getResponse();

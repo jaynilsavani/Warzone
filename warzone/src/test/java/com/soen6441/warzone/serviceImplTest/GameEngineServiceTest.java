@@ -143,6 +143,7 @@ public class GameEngineServiceTest {
         d_gameData.getD_playerList().get(0).setD_noOfArmies(6);
         d_gameData.getD_playerList().get(0).setD_currentToCountry("china");
         d_gameData.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
+        d_gameData.getD_playerList().get(0).setD_commandtype(1);
         d_gameData.getD_playerList().get(0).issue_order();
         Order l_order = d_gameData.getD_playerList().get(0).getD_orders().get(0);
         ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(0));
