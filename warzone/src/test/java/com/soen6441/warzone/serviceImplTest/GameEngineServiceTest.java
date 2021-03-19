@@ -3,6 +3,7 @@ package com.soen6441.warzone.serviceImplTest;
 import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.*;
 import com.soen6441.warzone.service.GameEngineService;
+import com.soen6441.warzone.service.OrderProcessor;
 import com.soen6441.warzone.state.IssueOrderPhase;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -31,13 +32,16 @@ public class GameEngineServiceTest {
 
     @Autowired
     GameEngineService d_gameEngineService;
+    
+    @Autowired
+    OrderProcessor d_orderProcessor;
 
     @Autowired
     GameData d_gameData;
 
     @Autowired
     Player d_player;
-    
+
     @Autowired
     WarMap d_warMap;
 
@@ -124,42 +128,43 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAssignReinforcements() {
-        IssueOrderPhase l_issueOrder=new IssueOrderPhase(d_gameEngine);
-        l_issueOrder.d_gameData=d_gameData;
+        IssueOrderPhase l_issueOrder = new IssueOrderPhase(d_gameEngine);
+        l_issueOrder.d_gameData = d_gameData;
         l_issueOrder.assignReinforcements();
-        d_gameData=l_issueOrder.d_gameData;
+        d_gameData = l_issueOrder.d_gameData;
         //GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
         int l_actualnoOfArmies = d_gameData.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
-        System.out.println(l_expectednoOfArmies +" and "+ l_actualnoOfArmies);
+        System.out.println(l_expectednoOfArmies + " and " + l_actualnoOfArmies);
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }
 
-    /**
-     * Test to check Deploy Command
-     */
-    @Test
-    public void testExecuteOrder() {
-        d_gameData.getD_playerList().get(0).setD_noOfArmies(6);
-        d_gameData.getD_playerList().get(0).setD_currentToCountry("china");
-        d_gameData.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
-        d_gameData.getD_playerList().get(0).setD_commandtype(1);
-        d_gameData.getD_playerList().get(0).issue_order();
-        Order l_order = d_gameData.getD_playerList().get(0).getD_orders().get(0);
-        ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(0));
-        d_gameData.getD_playerList().remove(0);
-        d_gameData.getD_playerList().add(0, ((DeployOrder) l_order).getD_player());
-        boolean l_check = l_order.executeOrder();
-        assertEquals(true, l_check);
-        int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
-        assertEquals(0, l_actualArmiesinPlayer);
-    }
+
+//    /**
+//     * Test to check Deploy Command
+//     */
+//    @Test
+//    public void testExecuteOrder() {
+//        d_gameData.getD_playerList().get(0).setD_noOfArmies(6);
+//        d_gameData.getD_playerList().get(0).setD_currentToCountry("china");
+//        d_gameData.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
+//        d_gameData.getD_playerList().get(0).setD_commandtype(1);
+//        d_gameData.getD_playerList().get(0).issue_order();
+//        Order l_order = d_gameData.getD_playerList().get(0).getD_orders().get(0);
+//        ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(0));
+//        d_gameData.getD_playerList().remove(0);
+//        d_gameData.getD_playerList().add(0, ((DeployOrder) l_order).getD_player());
+//        boolean l_check = l_order.executeOrder();
+//        assertEquals(true, l_check);
+//        int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
+//        assertEquals(0, l_actualArmiesinPlayer);
+//    }
     
     /**
      * Test to check Bomb Command
      */
     @Test
-    public void testBombCommand(){
+    public void testBombCommand() {
         List<Country> l_countryList = new ArrayList();
 
         //creating a new country object
@@ -174,25 +179,21 @@ public class GameEngineServiceTest {
         l_country.setD_neighbourCountries(l_neighborList);
         l_countryList.add(l_country);
         d_player.setD_ownedCountries(l_countryList);
-        
-        
-        BombOrder d_order = new BombOrder();
-        d_order.setD_countryName("china");
-        d_order.setD_player(d_player);
-        d_order.setD_gameData(d_gameData);
-        
+     
+        d_orderProcessor.processOrder("boMb china".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order d_order = d_gameData.getD_playerList().get(0).next_order();
         assertEquals(true, d_order.executeOrder());
-        
+
         //cheking number of armies after using bomb card
-        for(Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()){
-            for(Country l_countryName  : l_continent.getValue().getD_countryList()){
-                   if(l_countryName.getD_countryName().equals("china")){
-                       assertEquals(5, l_countryName.getD_noOfArmies());
-                   }
+        for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
+            for (Country l_countryName : l_continent.getValue().getD_countryList()) {
+                if (l_countryName.getD_countryName().equals("china")) {
+                    assertEquals(5, l_countryName.getD_noOfArmies());
+                }
             }
         }
-        
-       
+
     }
 
 }

@@ -17,10 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Getter
 @Setter
 @ToString
-public class NegotiateOrder implements Order{
+public class NegotiateOrder extends Order{
 
     /**
-     * player in this order with whom cuurent player wants to negotiate
+     * player in this order with whom current player wants to negotiate
      */
     private String d_playerName;
     /**
@@ -31,5 +31,10 @@ public class NegotiateOrder implements Order{
     @Override
     public boolean executeOrder() {
         return false;
+    }
+
+    @Override
+    public GameData getGameData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

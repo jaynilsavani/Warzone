@@ -3,6 +3,8 @@ package com.soen6441.warzone.controller;
 import com.soen6441.warzone.config.StageManager;
 import static com.soen6441.warzone.config.WarzoneConstants.*;
 import com.soen6441.warzone.model.*;
+import com.soen6441.warzone.observerpattern.LogEntryBuffer;
+import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.GeneralUtil;
@@ -84,6 +86,9 @@ public class GameEngine implements Initializable {
     @Autowired
     private GameConfigService d_gameConfig;
 
+    private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
+
     /**
      * This method will exit the game and close the stage
      *
@@ -98,6 +103,7 @@ public class GameEngine implements Initializable {
     public void setPhase(Phase p_phase) {
         gamePhase = p_phase;
         System.out.println("new phase: " + p_phase.getClass().getSimpleName());
+        d_logEntryBuffer.setLogEntryBuffer("-------------" + p_phase.getClass().getSimpleName() + "-------------");
     }
 
     public Phase getPhase() {
@@ -170,8 +176,6 @@ public class GameEngine implements Initializable {
                     IssueOrderPhase l_issuephase = (IssueOrderPhase) gamePhase;
                     d_gameData = l_issueorder.d_gameData;
                     List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
-//                    List<CommandResponse > l_commandList = executionOfOrders();
-//                    List<CommandResponse> l_commandList = executionOfOrders();
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
                     }
