@@ -41,7 +41,7 @@ public class BombOrder extends Order {
             if (l_country.getD_countryName().equals(d_countryName)) {
                 return false;
             } else {
-                //chekcing adjacency 
+                //checkcing adjacency 
                 for (String l_neighbour : l_country.getD_neighbourCountries()) {
                     if (d_countryName.equalsIgnoreCase(l_neighbour)) {
                         l_countryName = getCountryObjectByCountryName(d_countryName);

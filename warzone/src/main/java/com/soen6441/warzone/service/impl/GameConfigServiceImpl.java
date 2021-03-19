@@ -221,7 +221,9 @@ public class GameConfigServiceImpl implements GameConfigService {
                             Random l_rand = new Random();
                             int rand_int1 = l_rand.nextInt(l_noOfCountries);
                             if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
-                                l_country.add(l_country_check.get(rand_int1));
+                                Country c = new Country(l_country_check.get(rand_int1));
+                                c.setD_countryIndex(0);
+                                l_country.add(c);
                                 l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
                                 p_gameData.getD_playerList().get(l_j).setD_ownedCountries(l_country);
                                 break;

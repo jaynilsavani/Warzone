@@ -33,7 +33,7 @@ public class GameEngineServiceTest {
 
     @Autowired
     GameEngineService d_gameEngineService;
-    
+
     @Autowired
     OrderProcessor d_orderProcessor;
 
@@ -111,7 +111,13 @@ public class GameEngineServiceTest {
         d_warMap.setD_continents(l_continentMap);
 
         d_player.setD_playerName("user");
-        d_player.setD_ownedCountries(l_countryList);
+        List<Country> l_countryList1 = new ArrayList<>();
+        for (Country country : l_countryList) {
+            country.setD_countryIndex(0);
+            l_countryList1.add(country);
+        }
+
+        d_player.setD_ownedCountries(l_countryList1);
         List<Player> l_playerList = new ArrayList<Player>();
         l_playerList.add(d_player);
         d_gameData.setD_playerList(l_playerList);
@@ -140,7 +146,6 @@ public class GameEngineServiceTest {
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }
 
-
 //    /**
 //     * Test to check Deploy Command
 //     */
@@ -160,7 +165,6 @@ public class GameEngineServiceTest {
 //        int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
 //        assertEquals(0, l_actualArmiesinPlayer);
 //    }
-
     /**
      * Test to check Bomb Command
      */
@@ -184,10 +188,9 @@ public class GameEngineServiceTest {
         d_orderProcessor.processOrder("boMb china".trim(), d_gameData);
         d_gameData.getD_playerList().get(0).issue_order();
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
-
         assertEquals(true, l_order.executeOrder());
 
-        //cheking number of armies after using bomb card
+        //checking number of armies after using bomb card
         for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
             for (Country l_countryName : l_continent.getValue().getD_countryList()) {
                 if (l_countryName.getD_countryName().equals("china")) {
@@ -198,6 +201,33 @@ public class GameEngineServiceTest {
     }
 
     /**
+     * Test to check Blockade Command
+     */
+    @Test
+    public void testBlockadeCommand() {
+        d_orderProcessor.processOrder("blockade china".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+
+        assertEquals(true, l_order.executeOrder());
+
+        //checking that targeted country become neutral
+        for (Player l_player : l_order.d_gameData.getD_playerList()) {
+            if (l_player.getD_playerName().equals("user")) {
+                assertEquals(false, l_player.getD_ownedCountries().contains("china"));
+            }
+        }
+
+        //checking that number of arimes of targeted country become tripal
+        for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
+            for (Country l_countryName : l_continent.getValue().getD_countryList()) {
+                if (l_countryName.getD_countryName().equals("china")) {
+                    assertEquals(30, l_countryName.getD_noOfArmies());
+                }
+            }
+        }
+    }
+        /*
      * Test diplomacy(Negotiate) command
      */
     @Test
