@@ -1,3 +1,0 @@
-2021-03-19 06:46:02,060 [main] INFO  com.soen6441.warzone.serviceImplTest.GameConfigServiceTest - Starting GameConfigServiceTest using Java 11.0.10 on DESKTOP-F7KO8BJ with PID 4044 (started by HP in C:\Users\HP\Downloads\Refactoring-Warzone\Warzone\warzone)
-2021-03-19 06:46:02,075 [main] INFO  com.soen6441.warzone.serviceImplTest.GameConfigServiceTest - No active profile set, falling back to default profiles: default
-2021-03-19 06:46:04,247 [main] INFO  com.soen6441.warzone.serviceImplTest.GameConfigServiceTest - Started GameConfigServiceTest in 3.027 seconds (JVM running for 6.567)
