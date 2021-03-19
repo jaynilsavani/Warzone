@@ -3,6 +3,10 @@ package com.soen6441.warzone.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
+
+
+import java.util.Map;
 
 
 /**
@@ -34,13 +38,196 @@ public class AdvanceOrder implements Order{
     private String d_CountryNameTo;
 
     /**
-     * player in this order
+     * {@inheritDoc }
+     * <p>
+     * This method attack armies to the country
      */
-    private Player d_player;
-
-
     @Override
     public boolean executeOrder() {
+        Country l_countryfrom = getPlayerCountrybyName(d_CountryNameFrom);
+        Country l_countryTo = getPlayerCountrybyName(d_CountryNameTo);
+        Player l_targetPlayer = null;
+        if (d_player.getD_ownedCountries().contains(l_countryfrom)) {
+            int l_countryFromIndex=d_player.getD_ownedCountries().indexOf(l_countryfrom);
+            int l_playerFromIndex=d_gameData.getD_playerList().indexOf(d_player);
+            //System.out.println("country from index is "+l_countryfrom.getD_countryName() + " | "+l_countryFromIndex );
+            //System.out.println("player from index is " +d_player.getD_playerName() + " | "+l_playerFromIndex );
+            int l_countryToIndex=-1;
+            int l_playerToIndex=-1;
+
+            int l_fromArmies = l_countryfrom.getD_noOfArmies();
+            if(l_fromArmies<d_noOfArmies)
+            {
+                System.out.println("in null");
+                return false;
+            }
+            if (d_player.getD_ownedCountries().contains(l_countryTo) && isneighbourCountry(d_CountryNameTo,l_countryfrom)) {
+                System.out.println("same player");
+
+                int l_toArmies = l_countryTo.getD_noOfArmies();
+                l_countryToIndex=d_player.getD_ownedCountries().indexOf(l_countryTo);
+                if (l_countryfrom.getD_noOfArmies() >= d_noOfArmies) {
+                    l_fromArmies=l_fromArmies-d_noOfArmies;
+                    l_toArmies=l_toArmies+d_noOfArmies;
+                    l_countryfrom.setD_noOfArmies(l_fromArmies);
+                    l_countryTo.setD_noOfArmies(l_toArmies);
+                } else {
+                    l_fromArmies=0;
+                    l_toArmies=l_toArmies+l_fromArmies;
+                    l_countryfrom.setD_noOfArmies(l_fromArmies);
+                    l_countryTo.setD_noOfArmies(l_toArmies);
+                }
+
+                d_player.getD_ownedCountries().remove(l_countryToIndex);
+                d_player.getD_ownedCountries().add(l_countryFromIndex,l_countryfrom);
+                d_player.getD_ownedCountries().remove(l_countryFromIndex);
+                d_player.getD_ownedCountries().add(l_countryToIndex,l_countryTo);
+                d_gameData.getD_playerList().remove(l_playerFromIndex);
+                d_gameData.getD_playerList().add(l_playerFromIndex,d_player);
+
+                if (d_gameData.getD_warMap().getD_continents() != null) {
+                    for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
+                        for (Country l_countries : l_entry.getValue().getD_countryList()) {
+                            if (l_countries.getD_countryName().equalsIgnoreCase(d_CountryNameFrom)) {
+                                l_countries.setD_noOfArmies(l_fromArmies);                              //sets the no. of armies to the country of map
+                            }
+                            if (l_countries.getD_countryName().equalsIgnoreCase(d_CountryNameTo)) {
+                                l_countries.setD_noOfArmies(l_toArmies);                              //sets the no. of armies to the country of map
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+
+            else if (l_countryTo == null || !isneighbourCountry(d_CountryNameTo,l_countryfrom) ) {
+                System.out.println("to is null");
+                if (l_fromArmies >= d_noOfArmies) {
+                    l_fromArmies=l_fromArmies-d_noOfArmies;
+                    l_countryfrom.setD_noOfArmies(l_fromArmies);
+                } else {
+                    l_fromArmies=0;
+                    l_countryfrom.setD_noOfArmies(l_fromArmies);
+                }
+                d_player.getD_ownedCountries().remove(l_countryFromIndex);
+                d_player.getD_ownedCountries().add(l_countryFromIndex,l_countryfrom);
+                d_gameData.getD_playerList().remove(l_playerFromIndex);
+                d_gameData.getD_playerList().add(l_playerFromIndex,d_player);
+
+                if (d_gameData.getD_warMap().getD_continents() != null) {
+                    for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
+                        for (Country l_countries : l_entry.getValue().getD_countryList()) {
+                            if (l_countries.getD_countryName().equalsIgnoreCase(d_CountryNameFrom)) {
+                                l_countries.setD_noOfArmies(l_fromArmies);                              //sets the no. of armies to the country of map
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            else {
+                if (isneighbourCountry(d_CountryNameTo,l_countryfrom))
+                {
+                    System.out.println("attack");
+
+                    for (Player l_player : d_gameData.getD_playerList())
+                    {
+                        if (l_player.getD_ownedCountries().contains(l_countryTo))
+                        {
+                            l_targetPlayer = l_player;
+                            l_countryToIndex=l_player.getD_ownedCountries().indexOf(l_countryTo);
+                            l_playerToIndex=d_gameData.getD_playerList().indexOf(l_player);
+
+                        }
+                    }
+
+                    int l_toArmies = l_countryTo.getD_noOfArmies();
+                    int l_attackArmiesFrom=(int) Math.round(d_noOfArmies*0.6);
+                    int l_attackArmiesTo=(int) Math.round(l_toArmies*0.7);
+                    if(l_attackArmiesFrom>=l_toArmies)
+                    {
+                        l_toArmies=d_noOfArmies-l_attackArmiesTo;
+                        l_countryTo.setD_noOfArmies(l_toArmies);
+
+                        l_fromArmies=l_fromArmies-d_noOfArmies;
+                        l_countryfrom.setD_noOfArmies(l_fromArmies);
+                        d_player.getD_ownedCountries().add(l_countryTo);
+                        l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
+                    }
+                    else
+                    {
+                        l_toArmies=l_toArmies-l_attackArmiesFrom;
+                        int l_remainingCountries;
+                        if(d_noOfArmies>=l_attackArmiesTo) {
+                            l_remainingCountries = d_noOfArmies - l_attackArmiesTo;
+                        }
+                        else
+                        {
+                            l_remainingCountries=0;
+                        }
+                        l_fromArmies=l_fromArmies-d_noOfArmies+l_remainingCountries;
+                        l_countryfrom.setD_noOfArmies(l_fromArmies);
+                        l_countryTo.setD_noOfArmies(l_toArmies);
+                        d_player.getD_ownedCountries().remove(l_countryFromIndex);
+                        d_player.getD_ownedCountries().add(l_countryFromIndex,l_countryfrom);
+                        l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
+                        l_targetPlayer.getD_ownedCountries().add(l_countryToIndex,l_countryTo);
+                    }
+
+
+
+                    d_gameData.getD_playerList().remove(l_playerFromIndex);
+                    d_gameData.getD_playerList().add(l_playerFromIndex,d_player);
+                    d_gameData.getD_playerList().remove(l_playerToIndex);
+                    d_gameData.getD_playerList().add(l_playerToIndex,l_targetPlayer);
+
+                    if (d_gameData.getD_warMap().getD_continents() != null) {
+                        for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
+                            for (Country l_countries : l_entry.getValue().getD_countryList()) {
+                                if (l_countries.getD_countryName().equalsIgnoreCase(d_CountryNameFrom)) {
+                                    l_countries.setD_noOfArmies(l_fromArmies);                              //sets the no. of armies to the country of map
+                                }
+                                if (l_countries.getD_countryName().equalsIgnoreCase(d_CountryNameTo)) {
+                                    l_countries.setD_noOfArmies(l_toArmies);                              //sets the no. of armies to the country of map
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                }
+            }
+
+        } else {
+            System.out.println("country from is not there");
+            //countryfrom is not in the player list
+        }
+
+
+        return false;
+    }
+
+    public Country getPlayerCountrybyName(String p_cName) {
+        for (Player l_player : d_gameData.getD_playerList()) {
+            for (Country l_country : l_player.getD_ownedCountries()) {
+                if (l_country.getD_countryName().equalsIgnoreCase(p_cName)) {
+                    return l_country;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean isneighbourCountry(String p_countryName,Country p_countryFrom)
+    {
+        for(String l_country:p_countryFrom.getD_neighbourCountries())
+        {
+            if(l_country.equalsIgnoreCase(p_countryName))
+            {
+                return true;
+            }
+        }
         return false;
     }
 }

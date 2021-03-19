@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * This Class is used for The deploy order Command Three annotations
  * (Getter,Setter, toString), you can see on the top of the class are lombok
@@ -33,12 +35,18 @@ public class DeployOrder implements Order {
     private Player d_player;
 
     /**
+     * Gamedata in this order
+     */
+    private GameData d_gameData;
+
+    /**
      * {@inheritDoc }
      * <p>
      * This method deploy armies to the country
      */
     @Override
     public boolean executeOrder() {
+        int l_playerIndex=d_gameData.getD_playerList().indexOf(d_player);
         for (Country l_country : d_player.getD_ownedCountries()) {          //loop for countries owned by player
             if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() >= d_noOfArmies)) {  //checks the country,and no. of armies from player is greater than armies in the command
 
@@ -48,7 +56,18 @@ public class DeployOrder implements Order {
                 int l_getArmy = l_country.getD_noOfArmies();
                 d_noOfArmies = d_noOfArmies + l_getArmy;
                 l_country.setD_noOfArmies(d_noOfArmies);                      //add the no. of armies to the country owned by player
+                d_gameData.getD_playerList().remove(l_playerIndex);
+                d_gameData.getD_playerList().add(l_playerIndex,d_player);
 
+                if (d_gameData.getD_warMap().getD_continents() != null) {
+                    for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
+                        for (Country l_countries : l_entry.getValue().getD_countryList()) {
+                            if (l_countries.getD_countryName().equalsIgnoreCase(l_country.getD_countryName())) {
+                                l_countries.setD_noOfArmies(d_noOfArmies);                              //sets the no. of armies to the country of map
+                            }
+                        }
+                    }
+                }
                 return true;
             } else if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() < d_noOfArmies) && d_player.getD_noOfArmies() != 0) {   //checks the country,and no. of armies from player is lesser than armies in the command
 
@@ -57,6 +76,18 @@ public class DeployOrder implements Order {
                 l_country.setD_noOfArmies(d_noOfArmies);
 
                 d_player.setD_noOfArmies(0);
+                d_gameData.getD_playerList().remove(l_playerIndex);
+                d_gameData.getD_playerList().add(l_playerIndex,d_player);
+
+                if (d_gameData.getD_warMap().getD_continents() != null) {
+                    for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
+                        for (Country l_countries : l_entry.getValue().getD_countryList()) {
+                            if (l_countries.getD_countryName().equalsIgnoreCase(l_country.getD_countryName())) {
+                                l_countries.setD_noOfArmies(d_noOfArmies);                              //sets the no. of armies to the country of map
+                            }
+                        }
+                    }
+                }
                 return true;
             }
         }
@@ -70,6 +101,8 @@ public class DeployOrder implements Order {
 
         }
 
+        d_gameData.getD_playerList().remove(l_playerIndex);
+        d_gameData.getD_playerList().add(l_playerIndex,d_player);
         return false;
 
     }
