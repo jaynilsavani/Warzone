@@ -17,7 +17,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AirliftOrder implements Order{
+public class AirliftOrder implements Order {
 
 
     /**
@@ -33,11 +33,6 @@ public class AirliftOrder implements Order{
      * country on which armies have to deployed
      */
     private String d_targetCountry;
-
-    /**
-     * player in this order
-     */
-    private Player d_player;
 
     @Override
     public boolean executeOrder() {

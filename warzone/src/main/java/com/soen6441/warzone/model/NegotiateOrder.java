@@ -23,10 +23,6 @@ public class NegotiateOrder implements Order{
      * player in this order with whom cuurent player wants to negotiate
      */
     private String d_playerName;
-    /**
-     * Player in this order
-     */
-    private Player d_player;
 
     @Override
     public boolean executeOrder() {

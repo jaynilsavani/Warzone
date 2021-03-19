@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AdvanceOrder implements Order{
+public class AdvanceOrder implements Order {
 
 
     /**
@@ -32,12 +32,6 @@ public class AdvanceOrder implements Order{
      * country on which armies have to deployed
      */
     private String d_CountryNameTo;
-
-    /**
-     * player in this order
-     */
-    private Player d_player;
-
 
     @Override
     public boolean executeOrder() {
