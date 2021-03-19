@@ -76,9 +76,14 @@ public class Player {
     private String d_commandtype;
 
     /**
-     * nName of the player with current player wants to negotiate
+     * Name of the player with current player wants to negotiate
      */
     private String d_negotiatePlayer;
+
+    /**
+     * List of the player with current player wants to negotiate
+     */
+    private List<Player> d_negotiatePlayerList;
 
     /**
      * add the order to the list of orders
