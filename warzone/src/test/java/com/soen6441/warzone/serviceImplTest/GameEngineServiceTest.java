@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This Class will test business logic of GameEngineService.
@@ -197,7 +198,6 @@ public class GameEngineServiceTest {
                 }
             }
         }
-
     }
 
     /**
@@ -226,6 +226,29 @@ public class GameEngineServiceTest {
                 }
             }
         }
+    }
+        /*
+     * Test diplomacy(Negotiate) command
+     */
+    @Test
+    public void testNegotiateCommand() {
+        Player l_player = new Player();
+        l_player.setD_playerName("user2");
+        l_player.setD_negotiatePlayer(d_player.getD_playerName());
+        d_gameData.getD_playerList().add(l_player);
 
+        d_orderProcessor.processOrder("negotiate user2".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(true, l_order.executeOrder());
+
+        for (Player l_gamePlayer: d_gameData.getD_playerList()){
+            if(l_gamePlayer.getD_playerName() == l_player.getD_playerName()){
+                assertTrue(l_player.getD_negotiatePlayerList().contains(d_player));
+            }
+            if(l_gamePlayer.getD_playerName() == d_player.getD_playerName()){
+                assertTrue(d_player.getD_negotiatePlayerList().contains(l_player));
+            }
+        }
     }
 }
