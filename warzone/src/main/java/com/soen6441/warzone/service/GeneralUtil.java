@@ -82,4 +82,10 @@ public interface GeneralUtil {
      * @throws java.io.IOException throws IO Exception
      */
     public List<String> getAvailableMapFiles() throws IOException;
+    /**
+     * 
+     * @param p_input input String
+     * @return TitleCase String
+     */
+    public String toTitleCase(String p_input);
 }

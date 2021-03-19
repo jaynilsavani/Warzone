@@ -11,25 +11,32 @@ import java.util.List;
 
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER;
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
+import com.soen6441.warzone.service.OrderProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
- * ConcreteState of the State pattern.This Phase is used to take order from
- * each players in round robin manner.
+ * ConcreteState of the State pattern.This Phase is used to take order from each
+ * players in round robin manner.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class IssueOrderPhase extends GamePlay {
 
+    @Autowired
+    OrderProcessor d_orderProcessor;
+
     /**
-     * This parameterized constructor is used to invoke Phase Constructor and set the
-     * reference variable to GameEngine object for the state transition
+     * This parameterized constructor is used to invoke Phase Constructor and
+     * set the reference variable to GameEngine object for the state transition
+     *
      * @param p_gameEngine Object of GameEngine
      *
      */
     public IssueOrderPhase(GameEngine p_gameEngine) {
         super(p_gameEngine);
     }
+
     /**
      * {@inheritDoc }
      *
@@ -39,6 +46,7 @@ public class IssueOrderPhase extends GamePlay {
         this.printInvalidCommandMessage();
         return null;
     }
+
     /**
      * {@inheritDoc }
      *
@@ -50,6 +58,7 @@ public class IssueOrderPhase extends GamePlay {
         d_gameEngine.setPhase(executeOrderPhase);
         d_gameEngine.getPhase().executeOrder();
     }
+
     /**
      * {@inheritDoc }
      *
@@ -61,7 +70,7 @@ public class IssueOrderPhase extends GamePlay {
 
     @Override
     public void issueOrder(String p_command) {
-        d_gameEngine=d_gameEngine.getPhase().d_gameEngine;
+        d_gameEngine = d_gameEngine.getPhase().d_gameEngine;
         Player l_player = d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);              //assigns the current player using the playcounter
         if (d_gameData.getD_maxNumberOfTurns() < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
             d_gameData.setD_maxNumberOfTurns(l_player.getD_orders().size());
@@ -70,59 +79,62 @@ public class IssueOrderPhase extends GamePlay {
             d_gameEngine.d_playerFlag[d_gameEngine.d_playCounter] = 1;
             String l_response = l_player.getD_playerName() + " : done with issuing orders";
             d_gameEngine.d_generalUtil.prepareResponse(true, l_response);
-            d_issueResponse=d_gameEngine.d_generalUtil.getResponse();
+            d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
 
-        } else{                                                   //issue and order to that player
+        } else {                                                   //issue and order to that player
             String[] l_commands = p_command.split("\\s+");
-            if(l_player.getD_orders()==null)
-            {
-                List<Order> l_order=new ArrayList<>();
+            if (l_player.getD_orders() == null) {
+                List<Order> l_order = new ArrayList<>();
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_orders(l_order);
             }
-            if(l_commands[0].equalsIgnoreCase("deploy"))
-            {
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(1);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[2]));
+            d_issueResponse = d_orderProcessor.processOrder(p_command.trim(), d_gameData);
+            if (d_issueResponse.isD_isValid()) {
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+                d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
+                d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
             }
-            else if(l_commands[0].equalsIgnoreCase("advance"))
-            {
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(2);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-            }
-            else if(l_commands[0].equalsIgnoreCase("bomb"))
-            {
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(3);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-            }
-            else if(l_commands[0].equalsIgnoreCase("blockade"))
-            {
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(4);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+//            if (l_commands[0].equalsIgnoreCase("deploy")) {
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(l_commands[0]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[2]));
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+//            }
+//            else if(l_commands[0].equalsIgnoreCase("advance"))
+//            {
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(2);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+//            }
+//            else if(l_commands[0].equalsIgnoreCase("bomb"))
+//            {
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(3);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+//            }
+//            else if(l_commands[0].equalsIgnoreCase("blockade"))
+//            {
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(4);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+//
+//            }
+//            else if(l_commands[0].equalsIgnoreCase("airlift"))
+//            {
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(5);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+//            }
+//            else if(l_commands[0].equalsIgnoreCase("negotiate"))
+//            {
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(6);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_negotiatePlayer(l_commands[1]);
+//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+//            }
 
-            }
-            else if(l_commands[0].equalsIgnoreCase("airlift"))
-            {
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(5);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-            }
-            else if(l_commands[0].equalsIgnoreCase("negotiate"))
-            {
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(6);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_negotiatePlayer(l_commands[1]);
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-            }
-            d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
-            d_issueResponse=d_gameEngine.d_generalUtil.getResponse();
         }
     }
 
@@ -150,6 +162,5 @@ public class IssueOrderPhase extends GamePlay {
             }
         }
     }
-
 
 }

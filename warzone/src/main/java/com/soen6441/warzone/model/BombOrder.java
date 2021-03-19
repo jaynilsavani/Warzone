@@ -4,7 +4,6 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Class is used for The Bomb order Command Three annotations
@@ -17,21 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Getter
 @Setter
 @ToString
-public class BombOrder implements Order {
-
-    /**
-     * GameData in current Game
-     */
-    private GameData d_gameData;
+public class BombOrder extends Order {
+    //First list the mandatory fields followed by count . Also validateAndSetData method have same argument as the order of declaration of the field
 
     /**
      * Country in this order
      */
     private String d_countryName;
     /**
-     * Player in this order
+     * No of mandatory fields It always needs to have after all necessary fields
      */
-    private Player d_player;
+    public int d_mandatoryField = 1;
 
     /**
      * {@inheritDoc }
@@ -64,6 +59,19 @@ public class BombOrder implements Order {
     }
 
     /**
+     *
+     * @param p_countryName County name in the Command
+     * @return validity Of Command
+     */
+    public boolean validateAndSetData(String p_countryName) {
+        if (!p_countryName.isEmpty()) {
+            this.setD_countryName(p_countryName);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * This method return Country Object
      *
      * @param p_countryName : name of the country
@@ -81,4 +89,5 @@ public class BombOrder implements Order {
         }
         return l_countryName;
     }
+
 }

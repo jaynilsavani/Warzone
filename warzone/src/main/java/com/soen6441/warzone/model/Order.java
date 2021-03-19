@@ -8,11 +8,21 @@ package com.soen6441.warzone.model;
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
-public interface Order {
+public abstract class Order {
+
+    public Player d_player;
+    /**
+     * GameData in current Game
+     */
+    public GameData d_gameData;
 
     /**
      * @return Whether Order Executed or not
      */
-    boolean executeOrder();
+    abstract public boolean executeOrder();
+
+    public GameData getGameData() {
+        return d_gameData;
+    }
 
 }

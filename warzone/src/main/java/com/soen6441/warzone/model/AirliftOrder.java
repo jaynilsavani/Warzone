@@ -17,7 +17,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AirliftOrder implements Order{
+public class AirliftOrder extends Order{
 
 
     /**
@@ -42,5 +42,10 @@ public class AirliftOrder implements Order{
     @Override
     public boolean executeOrder() {
         return false;
+    }
+
+    @Override
+    public GameData getGameData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BlockadeOrder implements Order{
+public class BlockadeOrder extends Order{
 
     /**
      * Country in this order
@@ -30,5 +30,10 @@ public class BlockadeOrder implements Order{
     @Override
     public boolean executeOrder() {
         return false;
+    }
+
+    @Override
+    public GameData getGameData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
