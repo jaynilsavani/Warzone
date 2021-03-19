@@ -2,11 +2,9 @@ package com.soen6441.warzone.model;
 
 import java.util.List;
 import java.util.Objects;
-import lombok.EqualsAndHashCode;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 @Component
+@NoArgsConstructor
 //@EqualsAndHashCode
 public class Country {
 
@@ -53,35 +52,63 @@ public class Country {
      *
      * @return hashcode
      */
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.d_countryName);
-        return hash;
-    }
-
+//    @Override
+//    public int hashCode() {
+//        int hash = 3;
+//        hash = 67 * hash + Objects.hashCode(this.d_countryName);
+//        return hash;
+//    }
     /**
      * compares the objects
      *
-     * @param obj object that needs to comapre
+     * @param o object that needs to comapre
      * @return result of comparision
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Country other = (Country) obj;
-        if (!Objects.equals(this.d_countryName, other.d_countryName)) {
-            return false;
-        }
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Country country = (Country) o;
+        return d_continentIndex == country.d_continentIndex && d_countryName.equals(country.d_countryName);
+    }
+
+    /**
+     * to use the hashcode for this object
+     *
+     * @return hashcode
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(d_countryName, d_continentIndex);
+    }
+
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) {
+//            return true;
+//        }
+//        if (obj == null) {
+//            return false;
+//        }
+//        if (getClass() != obj.getClass()) {
+//            return false;
+//        }
+//        final Country other = (Country) obj;
+//        if (!Objects.equals(this.d_countryName, other.d_countryName)) {
+//            return false;
+//        }
+//        return true;
+//    }
+
+
+
+    public Country(Country p_country) {
+        this.d_countryIndex = p_country.d_countryIndex;
+        this.d_countryName = p_country.d_countryName;
+        this.d_continentIndex = p_country.d_continentIndex;
+        this.d_neighbourCountries = p_country.d_neighbourCountries;
+        this.d_noOfArmies = p_country.d_noOfArmies;
     }
 
 }
