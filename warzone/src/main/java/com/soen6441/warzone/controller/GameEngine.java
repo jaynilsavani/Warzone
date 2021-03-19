@@ -3,6 +3,8 @@ package com.soen6441.warzone.controller;
 import com.soen6441.warzone.config.StageManager;
 import static com.soen6441.warzone.config.WarzoneConstants.*;
 import com.soen6441.warzone.model.*;
+import com.soen6441.warzone.observerpattern.LogEntryBuffer;
+import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.GeneralUtil;
@@ -84,6 +86,9 @@ public class GameEngine implements Initializable {
     @Autowired
     private GameConfigService d_gameConfig;
 
+    private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
+
     /**
      * This method will exit the game and close the stage
      *
@@ -98,6 +103,7 @@ public class GameEngine implements Initializable {
     public void setPhase(Phase p_phase) {
         gamePhase = p_phase;
         System.out.println("new phase: " + p_phase.getClass().getSimpleName());
+        d_logEntryBuffer.setLogEntryBuffer("-------------" + p_phase.getClass().getSimpleName() + "-------------");
     }
 
     public Phase getPhase() {
