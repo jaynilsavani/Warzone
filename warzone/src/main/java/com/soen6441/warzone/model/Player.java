@@ -1,5 +1,7 @@
 package com.soen6441.warzone.model;
 
+import com.soen6441.warzone.service.GeneralUtil;
+import com.soen6441.warzone.service.OrderProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Class is used for storing and manipulating Player Information
@@ -23,6 +26,11 @@ import java.util.Objects;
 @ToString
 @Component
 public class Player {
+
+    @Autowired
+    private GeneralUtil d_generalUtil;
+    @Autowired
+    private OrderProcessor orderProcessor;
 
     /**
      * Stores the id of player
@@ -65,7 +73,7 @@ public class Player {
     /**
      * number of the command to set the order f that type
      */
-    private int d_commandtype;
+    private String d_commandtype;
 
     /**
      * nName of the player with current player wants to negotiate
@@ -74,61 +82,13 @@ public class Player {
 
     /**
      * add the order to the list of orders
+     *
      */
     public void issue_order() {
-        switch (d_commandtype)
-        {
-            case 1:
-                {
-                DeployOrder l_deplyOrder = new DeployOrder();
-                l_deplyOrder.setD_CountryName(d_currentToCountry);
-                l_deplyOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
-                d_orders.add(l_deplyOrder);
-                break;
-                }
-            case 2:
-                {
-                    AdvanceOrder l_advanceOrder=new AdvanceOrder();
-                    l_advanceOrder.setD_CountryNameFrom(d_currentFromCountry);
-                    l_advanceOrder.setD_CountryNameTo(d_currentToCountry);
-                    l_advanceOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
-                    d_orders.add(l_advanceOrder);
-                    break;
-                }
-            case 3:
-                {
-                    BombOrder l_bombOrder=new BombOrder();
-                    l_bombOrder.setD_countryName(d_currentToCountry);
-                    d_orders.add(l_bombOrder);
-                    break;
-                }
-            case 4:
-                {
-                    BlockadeOrder l_blockadeOrder=new BlockadeOrder();
-                    l_blockadeOrder.setD_countryName(d_currentToCountry);
-                    d_orders.add(l_blockadeOrder);
-                    break;
-                }
-            case 5:
-                {
-                    AirliftOrder l_airliftOrder=new AirliftOrder();
-                    l_airliftOrder.setD_sourceCountry(d_currentFromCountry);
-                    l_airliftOrder.setD_targetCountry(d_currentToCountry);
-                    l_airliftOrder.setD_noOfArmies(d_currentNoOfArmiesToMove);
-                    d_orders.add(l_airliftOrder);
-                    break;
-                }
-            case 6:
-                {
-                    NegotiateOrder l_negotiateOrder=new NegotiateOrder();
-                    l_negotiateOrder.setD_playerName(d_negotiatePlayer);
-                    d_orders.add(l_negotiateOrder);
-                    break;
-                }
-
-        }
+        Order l_orderObj = orderProcessor.getOrder();
+        l_orderObj.d_player = this;
+        d_orders.add(l_orderObj);
     }
-
     /**
      * @return The last order of order list
      */

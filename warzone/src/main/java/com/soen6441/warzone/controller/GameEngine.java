@@ -170,8 +170,6 @@ public class GameEngine implements Initializable {
                     IssueOrderPhase l_issuephase = (IssueOrderPhase) gamePhase;
                     d_gameData = l_issueorder.d_gameData;
                     List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
-//                    List<CommandResponse > l_commandList = executionOfOrders();
-//                    List<CommandResponse> l_commandList = executionOfOrders();
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
                     }

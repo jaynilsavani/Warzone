@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @ToString
 @Component
-public class DeployOrder implements Order {
+public class DeployOrder extends Order {
 
     /**
      * number of armies in this order
@@ -72,6 +72,12 @@ public class DeployOrder implements Order {
 
         return false;
 
+    }
+
+    @Override
+    public GameData getGameData() {
+        //Please update According to Game DAta
+        return new GameData();
     }
 
 }
