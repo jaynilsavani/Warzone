@@ -17,8 +17,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AdvanceOrder extends Order{
-
-
     /**
      * number of armies in this order
      */
@@ -32,11 +30,6 @@ public class AdvanceOrder extends Order{
      * country on which armies have to deployed
      */
     private String d_CountryNameTo;
-
-    /**
-     * player in this order
-     */
-    private Player d_player;
 
 
     @Override

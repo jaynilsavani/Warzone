@@ -17,15 +17,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class BlockadeOrder extends Order{
-
     /**
      * Country in this order
      */
     private String d_countryName;
-    /**
-     * Player in this order
-     */
-    private Player d_player;
 
     @Override
     public boolean executeOrder() {
