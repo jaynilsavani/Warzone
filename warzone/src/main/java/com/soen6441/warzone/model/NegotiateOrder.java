@@ -51,12 +51,25 @@ public class NegotiateOrder extends Order {
      */
     public boolean addPlayerToNegotiateList(Player p_orderPlayer, Player p_negotiatePlayer) {
         try {
+            // set neighbour into player object
             if (p_orderPlayer.getD_negotiatePlayerList() != null) {
                 p_orderPlayer.getD_negotiatePlayerList().add(p_negotiatePlayer);
             } else {
                 List<Player> l_playerList = new ArrayList();
                 l_playerList.add(p_negotiatePlayer);
                 p_orderPlayer.setD_negotiatePlayerList(l_playerList);
+            }
+
+            // set player in game data object
+            List<Integer> l_playerIndex = new ArrayList<>();
+            for (Player l_gamePlayer : d_gameData.getD_playerList()) {
+                if (l_gamePlayer.getD_playerName() == p_orderPlayer.getD_playerName()) {
+                    l_playerIndex.add(d_gameData.getD_playerList().indexOf(l_gamePlayer));
+                    break;
+                }
+            }
+            if (!l_playerIndex.isEmpty()) {
+                d_gameData.getD_playerList().set(l_playerIndex.get(0), p_orderPlayer);
             }
 
             return true;
