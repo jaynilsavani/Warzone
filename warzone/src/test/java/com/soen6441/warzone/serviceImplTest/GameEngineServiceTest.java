@@ -186,10 +186,10 @@ public class GameEngineServiceTest {
 
         d_orderProcessor.processOrder("boMb china".trim(), d_gameData);
         d_gameData.getD_playerList().get(0).issue_order();
-        Order d_order = d_gameData.getD_playerList().get(0).next_order();
-        assertEquals(true, d_order.executeOrder());
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(true, l_order.executeOrder());
 
-        //cheking number of armies after using bomb card
+        //checking number of armies after using bomb card
         for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
             for (Country l_countryName : l_continent.getValue().getD_countryList()) {
                 if (l_countryName.getD_countryName().equals("china")) {
@@ -200,4 +200,32 @@ public class GameEngineServiceTest {
 
     }
 
+    /**
+     * Test to check Blockade Command
+     */
+    @Test
+    public void testBlockadeCommand() {
+        d_orderProcessor.processOrder("blockade china".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+
+        assertEquals(true, l_order.executeOrder());
+
+        //checking that targeted country become neutral
+        for (Player l_player : l_order.d_gameData.getD_playerList()) {
+            if (l_player.getD_playerName().equals("user")) {
+                assertEquals(false, l_player.getD_ownedCountries().contains("china"));
+            }
+        }
+
+        //checking that number of arimes of targeted country become tripal
+        for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
+            for (Country l_countryName : l_continent.getValue().getD_countryList()) {
+                if (l_countryName.getD_countryName().equals("china")) {
+                    assertEquals(30, l_countryName.getD_noOfArmies());
+                }
+            }
+        }
+
+    }
 }
