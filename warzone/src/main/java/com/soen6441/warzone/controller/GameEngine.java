@@ -191,13 +191,15 @@ public class GameEngine implements Initializable {
                     CommandResponse l_map = d_gameConfig.showPlayerMap(d_gameData);           //to show the map and player*country table
                     d_FireCommandList.appendText(l_map.getD_responseString());
 
+                    for (Player l_player : d_gameData.getD_playerList()) {
+                        l_player.setD_isWinner(false);
+                    }
                     d_playCounter = 0;
                     d_gameData.setD_maxNumberOfTurns(0);
                     Arrays.fill(d_playerFlag, 0);                                   //flag that resets the issue counter
                     l_issueorder.d_gameData = d_gameData;
                     l_issueorder.assignReinforcements();                    //for reinforcement
                     d_gameData = l_issueorder.d_gameData;
-                    //d_gameData = d_gameEngineSevice.assignReinforcements(d_gameData);          // to reinforce the armies every time the loop resets
                     d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gameData));
                     d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
                     d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
@@ -248,7 +250,6 @@ public class GameEngine implements Initializable {
         l_issueorder.assignReinforcements();                    //for reinforcement
         d_gameData = l_issueorder.d_gameData;
         d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
-        //reinforcementArmies();
     }
 
     /**

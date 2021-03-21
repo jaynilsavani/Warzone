@@ -45,7 +45,7 @@ public class AirliftOrder extends Order {
     public boolean executeOrder() {
         Country l_countryfrom = getPlayerCountrybyName(d_CountryNameFrom);
         Country l_countryTo = getPlayerCountrybyName(d_CountryNameTo);
-        System.out.println(d_player);
+//        System.out.println(d_player);
         Player l_targetPlayer = null;
         if (d_player.getD_ownedCountries().contains(l_countryfrom)) {
             int l_countryFromIndex = d_player.getD_ownedCountries().indexOf(l_countryfrom);
@@ -57,11 +57,11 @@ public class AirliftOrder extends Order {
 
             int l_fromArmies = l_countryfrom.getD_noOfArmies();
             if (l_fromArmies < d_noOfArmies) {
-                System.out.println("in null");
+//                System.out.println("in null");
                 return false;
             }
             if (d_player.getD_ownedCountries().contains(l_countryTo)) {
-                System.out.println("same player");
+//                System.out.println("same player");
 
                 int l_toArmies = l_countryTo.getD_noOfArmies();
                 l_countryToIndex = d_player.getD_ownedCountries().indexOf(l_countryTo);
@@ -99,7 +99,7 @@ public class AirliftOrder extends Order {
                 return true;
             } else {
                 if (l_countryTo != null) {
-                    System.out.println("attack");
+//                    System.out.println("attack");
 
                     for (Player l_player : d_gameData.getD_playerList()) {
                         if (l_player.getD_ownedCountries().contains(l_countryTo)) {
@@ -162,7 +162,7 @@ public class AirliftOrder extends Order {
             }
 
         } else {
-            System.out.println("countryfrom is not there");
+//            System.out.println("countryfrom is not there");
             return false;
         }
         return false;

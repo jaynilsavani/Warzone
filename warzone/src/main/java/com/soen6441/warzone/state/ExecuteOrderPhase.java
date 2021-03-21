@@ -10,20 +10,21 @@ import java.util.Map;
 import javafx.scene.Parent;
 
 /**
- * ConcreteState of the State pattern.This Phase is used to execute orders
- * which are issued by players in the previous phase.
+ * ConcreteState of the State pattern.This Phase is used to execute orders which
+ * are issued by players in the previous phase.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class ExecuteOrderPhase extends GamePlay {
+
     /**
-     * This parameterized constructor is used to invoke Phase Constructor
-     * and set the reference variable to GameEngine object for the state transition.
+     * This parameterized constructor is used to invoke Phase Constructor and
+     * set the reference variable to GameEngine object for the state transition.
      *
      * @param p_gameEngine Object of GameEngine
      */
     public ExecuteOrderPhase(GameEngine p_gameEngine) {
-        super( p_gameEngine );
+        super(p_gameEngine);
     }
 
     /**
@@ -40,10 +41,10 @@ public class ExecuteOrderPhase extends GamePlay {
      */
     @Override
     public void next(Object p_nextObject) {
-        IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase( d_gameEngine );
+        IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase(d_gameEngine);
         l_isueOrderPhase.d_gameData = (GameData) d_gameData;
         l_isueOrderPhase.d_commandResponses = d_commandResponses;
-        d_gameEngine.setPhase( l_isueOrderPhase );
+        d_gameEngine.setPhase(l_isueOrderPhase);
     }
 
     /**
@@ -54,23 +55,43 @@ public class ExecuteOrderPhase extends GamePlay {
         List<CommandResponse> l_orderStatus = new ArrayList<>();
         for (int l_i = 0; l_i < d_gameData.getD_maxNumberOfTurns(); l_i++) {                       //main loop for giving the turn to player in round-robin
             for (int l_j = 0; l_j < d_gameData.getD_playerList().size(); l_j++) {
-                if (d_gameData.getD_playerList().get( l_j ).hasOrder()) {             //checks if the player has an order or not
+                if (d_gameData.getD_playerList().get(l_j).hasOrder()) {             //checks if the player has an order or not
                     Order l_order = d_gameData.getD_playerList().get(l_j).next_order();
-                    boolean l_executeOrder;
+                    boolean l_executeOrder = false;
+                    if (l_order instanceof AirliftOrder || l_order instanceof BlockadeOrder
+                            || l_order instanceof BombOrder || l_order instanceof NegotiateOrder) {
+                        GameCard l_gameCard = GameCard.commandToGameCardMapper(l_order);
+                        boolean l_hasCard = d_gameData.getD_playerList().get(l_j).hasCard(
+                                l_gameCard);
+                        if (l_hasCard) {
+                            l_executeOrder = l_order.executeOrder();                           //invokes the order
+                            d_gameData = l_order.getGameData();
+                            d_gameData.getD_playerList().get(l_j).removeCard(l_gameCard);
+                        }
+                    } else {
 
                         l_executeOrder = l_order.executeOrder();                           //invokes the order
-                        d_gameData=l_order.getGameData();
-                        if (l_executeOrder) {
-                            l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
-                        } else {                                                              //return false ,if the deployment is failed
-                            l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
-                        }
+                        d_gameData = l_order.getGameData();
+                    }
+
+//                    l_executeOrder = l_order.executeOrder();                           //invokes the order
+//                    d_gameData = l_order.getGameData();
+                    if (l_executeOrder) {
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
+                    } else {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
+                    }
                 }
+            }
+        }
+        for (Player l_player : d_gameData.getD_playerList()) {
+            if (l_player.isD_isWinner()) {
+                l_player.addCard(GameCard.randomGameCard());
             }
         }
 
         d_commandResponses = l_orderStatus;
-        this.next( null );
+        this.next(null);
     }
 
     @Override
@@ -82,6 +103,5 @@ public class ExecuteOrderPhase extends GamePlay {
     public void assignReinforcements() {
         this.printInvalidCommandMessage();
     }
-
 
 }

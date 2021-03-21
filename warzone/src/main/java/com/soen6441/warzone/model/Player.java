@@ -76,7 +76,11 @@ public class Player {
      * number of the command to set the order f that type
      */
     private String d_commandtype;
-
+    /**
+     * This is used to set Whether player won the battle or not in the current
+     * round
+     */
+    private boolean d_isWinner;
     /**
      * Name of the player with current player wants to negotiate
      */

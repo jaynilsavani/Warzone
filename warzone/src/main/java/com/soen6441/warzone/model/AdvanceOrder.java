@@ -45,24 +45,19 @@ public class AdvanceOrder extends Order{
         Country l_countryfrom = getPlayerCountrybyName(d_CountryNameFrom);
         Country l_countryTo = getPlayerCountrybyName(d_CountryNameTo);
         boolean l_flag=true;
-        System.out.println(d_player);
         Player l_targetPlayer = null;
         if (d_player.getD_ownedCountries().contains(l_countryfrom)) {
             int l_countryFromIndex=d_player.getD_ownedCountries().indexOf(l_countryfrom);
             int l_playerFromIndex=d_gameData.getD_playerList().indexOf(d_player);
-            //System.out.println("country from index is "+l_countryfrom.getD_countryName() + " | "+l_countryFromIndex );
-            //System.out.println("player from index is " +d_player.getD_playerName() + " | "+l_playerFromIndex );
             int l_countryToIndex=-1;
             int l_playerToIndex=-1;
 
             int l_fromArmies = l_countryfrom.getD_noOfArmies();
             if(l_fromArmies<d_noOfArmies)
             {
-                System.out.println("in null");
                 return false;
             }
             if (d_player.getD_ownedCountries().contains(l_countryTo) && isneighbourCountry(d_CountryNameTo,l_countryfrom)) {
-                System.out.println("same player");
 
                 int l_toArmies = l_countryTo.getD_noOfArmies();
                 l_countryToIndex=d_player.getD_ownedCountries().indexOf(l_countryTo);
@@ -130,8 +125,6 @@ public class AdvanceOrder extends Order{
             else {
                 if (isneighbourCountry(d_CountryNameTo,l_countryfrom))
                 {
-                    System.out.println("attack");
-
                     for (Player l_player : d_gameData.getD_playerList())
                     {
                         if (l_player.getD_ownedCountries().contains(l_countryTo))
@@ -154,8 +147,8 @@ public class AdvanceOrder extends Order{
                         l_fromArmies=l_fromArmies-d_noOfArmies;
                         l_countryfrom.setD_noOfArmies(l_fromArmies);
                         d_player.getD_ownedCountries().add(l_countryTo);
+                        d_player.setD_isWinner(true);
                         l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
-                        //assigncard
                     }
                     else
                     {
@@ -201,7 +194,7 @@ public class AdvanceOrder extends Order{
             }
 
         } else {
-            System.out.println("countryfrom is not there");
+            System.out.println("country from is not there");
             return false;
         }
         return false;
