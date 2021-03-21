@@ -243,8 +243,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     if (l_isValidContinent) {
                         if (!l_countryList.isEmpty()) {
                             // if continent already have countries
-                            List<String> l_countryNn = getAvailableCountryName(d_warMap);
-                            if (!l_countryNn.contains(l_countryName.toLowerCase())) {
+                            List<String> l_availableCountries = getAvailableCountryName(d_warMap);
+                            if (!l_availableCountries.contains(l_countryName.toLowerCase())) {
                                 saveCountry(l_countryName, l_continentIndex);
                                 d_generalUtil.prepareResponse(true, "Country saved successfully");
                             } else {
@@ -297,7 +297,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
         }
         String l_countryName = "";
         String l_neighbourCountryName = "";
-        boolean l_result = false;
         List<String> l_commandString = Arrays.asList(p_neighbour.split(" "));
         if (d_generalUtil.validateIOString(p_neighbour, "editneighbour((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+\\s[a-z|A-Z]+))+")) {
             List<String> l_cName = getAvailableCountryName(d_warMap);
@@ -582,7 +581,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
      */
     public boolean deleteContinent(String p_continentName) {
         boolean l_result = false;
-        int l_continentId;
         List<String> l_countryOfContinent = new ArrayList();
 
         //to store country of deleting continent
@@ -630,7 +628,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
         if (d_warMap.getD_continents() != null) {
             for (Map.Entry<Integer, Continent> l_entry : d_warMap.getD_continents().entrySet()) {
                 if (l_entry.getValue() != null && p_continentName.equalsIgnoreCase(l_entry.getValue().getD_continentName())) {
-                    l_continentId = l_entry.getKey();
                     d_warMap.getD_continents().remove(l_entry.getKey());
                     l_result = true;
                     break;
@@ -1068,10 +1065,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         }
 
                         for (int i = 0; i < l_currentContinent.getD_countryList().size(); i++) {
-                            Country currentcountry = l_currentContinent.getD_countryList().get(i);
-                            if (currentcountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
-                                currentcountry.setD_neighbourCountries(l_neighbourName);
-                                l_currentContinent.getD_countryList().set(i, currentcountry);
+                            Country l_currentCountry = l_currentContinent.getD_countryList().get(i);
+                            if (l_currentCountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
+                                l_currentCountry.setD_neighbourCountries(l_neighbourName);
+                                l_currentContinent.getD_countryList().set(i, l_currentCountry);
                             }
                         }
                         l_continentMap.put(l_currentContinent.getD_continentIndex(), l_currentContinent);
@@ -1100,11 +1097,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
             //getting country list 
             List<Country> l_countryList = continent.getD_countryList();
             if (l_countryList != null) {
-                for (Country country : l_countryList) {
+                for (Country l_country : l_countryList) {
 
-                    if (country != null) {
+                    if (l_country != null) {
                         //comparing index with country's which we want to find
-                        if (country.getD_countryIndex() == p_countryIndex) {
+                        if (l_country.getD_countryIndex() == p_countryIndex) {
 
                             return continent;
                         }
@@ -1133,12 +1130,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
             List<Country> l_countryList = continent.getD_countryList();
             if (l_countryList != null) {
-                for (Country country : l_countryList) {
+                for (Country l_country : l_countryList) {
 
-                    if (country != null) {
+                    if (l_country != null) {
                         //comparing index with country's which we want to find
-                        if (p_countryIndex == country.getD_countryIndex()) {
-                            neighbourName = country.getD_countryName();
+                        if (p_countryIndex == l_country.getD_countryIndex()) {
+                            neighbourName = l_country.getD_countryName();
                             break;
                         }
                     }
@@ -1150,11 +1147,11 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method will return country index from country name
+     * This method will return  index from  name
      *
      * @param p_warMap is object of WarMap model
-     * @param p_countryName is the name of country
-     * @return index of country
+     * @param p_countryName is the name of
+     * @return index of
      */
     private int getCountryIndexByCountryName(WarMap p_warMap, String p_countryName) {
         int l_countryIndex = 0;
@@ -1162,12 +1159,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
             Continent l_currentContinent = l_entry.getValue();
-            //getting the country list 
+            //getting the  list
             if (l_currentContinent.getD_countryList() != null) {
                 List<Country> l_countryList = l_currentContinent.getD_countryList();
                 if (l_countryList != null) {
                     for (Country l_country : l_countryList) {
-                        //Comparing country name with give country name
+                        //Comparing  name with give  name
                         if (l_country != null) {
                             if (l_country.getD_countryName() == p_countryName) {
                                 l_countryIndex = l_country.getD_countryIndex();
@@ -1182,7 +1179,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method is used for getting country index by country name
+     * This method is used for getting  index by  name
      *
      * @param p_continentMap
      * @param p_countryName
@@ -1194,12 +1191,12 @@ public class MapHandlingImpl implements MapHandlingInterface {
             //geting all countries from the continents
             List<Country> l_countryList = continent.getD_countryList();
             if (l_countryList != null) {
-                for (Country country : l_countryList) {
+                for (Country l_country : l_countryList) {
 
-                    if (country != null) {
-                        //comparing the county name with given country name
-                        if (p_countryName.equalsIgnoreCase(country.getD_countryName())) {
-                            return country.getD_countryIndex();
+                    if (l_country != null) {
+                        //comparing the county name with given l_country name
+                        if (p_countryName.equalsIgnoreCase(l_country.getD_countryName())) {
+                            return l_country.getD_countryIndex();
                         }
                     }
                 }
