@@ -47,6 +47,13 @@ public class AirliftOrder extends Order {
         Country l_countryTo = getPlayerCountrybyName(d_CountryNameTo);
         System.out.println(d_player);
         Player l_targetPlayer = null;
+        if (d_player.getD_negotiatePlayerList() != null) {
+            for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {
+                if (l_negotiatedPlayer.getD_ownedCountries().contains(l_countryTo)) {
+                    return true;
+                }
+            }
+        }
         if (d_player.getD_ownedCountries().contains(l_countryfrom)) {
             int l_countryFromIndex = d_player.getD_ownedCountries().indexOf(l_countryfrom);
             int l_playerFromIndex = d_gameData.getD_playerList().indexOf(d_player);
