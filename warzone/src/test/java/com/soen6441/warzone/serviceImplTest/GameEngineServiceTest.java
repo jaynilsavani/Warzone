@@ -2,6 +2,7 @@ package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.*;
+import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.OrderProcessor;
 import com.soen6441.warzone.state.IssueOrderPhase;
@@ -92,10 +93,10 @@ public class GameEngineServiceTest {
         l_country1.setD_noOfArmies(10);
         List<String> l_neighborList1 = new ArrayList();
         l_neighborList1.add("india");
+        l_countryList.add(l_country1);
 
         //added neighbour of country 
         l_country1.setD_neighbourCountries(l_neighborList1);
-        l_countryList.add(l_country1);
 
         //creating a new continent object
         Continent l_continent = new Continent();
@@ -118,11 +119,28 @@ public class GameEngineServiceTest {
         }
 
         d_player.setD_ownedCountries(l_countryList1);
+
         List<Player> l_playerList = new ArrayList<Player>();
         l_playerList.add(d_player);
         d_gameData.setD_playerList(l_playerList);
         d_gameData.setD_fileName("test.map");
         d_gameData.setD_warMap(d_warMap);
+
+        //creating a new country object
+        Country l_country2 = new Country();
+        l_country2.setD_continentIndex(1);
+        l_country2.setD_countryIndex(3);
+        l_country2.setD_countryName("nepal");
+        List<String> l_neighborList2 = new ArrayList();
+        l_neighborList2.add("india");
+        l_country2.setD_neighbourCountries(l_neighborList2);
+        List<Country> l_countrylist2=new ArrayList<>();
+        l_countrylist2.add(l_country2);
+        Player l_player2=new Player();
+        l_player2.setD_playerName("User2");
+        l_player2.setD_ownedCountries(l_countrylist2);
+        d_gameData.getD_playerList().add(l_player2);
+
 
     }
 
@@ -146,25 +164,23 @@ public class GameEngineServiceTest {
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }
 
-//    /**
-//     * Test to check Deploy Command
-//     */
-//    @Test
-//    public void testExecuteOrder() {
-//        d_gameData.getD_playerList().get(0).setD_noOfArmies(6);
-//        d_gameData.getD_playerList().get(0).setD_currentToCountry("china");
-//        d_gameData.getD_playerList().get(0).setD_currentNoOfArmiesToMove(234);
-//        d_gameData.getD_playerList().get(0).setD_commandtype(1);
-//        d_gameData.getD_playerList().get(0).issue_order();
-//        Order l_order = d_gameData.getD_playerList().get(0).getD_orders().get(0);
-//        ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(0));
-//        d_gameData.getD_playerList().remove(0);
-//        d_gameData.getD_playerList().add(0, ((DeployOrder) l_order).getD_player());
-//        boolean l_check = l_order.executeOrder();
-//        assertEquals(true, l_check);
-//        int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
-//        assertEquals(0, l_actualArmiesinPlayer);
-//    }
+    /**
+     * Test to check Deploy Command
+     */
+    @Test
+    public void testDeployCommand() {
+        d_gameData.getD_playerList().get(0).setD_noOfArmies(10);
+        d_orderProcessor.processOrder("deploy india 6",d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order=d_gameData.getD_playerList().get(0).next_order();
+        boolean l_check = l_order.executeOrder();
+        assertEquals(true, l_check);
+        int l_countryArmies=d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_noOfArmies();
+        assertEquals(6,l_countryArmies);
+        int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
+        assertEquals(4, l_actualArmiesinPlayer);
+    }
+
     /**
      * Test to check Bomb Command
      */
@@ -250,5 +266,48 @@ public class GameEngineServiceTest {
                 assertTrue(d_player.getD_negotiatePlayerList().contains(l_player));
             }
         }
+    }
+
+    /**
+     * Test diplomacy(advance) command
+     */
+    @Test
+    public void testAdvanceCommand() {
+
+
+
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+        System.out.println(d_gameData.getD_playerList().get(0).getD_ownedCountries().size());
+        System.out.println(d_gameData.getD_playerList().get(1).getD_ownedCountries().size());
+        d_orderProcessor.processOrder("advance india nepal 5".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(true, l_order.executeOrder());
+        assertEquals(0,d_gameData.getD_playerList().get(1).getD_ownedCountries().size());
+        assertEquals(3,d_gameData.getD_playerList().get(0).getD_ownedCountries().size());
+        assertEquals(3,d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).getD_noOfArmies());
+        assertEquals(2,d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_noOfArmies());
+    }
+
+    /**
+     * Test diplomacy(airlift) command
+     * can advance the attack if country wherre attack should occur is not neigbour to the attacking country
+     */
+    @Test
+    public void testAirliftCommand() {
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+
+        d_orderProcessor.processOrder("airlift india nepal 6".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(true, l_order.executeOrder());
+
+        assertEquals(0,d_gameData.getD_playerList().get(1).getD_ownedCountries().size());
+        assertEquals(3,d_gameData.getD_playerList().get(0).getD_ownedCountries().size());
+        assertEquals(4,d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).getD_noOfArmies());
+        assertEquals(1,d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_noOfArmies());
     }
 }

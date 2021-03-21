@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Map;
+
 
 /**
  * This Class is used for The airlift order Command Three annotations
@@ -19,18 +21,25 @@ import lombok.ToString;
 @ToString
 public class AirliftOrder extends Order{
     /**
-     * number of armies in this order
-     */
-    private int d_noOfArmies;
-    /**
      * source country in this order
      */
-    private String d_sourceCountry;
+    private String d_CountryNameFrom;
 
     /**
      * country on which armies have to deployed
      */
-    private String d_targetCountry;
+    private String d_CountryNameTo;
+
+    /**
+     * number of armies in this order
+     */
+    private int d_noOfArmies;
+
+    /**
+     * No of mandatory fields It always needs to have after all necessary fields
+     */
+    public int d_mandatoryField = 3;
+
 
     @Override
     public boolean executeOrder() {

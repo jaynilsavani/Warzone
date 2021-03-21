@@ -4,6 +4,7 @@ import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.Continent;
 import com.soen6441.warzone.model.Order;
 import com.soen6441.warzone.model.Player;
+import com.soen6441.warzone.service.impl.OrderProcessorImpl;
 import javafx.scene.Parent;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFO
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
 import com.soen6441.warzone.service.OrderProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -23,8 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class IssueOrderPhase extends GamePlay {
 
-    @Autowired
-    OrderProcessor d_orderProcessor;
+    //@Autowired
+    //OrderProcessor d_orderProcessor;
 
     /**
      * This parameterized constructor is used to invoke Phase Constructor and
@@ -70,7 +72,6 @@ public class IssueOrderPhase extends GamePlay {
 
     @Override
     public void issueOrder(String p_command) {
-        d_gameEngine = d_gameEngine.getPhase().d_gameEngine;
         Player l_player = d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);              //assigns the current player using the playcounter
         if (d_gameData.getD_maxNumberOfTurns() < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
             d_gameData.setD_maxNumberOfTurns(l_player.getD_orders().size());
@@ -87,9 +88,11 @@ public class IssueOrderPhase extends GamePlay {
                 List<Order> l_order = new ArrayList<>();
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_orders(l_order);
             }
-            d_issueResponse = d_orderProcessor.processOrder(p_command.trim(), d_gameData);
+            d_issueResponse = d_gameEngine.d_orderProcessor.processOrder(p_command.trim(), d_gameData);
             if (d_issueResponse.isD_isValid()) {
-                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
+                Player l_p=d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);
+                l_p.setOrderProcessor(d_gameEngine.d_player.getOrderProcessor());
+                l_p.issue_order();
                 d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
                 d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
             }

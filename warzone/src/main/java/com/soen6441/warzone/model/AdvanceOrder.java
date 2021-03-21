@@ -3,6 +3,7 @@ package com.soen6441.warzone.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.Map;
 
 
 /**
@@ -25,6 +26,7 @@ public class AdvanceOrder extends Order{
      * country in this order
      */
     private String d_CountryNameFrom;
+
 
     /**
      * country on which armies have to deployed
