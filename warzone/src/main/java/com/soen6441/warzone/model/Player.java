@@ -28,9 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Player {
 
     @Autowired
-    private GeneralUtil d_generalUtil;
-    @Autowired
-    private OrderProcessor orderProcessor;
+    OrderProcessor orderProcessor;
 
     /**
      * Stores the id of player
