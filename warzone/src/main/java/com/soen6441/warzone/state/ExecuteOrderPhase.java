@@ -2,6 +2,8 @@ package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.*;
+import com.soen6441.warzone.service.MapHandlingInterface;
+import com.soen6441.warzone.service.impl.MapHandlingImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,14 +59,21 @@ public class ExecuteOrderPhase extends GamePlay {
                 if (d_gameData.getD_playerList().get( l_j ).hasOrder()) {             //checks if the player has an order or not
                     Order l_order = d_gameData.getD_playerList().get(l_j).next_order();
                     boolean l_executeOrder;
+                    MapHandlingInterface l_map=new MapHandlingImpl();
+                    l_executeOrder = l_order.executeOrder();                           //invokes the order
+                    d_gameData=l_order.getGameData();
+                    if (l_executeOrder && d_gameData.getD_playerList().get(l_j).getD_ownedCountries().size()==l_map.getAvailableCountries(d_gameData.getD_warMap()).size()) {
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName().toUpperCase() + " IS WINNER!!!\n"));
+                        break;
+                    }
+                    else if(l_executeOrder)
+                    {
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
+                    }
+                    else {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
+                    }
 
-                        l_executeOrder = l_order.executeOrder();                           //invokes the order
-                        d_gameData=l_order.getGameData();
-                        if (l_executeOrder) {
-                            l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
-                        } else {                                                              //return false ,if the deployment is failed
-                            l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
-                        }
                 }
             }
         }
