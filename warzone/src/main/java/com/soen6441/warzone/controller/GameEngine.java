@@ -8,6 +8,8 @@ import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.GeneralUtil;
+import com.soen6441.warzone.service.OrderProcessor;
+import com.soen6441.warzone.service.impl.OrderProcessorImpl;
 import com.soen6441.warzone.state.GamePlay;
 import com.soen6441.warzone.state.IssueOrderPhase;
 import com.soen6441.warzone.state.MapPhase;
@@ -85,6 +87,12 @@ public class GameEngine implements Initializable {
 
     @Autowired
     private GameConfigService d_gameConfig;
+
+    @Autowired
+    public OrderProcessor d_orderProcessor;
+
+    @Autowired
+    public Player d_player;
 
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);

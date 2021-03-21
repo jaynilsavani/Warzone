@@ -56,53 +56,15 @@ public class ExecuteOrderPhase extends GamePlay {
             for (int l_j = 0; l_j < d_gameData.getD_playerList().size(); l_j++) {
                 if (d_gameData.getD_playerList().get( l_j ).hasOrder()) {             //checks if the player has an order or not
                     Order l_order = d_gameData.getD_playerList().get(l_j).next_order();
-                    if (l_order instanceof DeployOrder)
-                    {
-                        String l_countryName = ((DeployOrder) l_order).getD_CountryName();
-                    ((DeployOrder) l_order).setD_player(d_gameData.getD_playerList().get(l_j));         //to add the player to use in execution
-                    boolean l_executeOrder = l_order.executeOrder();                           //invokes the order
-                    if (l_executeOrder) {
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
-                        d_gameData.getD_playerList().remove(l_j);                                          //replaces the player with the updated player from order
-                        d_gameData.getD_playerList().add(l_j, ((DeployOrder) l_order).getD_player());
+                    boolean l_executeOrder;
 
-                        int l_noOfArmies = ((DeployOrder) l_order).getD_noOfArmies();
-                        if (d_gameData.getD_warMap().getD_continents() != null) {
-                            for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
-                                for (Country l_countries : l_entry.getValue().getD_countryList()) {
-                                    if (l_countries.getD_countryName().equalsIgnoreCase(l_countryName)) {
-                                        l_countries.setD_noOfArmies(l_noOfArmies);                              //sets the no. of armies to the country of map
-                                    }
-                                }
-                            }
+                        l_executeOrder = l_order.executeOrder();                           //invokes the order
+                        d_gameData=l_order.getGameData();
+                        if (l_executeOrder) {
+                            l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
+                        } else {                                                              //return false ,if the deployment is failed
+                            l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
                         }
-
-                    } else {                                                              //return false ,if the deployment is failed
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
-                    }
-                }
-                    else if(l_order instanceof AdvanceOrder)
-                    {
-                        //implementation of execution order
-                    }
-                    else if(l_order instanceof BombOrder)
-                    {
-                        //implementation of execution order
-                    }
-                    else if(l_order instanceof BlockadeOrder)
-                    {
-                        //implementation of execution order
-                    }
-                    else if(l_order instanceof AirliftOrder)
-                    {
-                        //implementation of execution order
-                    }
-                    else if(l_order instanceof NegotiateOrder)
-                    {
-                        //implementation of execution order
-                    }
-
-
                 }
             }
         }
