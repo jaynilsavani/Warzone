@@ -1,5 +1,7 @@
 package com.soen6441.warzone.model;
 
+import java.util.Random;
+
 /**
  * This Enum is used for Managing Type of the card
  *
@@ -8,7 +10,7 @@ package com.soen6441.warzone.model;
 public enum GameCard {
     BOMB, BLOCKADE, AIRLIFT, DIPLOMACY;
 
-    public GameCard commandToGameCardMapper(Order p_order) {
+    public static GameCard commandToGameCardMapper(Order p_order) {
         if (p_order instanceof AirliftOrder) {
             return AIRLIFT;
         } else if (p_order instanceof BlockadeOrder) {
@@ -19,5 +21,10 @@ public enum GameCard {
             return DIPLOMACY;
         }
         return null;
+    }
+
+    public static GameCard randomGameCard() {
+        int l_pick = new Random().nextInt(GameCard.values().length);
+        return GameCard.values()[l_pick];
     }
 }

@@ -96,48 +96,6 @@ public class IssueOrderPhase extends GamePlay {
                 d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
                 d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
             }
-//            if (l_commands[0].equalsIgnoreCase("deploy")) {
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(l_commands[0]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[2]));
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-//            }
-//            else if(l_commands[0].equalsIgnoreCase("advance"))
-//            {
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(2);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-//            }
-//            else if(l_commands[0].equalsIgnoreCase("bomb"))
-//            {
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(3);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-//            }
-//            else if(l_commands[0].equalsIgnoreCase("blockade"))
-//            {
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(4);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[1]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-//
-//            }
-//            else if(l_commands[0].equalsIgnoreCase("airlift"))
-//            {
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(5);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentFromCountry(l_commands[1]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentToCountry(l_commands[2]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_currentNoOfArmiesToMove(Integer.parseInt(l_commands[3]));
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-//            }
-//            else if(l_commands[0].equalsIgnoreCase("negotiate"))
-//            {
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_commandtype(6);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_negotiatePlayer(l_commands[1]);
-//                d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).issue_order();
-//            }
-
         }
     }
 
