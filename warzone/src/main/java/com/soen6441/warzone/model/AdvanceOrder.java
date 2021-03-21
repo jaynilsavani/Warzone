@@ -50,7 +50,6 @@ public class AdvanceOrder extends Order{
         if (d_player.getD_negotiatePlayerList() != null) {
             for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {
                 if (l_negotiatedPlayer.getD_ownedCountries().contains(l_countryTo)) {
-                    System.out.println("Player is Negotiated");
                     return true;
                 }
             }
