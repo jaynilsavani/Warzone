@@ -52,6 +52,10 @@ public class Player {
      */
     private List<Order> d_orders = new ArrayList<Order>();
     /**
+     * List of the Cards
+     */
+    private List<GameCard> d_cards = new ArrayList<GameCard>();
+    /**
      * reinforcementPool Of the player
      */
     private int d_noOfArmies;
@@ -94,6 +98,7 @@ public class Player {
         l_orderObj.d_player = this;
         d_orders.add(l_orderObj);
     }
+
     /**
      * @return The last order of order list
      */
@@ -105,6 +110,39 @@ public class Player {
         } else {
             return null;
         }
+    }
+
+    /**
+     * This is used to add the card in the player's list of the card
+     *
+     * @param p_gameCard GameCard
+     */
+    public void addCard(GameCard p_gameCard) {
+        if (d_cards == null) {
+            d_cards = new ArrayList<>();
+        }
+        d_cards.add(p_gameCard);
+    }
+
+    /**
+     *
+     * @param p_gameCard
+     * @return
+     */
+    public boolean hasCard(GameCard p_gameCard) {
+        return d_cards.contains(p_gameCard);
+    }
+
+    /**
+     *
+     * @param p_gameCard
+     * @return
+     */
+    public boolean removeCard(GameCard p_gameCard) {
+        if (d_cards != null && (!d_cards.isEmpty())) {
+            return d_cards.remove(p_gameCard);
+        }
+        return false;
     }
 
     /**

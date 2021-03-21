@@ -200,6 +200,17 @@ public class GameEngineServiceTest {
         }
     }
 
+    @Test
+    public void testBombCard() {
+        Player get = d_gameData.getD_playerList().get(0);
+        get.getD_cards().add(GameCard.BOMB);
+        get.getD_cards().add(GameCard.BOMB);
+        assertEquals(get.getD_cards().size(), 2);
+        get.getD_cards().remove(GameCard.BOMB);
+        boolean l_removed = get.getD_cards().remove(GameCard.AIRLIFT);
+        assertEquals(l_removed, false);
+    }
+
     /**
      * Test to check Blockade Command
      */
@@ -227,7 +238,8 @@ public class GameEngineServiceTest {
             }
         }
     }
-        /*
+
+    /*
      * Test diplomacy(Negotiate) command
      */
     @Test
@@ -242,11 +254,11 @@ public class GameEngineServiceTest {
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertEquals(true, l_order.executeOrder());
 
-        for (Player l_gamePlayer: d_gameData.getD_playerList()){
-            if(l_gamePlayer.getD_playerName() == l_player.getD_playerName()){
+        for (Player l_gamePlayer : d_gameData.getD_playerList()) {
+            if (l_gamePlayer.getD_playerName() == l_player.getD_playerName()) {
                 assertTrue(l_player.getD_negotiatePlayerList().contains(d_player));
             }
-            if(l_gamePlayer.getD_playerName() == d_player.getD_playerName()){
+            if (l_gamePlayer.getD_playerName() == d_player.getD_playerName()) {
                 assertTrue(d_player.getD_negotiatePlayerList().contains(l_player));
             }
         }
