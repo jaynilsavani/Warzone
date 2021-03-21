@@ -8,6 +8,8 @@ import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.GeneralUtil;
+import com.soen6441.warzone.service.OrderProcessor;
+import com.soen6441.warzone.service.impl.OrderProcessorImpl;
 import com.soen6441.warzone.state.GamePlay;
 import com.soen6441.warzone.state.IssueOrderPhase;
 import com.soen6441.warzone.state.MapPhase;
@@ -86,6 +88,12 @@ public class GameEngine implements Initializable {
     @Autowired
     private GameConfigService d_gameConfig;
 
+    @Autowired
+    public OrderProcessor d_orderProcessor;
+
+    @Autowired
+    public Player d_player;
+
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 
@@ -151,13 +159,13 @@ public class GameEngine implements Initializable {
      * @param p_event handling the user events
      */
     public void getData(ActionEvent p_event) {
-        String l_s = d_CommandLine.getText().trim();
-        String[] l_validatestr = l_s.split("\\s");
-        if ((d_generalUtil.validateIOString(l_s, "(advance|airlift)\\s+[a-zA-Z]+\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 4)||(d_generalUtil.validateIOString(l_s, "(bomb|blockade|negotiate)\\s+[a-zA-Z]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_s, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_s.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
+        String l_commandString = d_CommandLine.getText().trim();
+        String[] l_validatestr = l_commandString.split("\\s");
+        if ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z]+\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 4)||(d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
             l_issueorder.d_gameData = d_gameData;
-            l_issueorder.issueOrder(l_s);                    //to invoke the issue order after player gives the command
+            l_issueorder.issueOrder(l_commandString);                    //to invoke the issue order after player gives the command
             CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
             d_gameData = l_issueorder.d_gameData;
             d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");

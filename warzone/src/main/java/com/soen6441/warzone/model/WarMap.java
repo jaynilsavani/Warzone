@@ -40,9 +40,4 @@ public class WarMap {
      * It will represent the status of map object.
      */
     private boolean d_status;
-
-    /**
-     * It will represent the status of the map whether it is valid or not.
-     */
-    private boolean d_isValid;
 }
