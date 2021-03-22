@@ -7,6 +7,8 @@ import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.model.WarMap;
+import com.soen6441.warzone.observerpattern.LogEntryBuffer;
+import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
@@ -79,6 +81,9 @@ public class GameConfigController implements Initializable {
     @Autowired
     private GameEngine d_gameEngine;
 
+    private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
+
     /**
      * This is the initialization method of this controller
      *
@@ -128,6 +133,7 @@ public class GameConfigController implements Initializable {
      */
     public void getData(ActionEvent p_event) {
         String l_command = d_CommandLine.getText().trim();
+        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_command);
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
 
@@ -210,6 +216,7 @@ public class GameConfigController implements Initializable {
         }
 
         d_showPlayPhase.setText(l_gmConfigRes.toString());
+        d_logEntryBuffer.setLogEntryBuffer("Response:: " + l_gmConfigRes.getD_responseString());
         d_CommandLine.clear();
     }
 

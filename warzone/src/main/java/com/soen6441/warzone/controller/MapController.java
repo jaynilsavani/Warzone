@@ -72,9 +72,9 @@ public class MapController implements Initializable {
     public void getData(ActionEvent p_event) {
         String l_s = d_ExecuteCommand.getText().trim();
 
-        d_logEntryBuffer.setLogEntryBuffer("Command ::" + l_s);
+        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_s);
         CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(l_s);
-        d_logEntryBuffer.setLogEntryBuffer("Response ::" + l_commandRespose.getD_responseString());
+        d_logEntryBuffer.setLogEntryBuffer("Response:: " + l_commandRespose.getD_responseString());
 
         d_ExecuteCommand.clear();
         d_commandResponse.setText(l_commandRespose.toString());
