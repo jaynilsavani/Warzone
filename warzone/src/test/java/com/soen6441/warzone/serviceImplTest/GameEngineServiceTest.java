@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -348,4 +349,51 @@ public class GameEngineServiceTest {
         assertEquals(false, d_gameData.getD_playerList().get(1).getD_cards().contains(GameCard.BOMB));
     }
 
+    /**
+     * Test that player can not issue Blockade Order in opponent's country
+     */
+    @Test
+    public void testBlockadeInOpponentCountry() {
+        d_orderProcessor.processOrder("blockade nepal".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test that Negotiation is not possible with player, who is not in the game
+     */
+    @Test
+    public void testNegotiationWithOutofGamePlayer() {
+        d_orderProcessor.processOrder("negotiate user3".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test if no of armies passed in issue order is greater than actual armies in airlift command
+     */
+    @Test
+    public void testArmiesInAirliftCommand() {
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(5);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+
+        d_orderProcessor.processOrder("airlift india nepal 6".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertFalse(l_order.executeOrder());
+    }
+
+    /**
+     * Test to check Bomb Command when user enters country from his own country list
+     */
+    @Test
+    public void testSameCountriesInBombCommand() {
+        d_orderProcessor.processOrder("boMb china".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertFalse(l_order.executeOrder());
+    }
 }
