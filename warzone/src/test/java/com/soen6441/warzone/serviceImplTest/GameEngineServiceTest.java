@@ -288,7 +288,8 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAdvanceCommand() {
-
+        List<Country> l_countrylst=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countrylst.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
         d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
@@ -308,7 +309,8 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAirliftCommand() {
-
+        List<Country> l_countrylst=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countrylst.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
         d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
 
