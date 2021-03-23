@@ -88,19 +88,41 @@ public class ExecuteOrderPhase extends GamePlay {
                         d_logEntryBuffer.setLogEntryBuffer("Winner Declared: " + d_gameData.getD_playerList().get(l_j).getD_playerName().toUpperCase() + " IS WINNER!!!\n");
                         break;
                     }
-                     else if (l_executeOrder) {
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully\n"));
-                        d_logEntryBuffer.setLogEntryBuffer("Order Executed Successfully: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully");
-                     } else {                                                              //return false ,if the deployment is failed
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
-                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies");
+                     if (l_executeOrder) {
+                         l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully\n"));
+                         d_logEntryBuffer.setLogEntryBuffer("Order Executed Successfully: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully");
                      }
+                     if(!l_executeOrder && (l_order instanceof DeployOrder)) {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " (deploy) either country is incorrect or not enough armies\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + " (deploy) either country is incorrect or not enough armies");
+                     }
+                     if(!l_executeOrder && (l_order instanceof AdvanceOrder)) {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " (advance) either countryfrom or countryto is incorrect or not enough armies or player has negotiated\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + " (advance) either countryfrom or countryto is incorrect or not enough armies");
+                    }
+                    if(!l_executeOrder && (l_order instanceof BombOrder)) {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " (bomb) country is incorrect or his owned country or card is not assigned\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + "  (bomb) country is incorrect or his owned country or card is not assigned ");
+                    }
+                    if(!l_executeOrder && (l_order instanceof BlockadeOrder)) {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " (blockade) country is incorrect or not his owned coutry or card is not assigned\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + "(blockade) country is incorrect or not his owned coutry or card is not assigned");
+                    }
+                    if(!l_executeOrder && (l_order instanceof NegotiateOrder)) {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + "(negotiate) player is incorrect or same player for negotiation or card is not assigned\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + " (negotiate) player is incorrect or same player for negotiation or card is not assigned");
+                    }
+                    if(!l_executeOrder && (l_order instanceof AirliftOrder)) {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " (airlift) either countryfrom or countryto is incorrect or not enough armies or player has negotiated or card is not assigned\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + " (airlift) either countryfrom or countryto is incorrect or not enough armies or player has negotiated or card is not assigned");
+                    }
                 }
             }
         }
         for (Player l_player : d_gameData.getD_playerList()) {
             if (l_player.isD_isWinner()) {
                 l_player.addCard(GameCard.randomGameCard());
+                l_orderStatus.add(new CommandResponse(true,"player "+ l_player.getD_playerName()+" received "+l_player.getD_cards()));
             }
         }
 

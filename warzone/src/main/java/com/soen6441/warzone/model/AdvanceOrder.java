@@ -49,7 +49,7 @@ public class AdvanceOrder extends Order{
         if (d_player.getD_negotiatePlayerList() != null) {
             for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {
                 if (l_negotiatedPlayer.getD_ownedCountries().contains(l_countryTo)) {
-                    return true;
+                    return false;
                 }
             }
         }
@@ -142,7 +142,6 @@ public class AdvanceOrder extends Order{
 
                         }
                     }
-
                     int l_toArmies = l_countryTo.getD_noOfArmies();
                     int l_attackArmiesFrom=(int) Math.round(d_noOfArmies*0.6);
                     int l_attackArmiesTo=(int) Math.round(l_toArmies*0.7);

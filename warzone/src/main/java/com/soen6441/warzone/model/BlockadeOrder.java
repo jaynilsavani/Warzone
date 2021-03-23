@@ -40,20 +40,20 @@ public class BlockadeOrder extends Order {
         Country l_countryName = null;
         boolean l_status = false;
         for (Country l_country : d_player.getD_ownedCountries()) {
-            if (l_country.getD_countryName().equals(d_countryName)) {
+            if (l_country.getD_countryName().equalsIgnoreCase(d_countryName)) {
                 l_countryName = getCountryObjectByCountryName(d_countryName);
                 if (l_countryName != null) {
                     int l_army = l_countryName.getD_noOfArmies() * 3;
                     l_countryName.setD_noOfArmies(l_army);
                     
                     //set country object into gamedata
-                    for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
+                    /*for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
                         for (Country l_countryObj : l_continent.getValue().getD_countryList()) {
                             if (l_countryObj.getD_countryName().equals(l_countryName.getD_countryName())) {
                                 l_continent.getValue().getD_countryList().set(l_countryObj.getD_countryIndex(), l_countryName);
                             }
                         }
-                    }
+                    }*/
                     l_status = true;
                 }
             }
@@ -66,7 +66,7 @@ public class BlockadeOrder extends Order {
             //set player object into gamedata
             List<Integer> l_playerIndex = new ArrayList<>();
             for (Player l_player : d_gameData.getD_playerList()) {
-                if (l_player.getD_playerName().equals(d_player.getD_playerName())) {
+                if (l_player.getD_playerName().equalsIgnoreCase(d_player.getD_playerName())) {
                     l_playerIndex.add(d_gameData.getD_playerList().indexOf(l_player));
                     break;
                 }
