@@ -160,7 +160,7 @@ public class GameEngineServiceTest {
         //GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
         int l_actualnoOfArmies = d_gameData.getD_playerList().get(0).getD_noOfArmies();
         int l_expectednoOfArmies = 8;
-        System.out.println(l_expectednoOfArmies + " and " + l_actualnoOfArmies);
+        //System.out.println(l_expectednoOfArmies + " and " + l_actualnoOfArmies);
         assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
     }
 

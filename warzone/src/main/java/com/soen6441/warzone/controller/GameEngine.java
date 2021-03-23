@@ -111,7 +111,7 @@ public class GameEngine implements Initializable {
 
     public void setPhase(Phase p_phase) {
         gamePhase = p_phase;
-        System.out.println("new phase: " + p_phase.getClass().getSimpleName());
+        //System.out.println("new phase: " + p_phase.getClass().getSimpleName());
         d_logEntryBuffer.setLogEntryBuffer("-------------" + p_phase.getClass().getSimpleName() + "-------------");
     }
 
@@ -205,6 +205,8 @@ public class GameEngine implements Initializable {
                         d_FireCommandList.appendText(l_map.getD_responseString());
                         for (Player l_player : d_gameData.getD_playerList()) {
                           l_player.setD_isWinner(false);
+                          l_player.setD_negotiatePlayerList(new ArrayList<>());
+                          l_player.setD_negotiatePlayer("");
                         }
                         d_playCounter = 0;
                         d_gameData.setD_maxNumberOfTurns(0);
@@ -218,7 +220,7 @@ public class GameEngine implements Initializable {
                         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                         d_CommandLine.clear();
-                        break;
+
                     }
                     break;
                 }
