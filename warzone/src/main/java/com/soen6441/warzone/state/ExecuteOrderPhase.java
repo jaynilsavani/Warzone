@@ -121,7 +121,7 @@ public class ExecuteOrderPhase extends GamePlay {
         }
         for (Player l_player : d_gameData.getD_playerList()) {
             if (l_player.isD_isWinner()) {
-                l_player.addCard(GameCard.randomGameCard());
+                l_player.addCard(GameCard.BLOCKADE);
                 l_orderStatus.add(new CommandResponse(true,"player "+ l_player.getD_playerName()+" received "+l_player.getD_cards()));
             }
         }

@@ -45,7 +45,6 @@ public class AirliftOrder extends Order {
     public boolean executeOrder() {
         Country l_countryfrom = getPlayerCountrybyName(d_CountryNameFrom);
         Country l_countryTo = getPlayerCountrybyName(d_CountryNameTo);
-//        System.out.println(d_player);
         Player l_targetPlayer = null;
         if (d_player.getD_negotiatePlayerList() != null) {
             for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {
@@ -57,19 +56,14 @@ public class AirliftOrder extends Order {
         if (d_player.getD_ownedCountries().contains(l_countryfrom)) {
             int l_countryFromIndex = d_player.getD_ownedCountries().indexOf(l_countryfrom);
             int l_playerFromIndex = d_gameData.getD_playerList().indexOf(d_player);
-            //System.out.println("country from index is "+l_countryfrom.getD_countryName() + " | "+l_countryFromIndex );
-            //System.out.println("player from index is " +d_player.getD_playerName() + " | "+l_playerFromIndex );
             int l_countryToIndex = -1;
             int l_playerToIndex = -1;
 
             int l_fromArmies = l_countryfrom.getD_noOfArmies();
             if (l_fromArmies < d_noOfArmies) {
-//                System.out.println("in null");
                 return false;
             }
-            if (d_player.getD_ownedCountries().contains(l_countryTo)) {
-//                System.out.println("same player");
-
+            if (d_player.getD_ownedCountries().contains(l_countryTo) && l_countryfrom!=l_countryTo) {
                 int l_toArmies = l_countryTo.getD_noOfArmies();
                 l_countryToIndex = d_player.getD_ownedCountries().indexOf(l_countryTo);
                 if (l_countryfrom.getD_noOfArmies() >= d_noOfArmies) {
@@ -90,24 +84,9 @@ public class AirliftOrder extends Order {
                 d_player.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
                 d_gameData.getD_playerList().remove(l_playerFromIndex);
                 d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
-
-                if (d_gameData.getD_warMap().getD_continents() != null) {
-                    for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
-                        for (Country l_countries : l_entry.getValue().getD_countryList()) {
-                            if (l_countries.getD_countryName().equalsIgnoreCase(d_CountryNameFrom)) {
-                                l_countries.setD_noOfArmies(l_fromArmies);                              //sets the no. of armies to the country of map
-                            }
-                            if (l_countries.getD_countryName().equalsIgnoreCase(d_CountryNameTo)) {
-                                l_countries.setD_noOfArmies(l_toArmies);                              //sets the no. of armies to the country of map
-                            }
-                        }
-                    }
-                }
                 return true;
             } else {
-                if (l_countryTo != null) {
-//                    System.out.println("attack");
-
+                if (l_countryTo != null && l_countryfrom!=l_countryTo) {
                     for (Player l_player : d_gameData.getD_playerList()) {
                         if (l_player.getD_ownedCountries().contains(l_countryTo)) {
                             l_targetPlayer = l_player;
@@ -127,7 +106,9 @@ public class AirliftOrder extends Order {
                         l_fromArmies = l_fromArmies - d_noOfArmies;
                         l_countryfrom.setD_noOfArmies(l_fromArmies);
                         d_player.getD_ownedCountries().add(l_countryTo);
-                        l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
+                        if(l_targetPlayer!=null) {
+                            l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
+                        }
                     } else {
                         l_toArmies = l_toArmies - l_attackArmiesFrom;
                         int l_remainingCountries;
@@ -141,15 +122,19 @@ public class AirliftOrder extends Order {
                         l_countryTo.setD_noOfArmies(l_toArmies);
                         d_player.getD_ownedCountries().remove(l_countryFromIndex);
                         d_player.getD_ownedCountries().add(l_countryFromIndex, l_countryfrom);
-                        l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
-                        l_targetPlayer.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
+                        if(l_targetPlayer!=null) {
+                            l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
+                            l_targetPlayer.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
+                        }
                     }
 
 
                     d_gameData.getD_playerList().remove(l_playerFromIndex);
                     d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
-                    d_gameData.getD_playerList().remove(l_playerToIndex);
-                    d_gameData.getD_playerList().add(l_playerToIndex, l_targetPlayer);
+                    if(l_targetPlayer!=null) {
+                        d_gameData.getD_playerList().remove(l_playerToIndex);
+                        d_gameData.getD_playerList().add(l_playerToIndex, l_targetPlayer);
+                    }
 
                     if (d_gameData.getD_warMap().getD_continents() != null) {
                         for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
@@ -180,12 +165,15 @@ public class AirliftOrder extends Order {
      * @return
      */
     public Country getPlayerCountrybyName(String p_cName) {
-        for (Player l_player : d_gameData.getD_playerList()) {
-            for (Country l_country : l_player.getD_ownedCountries()) {
-                if (l_country.getD_countryName().equalsIgnoreCase(p_cName)) {
+        for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
+            for(Country l_country:l_entry.getValue().getD_countryList())
+            {
+                if(l_country.getD_countryName().equalsIgnoreCase(p_cName))
+                {
                     return l_country;
                 }
             }
+
         }
         return null;
     }

@@ -1268,8 +1268,10 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public ArrayList<String> getAvailableContinentName(WarMap p_warMap) {
         if (p_warMap != null) {
             List<String> l_continent = new ArrayList<String>();
-            for (Map.Entry<Integer, Continent> l_entries : p_warMap.getD_continents().entrySet()) {
-                l_continent.add(l_entries.getValue().getD_continentName().toLowerCase());
+            if(p_warMap.getD_continents()!=null) {
+                for (Map.Entry<Integer, Continent> l_entries : p_warMap.getD_continents().entrySet()) {
+                    l_continent.add(l_entries.getValue().getD_continentName().toLowerCase());
+                }
             }
             return (ArrayList<String>) l_continent;
         } else {
