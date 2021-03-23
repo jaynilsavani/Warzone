@@ -38,9 +38,12 @@ public class BombOrder extends Order {
         Country l_countryName;
         //checking that target country is opponent country
         for (Country l_country : d_player.getD_ownedCountries()) {
-            if (l_country.getD_countryName().equals(d_countryName)) {
+            if (l_country.getD_countryName().equalsIgnoreCase(d_countryName)) {
                 return false;
-            } else {
+            }
+        }
+        for (Country l_country : d_player.getD_ownedCountries()) {
+
                 //checkcing adjacency 
                 for (String l_neighbour : l_country.getD_neighbourCountries()) {
                     if (d_countryName.equalsIgnoreCase(l_neighbour)) {
@@ -52,7 +55,7 @@ public class BombOrder extends Order {
                             return true;
                         }
                     }
-                }
+
             }
         }
         return false;
