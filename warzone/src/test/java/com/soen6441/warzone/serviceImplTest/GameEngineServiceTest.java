@@ -7,6 +7,8 @@ import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.OrderProcessor;
 import com.soen6441.warzone.state.IssueOrderPhase;
 import com.soen6441.warzone.state.StartUpPhase;
+import com.soen6441.warzone.service.impl.MapHandlingImpl;
+import com.soen6441.warzone.service.MapHandlingInterface;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -286,7 +288,8 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAdvanceCommand() {
-
+        List<Country> l_countrylst=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countrylst.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
         d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
@@ -306,7 +309,8 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAirliftCommand() {
-
+        List<Country> l_countrylst=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countrylst.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
         d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
 
@@ -395,5 +399,33 @@ public class GameEngineServiceTest {
         d_gameData.getD_playerList().get(0).issue_order();
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertFalse(l_order.executeOrder());
+    }
+
+
+    /**
+     * Test of winner
+     * when any player owns every country of the map ,then it's a winner
+     * here in demo user has 2 countries owned ,so we'll test to attack on remaining country
+     */
+    @Test
+    public void testWinner() {
+        //creating a new country object
+        Country l_country2 = new Country();
+        l_country2.setD_continentIndex(1);
+        l_country2.setD_countryIndex(3);
+        l_country2.setD_countryName("nepal");
+        List<Country> l_countrylist=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countrylist.add(l_country2);
+        d_gameData.getD_warMap().getD_continents().get(1).setD_countryList(l_countrylist);
+
+        MapHandlingInterface l_map=new MapHandlingImpl();
+        List<String> l_neighbour=d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).getD_neighbourCountries();
+        l_neighbour.add("nepal");
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).setD_neighbourCountries(l_neighbour);
+        d_orderProcessor.processOrder("advance china nepal 3".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(true, l_order.executeOrder());
+        assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(),l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
     }
 }
