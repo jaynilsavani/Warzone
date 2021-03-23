@@ -2,6 +2,8 @@ package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.*;
+import com.soen6441.warzone.observerpattern.LogEntryBuffer;
+import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.service.impl.MapHandlingImpl;
 
@@ -19,6 +21,8 @@ import javafx.scene.Parent;
  */
 public class ExecuteOrderPhase extends GamePlay {
 
+    private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
     /**
      * This parameterized constructor is used to invoke Phase Constructor and
      * set the reference variable to GameEngine object for the state transition.
@@ -81,13 +85,16 @@ public class ExecuteOrderPhase extends GamePlay {
 //                    d_gameData = l_order.getGameData();
                      if (l_executeOrder && d_gameData.getD_playerList().get(l_j).getD_ownedCountries().size()==l_map.getAvailableCountries(d_gameData.getD_warMap()).size()) {
                         l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName().toUpperCase() + " IS WINNER!!!\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Winner Declared: " + d_gameData.getD_playerList().get(l_j).getD_playerName().toUpperCase() + " IS WINNER!!!\n");
                         break;
                     }
                      else if (l_executeOrder) {
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed sucessfully\n"));
-                    } else {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully\n"));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Executed Successfully: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully");
+                     } else {                                                              //return false ,if the deployment is failed
                         l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies\n"));
-                    }
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + " either country is incorrect or not enough armies");
+                     }
                 }
             }
         }

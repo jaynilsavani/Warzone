@@ -4,6 +4,8 @@ import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.Continent;
 import com.soen6441.warzone.model.Order;
 import com.soen6441.warzone.model.Player;
+import com.soen6441.warzone.observerpattern.LogEntryBuffer;
+import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.impl.OrderProcessorImpl;
 import javafx.scene.Parent;
 
@@ -27,6 +29,8 @@ public class IssueOrderPhase extends GamePlay {
 
     //@Autowired
     //OrderProcessor d_orderProcessor;
+    private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 
     /**
      * This parameterized constructor is used to invoke Phase Constructor and
@@ -73,6 +77,7 @@ public class IssueOrderPhase extends GamePlay {
     @Override
     public void issueOrder(String p_command) {
         Player l_player = d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);              //assigns the current player using the playcounter
+        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_player.getD_playerName() + "'s turn -> " + p_command);
         if (d_gameData.getD_maxNumberOfTurns() < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
             d_gameData.setD_maxNumberOfTurns(l_player.getD_orders().size());
         }

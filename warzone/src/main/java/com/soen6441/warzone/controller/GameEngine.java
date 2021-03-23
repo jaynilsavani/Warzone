@@ -104,6 +104,7 @@ public class GameEngine implements Initializable {
      */
     @FXML
     public void exitGame(ActionEvent p_event) {
+        d_logEntryBuffer.setLogEntryBuffer("Exit Game\n");
         Stage l_stage = (Stage) d_BtnExit.getScene().getWindow();
         l_stage.close();
     }
