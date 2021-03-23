@@ -50,7 +50,7 @@ public class AirliftOrder extends Order {
         if (d_player.getD_negotiatePlayerList() != null) {
             for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {
                 if (l_negotiatedPlayer.getD_ownedCountries().contains(l_countryTo)) {
-                    return true;
+                    return false;
                 }
             }
         }

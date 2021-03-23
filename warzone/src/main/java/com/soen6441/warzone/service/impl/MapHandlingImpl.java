@@ -877,7 +877,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 } else if (l_j == 0 && l_i != 0) {
                     int l_conintentIndex = p_countries.get(l_i - 1).getD_continentIndex();
                     String l_continentName = getContinentNameByContinentId(p_warMap.getD_continents(), l_conintentIndex);
-                    l_mapMetrices[l_i][l_j] = p_countries.get(l_i - 1).getD_countryName() + " (" + l_continentName + ")";
+                    int l_armies=p_countries.get(l_i-1).getD_noOfArmies();
+                    l_mapMetrices[l_i][l_j] = p_countries.get(l_i - 1).getD_countryName() +" "+l_armies+ " (" + l_continentName + ") ";
                     if (l_maxLength < l_mapMetrices[l_i][l_j].length()) {
                         l_maxLength = l_mapMetrices[l_i][l_j].length();
                     }
