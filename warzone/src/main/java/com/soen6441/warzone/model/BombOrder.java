@@ -17,7 +17,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class BombOrder extends Order {
-    //First list the mandatory fields followed by count . Also validateAndSetData method have same argument as the order of declaration of the field
 
     /**
      * Country in this order
@@ -62,7 +61,7 @@ public class BombOrder extends Order {
     }
 
     /**
-     *
+     * used to validate the data of this class
      * @param p_countryName County name in the Command
      * @return validity Of Command
      */
@@ -87,9 +86,7 @@ public class BombOrder extends Order {
             for (Country l_country : l_entry.getValue().getD_countryList()) {
                 if (p_countryName.equalsIgnoreCase(l_country.getD_countryName())) {
                     l_countryName = l_country;
-                }
-            }
-        }
+                } } }
         return l_countryName;
     }
 

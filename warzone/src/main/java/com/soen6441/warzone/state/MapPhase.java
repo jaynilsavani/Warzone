@@ -6,7 +6,6 @@ import com.soen6441.warzone.view.FxmlView;
 import javafx.scene.Parent;
 
 /**
- *
  * ConcreteState of the State pattern.This Phase is used for Map Editing commands
  * i.e create, edit, validate, save and load map which are valid in this state.
  *
@@ -15,26 +14,25 @@ import javafx.scene.Parent;
 public class MapPhase extends Phase {
 
     /**
-     *  This parameterized constructor is used to invoke Phase Constructor and
-     *  set the reference variable to GameEngine object for the state transition
-     *  @param p_gameEngine Object of GameEngine
+     * This parameterized constructor is used to invoke Phase Constructor and
+     * set the reference variable to GameEngine object for the state transition
+     *
+     * @param p_gameEngine Object of GameEngine
      */
     public MapPhase(GameEngine p_gameEngine) {
-        super(p_gameEngine);
+        super( p_gameEngine );
     }
 
     /**
      * {@inheritDoc }
-     *
      */
     @Override
     public Parent execute() {
-        return d_gameEngine.getStageManager().loadViewNodeHierarchy(FxmlView.MAPMANAGER.getFxmlFile(), null, "");
+        return d_gameEngine.getStageManager().loadViewNodeHierarchy( FxmlView.MAPMANAGER.getFxmlFile(), null, "" );
     }
 
     /**
      * {@inheritDoc }
-     *
      */
     @Override
     public void next(Object p_nextObject) {
@@ -43,22 +41,26 @@ public class MapPhase extends Phase {
 
     /**
      * {@inheritDoc }
-     *
      */
     @Override
     public void executeOrder() {
         this.printInvalidCommandMessage();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void issueOrder(String p_command) {
         this.printInvalidCommandMessage();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void assignReinforcements() {
         this.printInvalidCommandMessage();
     }
-
 
 }

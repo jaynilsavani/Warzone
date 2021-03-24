@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- *
  * This abstract class is used as State Class in State Pattern and defines
  * the behavior that is common to all the states in its group (MapPhase).
  * All the states in its group need to extend this class.
@@ -27,6 +26,7 @@ public abstract class Phase {
     /**
      * This constructor is used to set the reference variable to GameEngine object
      * for the state transition
+     *
      * @param p_gameEngine This is the reference variable to set state.
      */
     public Phase(GameEngine p_gameEngine) {
@@ -53,8 +53,9 @@ public abstract class Phase {
     abstract public void executeOrder();
 
     /**
-     *This method is used to store the user input of orders in player's lst of
-     *orders
+     * This method is used to store the user input of orders in player's lst of
+     * orders
+     *
      * @param p_command command given by user
      */
     abstract public void issueOrder(String p_command);
@@ -69,6 +70,5 @@ public abstract class Phase {
      * Common method to all Phases.
      */
     public void printInvalidCommandMessage() {
-        //System.out.println("Invalid command in state " + this.getClass().getSimpleName());
     }
 }

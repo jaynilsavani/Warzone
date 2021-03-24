@@ -8,8 +8,16 @@ import java.util.Random;
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public enum GameCard {
+    /**
+     * enum variable of cards used to add in players card list
+     */
     BOMB, BLOCKADE, AIRLIFT, DIPLOMACY;
 
+    /**
+     * used to add the mapping of card to command
+     * @param p_order order from the players order list
+     * @return returns the gamecard object with the card related to the order
+     */
     public static GameCard commandToGameCardMapper(Order p_order) {
         if (p_order instanceof AirliftOrder) {
             return AIRLIFT;
@@ -23,6 +31,10 @@ public enum GameCard {
         return null;
     }
 
+    /**
+     * used to pick the random value of enum
+     * @return returns the gamecard object with the card related
+     */
     public static GameCard randomGameCard() {
         int l_pick = new Random().nextInt(GameCard.values().length);
         return GameCard.values()[l_pick];

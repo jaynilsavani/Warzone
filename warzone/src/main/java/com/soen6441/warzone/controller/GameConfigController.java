@@ -109,6 +109,10 @@ public class GameConfigController implements Initializable {
         d_gameData = new GameData();
     }
 
+    /**
+     * This method is used to set the Game Phase
+     * @param p_gameEngine represent the phase to be set
+     */
     public void setGameEngine(GameEngine p_gameEngine) {
         d_gameEngine = p_gameEngine;
 
@@ -133,7 +137,7 @@ public class GameConfigController implements Initializable {
      */
     public void getData(ActionEvent p_event) {
         String l_command = d_CommandLine.getText().trim();
-        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_command);
+        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_command);       //write log about command
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
 
@@ -158,7 +162,7 @@ public class GameConfigController implements Initializable {
                         l_gmConfigRes = d_generalUtil.getResponse();
                     }
                 } else {
-                    d_generalUtil.prepareResponse(false, "Please enter validloadmap command");
+                    d_generalUtil.prepareResponse(false, "Please enter valid loadmap command");
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
             }
@@ -175,7 +179,7 @@ public class GameConfigController implements Initializable {
                             d_gameData = l_updatedGamePlay.getKey();
                             String l_playerName = "\n Players : \n[";
                             if (d_gameData.getD_playerList() != null) {
-                                for (Player l_p : d_gameData.getD_playerList()) {
+                                for (Player l_p : d_gameData.getD_playerList()) {           //stores players name and print
                                     l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";
                                 }
                                 l_playerName = l_playerName + "]";

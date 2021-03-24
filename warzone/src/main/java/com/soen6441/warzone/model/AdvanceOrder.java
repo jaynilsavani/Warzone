@@ -41,7 +41,9 @@ public class AdvanceOrder extends Order{
      * No of mandatory fields It always needs to have after all necessary fields
      */
     public int d_mandatoryField = 3;
-
+     /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean executeOrder() {
         Country l_countryfrom = getPlayerCountrybyName(d_CountryNameFrom);
@@ -55,6 +57,7 @@ public class AdvanceOrder extends Order{
                 }
             }
         }
+        //checks whether player whohas issued an order has given country or not
         if (d_player.getD_ownedCountries().contains(l_countryfrom)) {
             int l_countryFromIndex=d_player.getD_ownedCountries().indexOf(l_countryfrom);
             int l_playerFromIndex=d_gameData.getD_playerList().indexOf(d_player);
@@ -62,10 +65,12 @@ public class AdvanceOrder extends Order{
             int l_playerToIndex=-1;
 
             int l_fromArmies = l_countryfrom.getD_noOfArmies();
+            //returns if given no. of armies are higher than country has
             if(l_fromArmies<d_noOfArmies)
             {
                 return false;
             }
+            //condition matches if both countries owned by same player and countryto is neighbour to countryfrom
             if (d_player.getD_ownedCountries().contains(l_countryTo) && isneighbourCountry(d_CountryNameTo,l_countryfrom)) {
 
                 int l_toArmies = l_countryTo.getD_noOfArmies();
@@ -92,6 +97,8 @@ public class AdvanceOrder extends Order{
                 return true;
             }
             else {
+                //checks for attack to intialize if country to is not owned by the same player or
+                //country has no player and should be neighbour
                 if (isneighbourCountry(d_CountryNameTo,l_countryfrom))
                 {
                     for (Player l_player : d_gameData.getD_playerList())
@@ -107,6 +114,7 @@ public class AdvanceOrder extends Order{
                     int l_toArmies = l_countryTo.getD_noOfArmies();
                     int l_attackArmiesFrom=(int) Math.round(d_noOfArmies*0.6);
                     int l_attackArmiesTo=(int) Math.round(l_toArmies*0.7);
+                    //main condition for attack by checking the
                     if(l_attackArmiesFrom>=l_toArmies)
                     {
                         l_toArmies=d_noOfArmies-l_attackArmiesTo;
@@ -120,6 +128,7 @@ public class AdvanceOrder extends Order{
                             l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
                         }
                     }
+                    //when attack happens but could not win the country due to less attacking armies than opponent armies
                     else
                     {
                         l_toArmies=l_toArmies-l_attackArmiesFrom;
@@ -161,6 +170,11 @@ public class AdvanceOrder extends Order{
 
     }
 
+    /**
+     * this method is sed to get the country object
+     * @param p_cName string having the countryname
+     * @return gives the country object from the given name
+     */
     public Country getPlayerCountrybyName(String p_cName) {
         for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
             for(Country l_country:l_entry.getValue().getD_countryList())
@@ -175,6 +189,12 @@ public class AdvanceOrder extends Order{
         return null;
     }
 
+    /**
+     * this method is used to validate whether 1st country in param has 2nd param country as a neighbour or not
+     * @param p_countryName country name of players
+     * @param p_countryFrom country name of opponent player or orphan country
+     * @return true/false based on checking the neighbour condition
+     */
     public boolean isneighbourCountry(String p_countryName,Country p_countryFrom)
     {
         for(String l_country:p_countryFrom.getD_neighbourCountries())
@@ -188,11 +208,11 @@ public class AdvanceOrder extends Order{
     }
 
     /**
-     *
-     * @param p_countryFromName
-     * @param p_countryNameTo
-     * @param p_noOfArmies
-     * @return
+     * used to validate the data of this class
+     * @param p_countryFromName country name of players
+     * @param p_countryNameTo country name of opponent player or orphan country
+     * @param p_noOfArmies no. of armies given in issue orders
+     * @return gives the validation of all params
      */
     public boolean validateAndSetData(String p_countryFromName,String p_countryNameTo,int p_noOfArmies) {
         if (!p_countryFromName.isEmpty() && !p_countryNameTo.isEmpty()) {

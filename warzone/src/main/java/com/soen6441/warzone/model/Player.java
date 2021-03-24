@@ -1,6 +1,5 @@
 package com.soen6441.warzone.model;
 
-import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.OrderProcessor;
 import lombok.Getter;
 import lombok.Setter;
@@ -127,9 +126,9 @@ public class Player {
     }
 
     /**
-     *
-     * @param p_gameCard
-     * @return
+     * used to check whether the player has a card or not
+     * @param p_gameCard object having the list of card of the layer
+     * @return true/false based on whether player has card or not
      */
     public boolean hasCard(GameCard p_gameCard) {
         return d_cards.contains(p_gameCard);
@@ -137,8 +136,8 @@ public class Player {
 
     /**
      *
-     * @param p_gameCard
-     * @return
+     * @param p_gameCard Gamecard Object
+     * @return Whether Gamecard is true or not
      */
     public boolean removeCard(GameCard p_gameCard) {
         if (d_cards != null && (!d_cards.isEmpty())) {
@@ -157,15 +156,15 @@ public class Player {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object l_obj) {
+        if (this == l_obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (l_obj == null || getClass() != l_obj.getClass()) {
             return false;
         }
-        Player player = (Player) o;
-        return d_noOfArmies == player.d_noOfArmies && d_currentFromCountry == player.d_currentFromCountry && d_currentNoOfArmiesToMove == player.d_currentNoOfArmiesToMove && d_playerName.equals(player.d_playerName) && Objects.equals(d_ownedCountries, player.d_ownedCountries) && Objects.equals(d_orders, player.d_orders) && Objects.equals(d_currentToCountry, player.d_currentToCountry);
+        Player l_player = (Player) l_obj;
+        return d_noOfArmies == l_player.d_noOfArmies && d_currentFromCountry == l_player.d_currentFromCountry && d_currentNoOfArmiesToMove == l_player.d_currentNoOfArmiesToMove && d_playerName.equals(l_player.d_playerName) && Objects.equals(d_ownedCountries, l_player.d_ownedCountries) && Objects.equals(d_orders, l_player.d_orders) && Objects.equals(d_currentToCountry, l_player.d_currentToCountry);
     }
 
     @Override
