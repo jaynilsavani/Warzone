@@ -14,17 +14,6 @@ import java.util.List;
 public interface GameEngineService {
 
     /**
-     * This method used to apply assign Reinforcement on provided GameData
-     * Object
-     *
-     * @param p_gameData Current Game Play object on which assign Reinforcement
-     * need to apply
-     * @return updated Gameplay Which has assigned reinforcement army to
-     * countries
-     */
-    //public GameData assignReinforcements(GameData p_gameData);
-
-    /**
      * @param p_gameData gives the gameengine to retrieve player data
      * @return gives the string with player name and their armies
      */
