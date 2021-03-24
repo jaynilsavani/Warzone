@@ -41,7 +41,7 @@ public class AirliftOrder extends Order {
     public int d_mandatoryField = 3;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      */
     @Override

@@ -31,7 +31,7 @@ public class NegotiateOrder extends Order {
     public int d_mandatoryField = 1;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *<p>
      *     This method negotiates with the player
      *</p>

@@ -41,10 +41,8 @@ public class AdvanceOrder extends Order{
      * No of mandatory fields It always needs to have after all necessary fields
      */
     public int d_mandatoryField = 3;
-
-    /**
-     * {@inheritdoc}
-     *
+     /**
+     * {@inheritDoc }
      */
     @Override
     public boolean executeOrder() {

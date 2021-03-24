@@ -136,8 +136,8 @@ public class Player {
 
     /**
      *
-     * @param p_gameCard
-     * @return
+     * @param p_gameCard Gamecard Object
+     * @return Whether Gamecard is true or not
      */
     public boolean removeCard(GameCard p_gameCard) {
         if (d_cards != null && (!d_cards.isEmpty())) {

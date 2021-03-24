@@ -97,6 +97,7 @@ public class DeployOrder extends Order {
     /**
      *
      * @param p_countryName County name in the Command
+     * @param p_noOfArmies No of armies
      * @return validity Of Command
      */
     public boolean validateAndSetData(String p_countryName,int p_noOfArmies) {
