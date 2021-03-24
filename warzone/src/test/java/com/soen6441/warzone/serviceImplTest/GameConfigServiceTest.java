@@ -114,7 +114,7 @@ public class GameConfigServiceTest {
      */
     @Test
     public void testAssignCountries() throws IOException {
-        MapHandlingInterface d_mapHandlingImpl=new MapHandlingImpl();
+        MapHandlingInterface l_mapHandlingImpl=new MapHandlingImpl();
         Player l_player1 = new Player();
         l_player1.setD_playerName("user1");
         Player l_player2 = new Player();
@@ -123,7 +123,7 @@ public class GameConfigServiceTest {
         l_player.add(l_player1);
         l_player.add(l_player2);
         d_gameData.setD_playerList(l_player);
-        d_gameData.setD_warMap(d_mapHandlingImpl.readMap("asia.map"));
+        d_gameData.setD_warMap(l_mapHandlingImpl.readMap("asia.map"));
         CommandResponse l_result=d_gameConfigService.assignCountries(d_gameData);
         assertTrue(l_result.isD_isValid());
         for(Player l_p:d_gameData.getD_playerList())

@@ -92,9 +92,10 @@ public class StageManager {
     /**
      * Loads the object hierarchy from a FXML document and returns to root node
      * of that hierarchy.
+     *
      * @param p_fxmlFilePath is path of fxml file located
      * @param p_object is an Object of a current State
-     * @param p_phaseName  is a name of a current Phase
+     * @param p_phaseName is a name of a current Phase
      * @return Parent root node of the FXML document hierarchy
      */
     public Parent loadViewNodeHierarchy(String p_fxmlFilePath, Object p_object, String p_phaseName) {
@@ -109,7 +110,7 @@ public class StageManager {
                 l_rootNode = l_loader.load();
                 GameConfigController l_gameConfig = l_loader.getController();
                 l_gameConfig.setGameEngine((GameEngine) p_object);
-            } else if (p_fxmlFilePath.contains(FxmlView.GAMEENGINE.getFxmlFile()) && p_phaseName.isBlank() ) {
+            } else if (p_fxmlFilePath.contains(FxmlView.GAMEENGINE.getFxmlFile()) && p_phaseName.isBlank()) {
                 l_rootNode = l_loader.load();
                 GameEngine l_gameEngine = l_loader.getController();
                 l_gameEngine.setGamePlay();
