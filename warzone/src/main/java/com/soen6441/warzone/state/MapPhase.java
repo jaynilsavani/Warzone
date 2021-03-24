@@ -6,8 +6,9 @@ import com.soen6441.warzone.view.FxmlView;
 import javafx.scene.Parent;
 
 /**
- * ConcreteState of the State pattern.This Phase is used for Map Editing commands
- * i.e create, edit, validate, save and load map which are valid in this state.
+ * ConcreteState of the State pattern.This Phase is used for Map Editing
+ * commands i.e create, edit, validate, save and load map which are valid in
+ * this state.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -20,7 +21,7 @@ public class MapPhase extends Phase {
      * @param p_gameEngine Object of GameEngine
      */
     public MapPhase(GameEngine p_gameEngine) {
-        super( p_gameEngine );
+        super(p_gameEngine);
     }
 
     /**
@@ -28,7 +29,7 @@ public class MapPhase extends Phase {
      */
     @Override
     public Parent execute() {
-        return d_gameEngine.getStageManager().loadViewNodeHierarchy( FxmlView.MAPMANAGER.getFxmlFile(), null, "" );
+        return d_gameEngine.getStageManager().loadViewNodeHierarchy(FxmlView.MAPMANAGER.getFxmlFile(), null, "");
     }
 
     /**

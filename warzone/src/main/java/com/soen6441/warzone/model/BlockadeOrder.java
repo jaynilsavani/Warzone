@@ -53,7 +53,7 @@ public class BlockadeOrder extends Order {
             List<Country> l_countryList = d_player.getD_ownedCountries();
             l_countryList.remove(l_countryName);
             d_player.setD_ownedCountries(l_countryList);
-            
+
             //set player object into gamedata
             List<Integer> l_playerIndex = new ArrayList<>();
             for (Player l_player : d_gameData.getD_playerList()) {
@@ -63,7 +63,7 @@ public class BlockadeOrder extends Order {
                 }
             }
             if (!l_playerIndex.isEmpty()) {
-                 d_gameData.getD_playerList().set(l_playerIndex.get(0), d_player);
+                d_gameData.getD_playerList().set(l_playerIndex.get(0), d_player);
             }
         }
         return l_status;
@@ -71,6 +71,7 @@ public class BlockadeOrder extends Order {
 
     /**
      * used to validate the data of this class
+     *
      * @param p_countryName County name in the Command
      * @return validity Of Command
      */

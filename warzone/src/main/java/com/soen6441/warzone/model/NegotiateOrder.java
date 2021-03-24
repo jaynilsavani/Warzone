@@ -1,6 +1,5 @@
 package com.soen6441.warzone.model;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +19,7 @@ import java.util.List;
 @Setter
 @ToString
 public class NegotiateOrder extends Order {
+
     /**
      * Player in this order with whom current player wants to negotiate
      */
@@ -32,9 +32,9 @@ public class NegotiateOrder extends Order {
 
     /**
      * {@inheritDoc}
-     *<p>
-     *     This method negotiates with the player
-     *</p>
+     * <p>
+     * This method negotiates with the player
+     * </p>
      */
     @Override
     public boolean executeOrder() {
@@ -51,7 +51,7 @@ public class NegotiateOrder extends Order {
     /**
      * This method will add player into negotiate player list
      *
-     * @param p_orderPlayer     player in which negotiate player will be added
+     * @param p_orderPlayer player in which negotiate player will be added
      * @param p_negotiatePlayer player to be added in negotiate player list
      * @return return false if exception occurs otherwise true
      */

@@ -161,10 +161,10 @@ public class GameEngineServiceTest {
         l_issueOrder.assignReinforcements();
         d_gameData = l_issueOrder.d_gameData;
         //GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
-        int l_actualnoOfArmies = d_gameData.getD_playerList().get(0).getD_noOfArmies();
-        int l_expectednoOfArmies = 8;
-        //System.out.println(l_expectednoOfArmies + " and " + l_actualnoOfArmies);
-        assertEquals(l_expectednoOfArmies, l_actualnoOfArmies);
+        int l_actualNoOfArmies = d_gameData.getD_playerList().get(0).getD_noOfArmies();
+        int l_expectedNoOfArmies = 8;
+        //System.out.println(l_expectedNoOfArmies + " and " + l_actualNoOfArmies);
+        assertEquals(l_expectedNoOfArmies, l_actualNoOfArmies);
     }
 
     /**
@@ -180,8 +180,8 @@ public class GameEngineServiceTest {
         assertEquals(true, l_check);
         int l_countryArmies = d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_noOfArmies();
         assertEquals(6, l_countryArmies);
-        int l_actualArmiesinPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
-        assertEquals(4, l_actualArmiesinPlayer);
+        int l_actualArmiesInPlayer = d_gameData.getD_playerList().get(0).getD_noOfArmies();
+        assertEquals(4, l_actualArmiesInPlayer);
     }
 
     /**
@@ -219,14 +219,17 @@ public class GameEngineServiceTest {
         }
     }
 
+    /**
+     * Test to check bomb card
+     */
     @Test
     public void testBombCard() {
-        Player get = d_gameData.getD_playerList().get(0);
-        get.getD_cards().add(GameCard.BOMB);
-        get.getD_cards().add(GameCard.BOMB);
+        Player l_player = d_gameData.getD_playerList().get(0);
+        l_player.getD_cards().add(GameCard.BOMB);
+        l_player.getD_cards().add(GameCard.BOMB);
 //        assertEquals(get.getD_cards().size(), 2);
-        get.getD_cards().remove(GameCard.BOMB);
-        boolean l_removed = get.getD_cards().remove(GameCard.AIRLIFT);
+        l_player.getD_cards().remove(GameCard.BOMB);
+        boolean l_removed = l_player.getD_cards().remove(GameCard.AIRLIFT);
         assertEquals(l_removed, false);
     }
 
@@ -248,7 +251,7 @@ public class GameEngineServiceTest {
             }
         }
 
-        //checking that number of arimes of targeted country become tripal
+        //checking that number of armies of targeted country become triple
         for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
             for (Country l_countryName : l_continent.getValue().getD_countryList()) {
                 if (l_countryName.getD_countryName().equals("china")) {
@@ -258,7 +261,7 @@ public class GameEngineServiceTest {
         }
     }
 
-    /*
+    /**
      * Test diplomacy(Negotiate) command
      */
     @Test
@@ -284,12 +287,12 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test diplomacy(advance) command
+     * Test advance command
      */
     @Test
     public void testAdvanceCommand() {
-        List<Country> l_countrylst=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
-        l_countrylst.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
         d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
@@ -304,13 +307,13 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test diplomacy(airlift) command can advance the attack if country wherre
-     * attack should occur is not neigbour to the attacking country
+     * Test airlift command can advance the attack if country where attack
+     * should occur is not neighbour to the attacking country
      */
     @Test
     public void testAirliftCommand() {
-        List<Country> l_countrylst=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
-        l_countrylst.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
         d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
 
@@ -339,8 +342,8 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAddCard() {
-        d_gameData.getD_playerList().get(1).addCard(GameCard.BOMB);
-        assertEquals(true, d_gameData.getD_playerList().get(1).getD_cards().contains(GameCard.BOMB));
+        d_gameData.getD_playerList().get(1).addCard(GameCard.BLOCKADE);
+        assertEquals(true, d_gameData.getD_playerList().get(1).getD_cards().contains(GameCard.BLOCKADE));
     }
 
     /**
@@ -369,7 +372,7 @@ public class GameEngineServiceTest {
      * Test that Negotiation is not possible with player, who is not in the game
      */
     @Test
-    public void testNegotiationWithOutofGamePlayer() {
+    public void testPlayerInNegotiateCommand() {
         d_orderProcessor.processOrder("negotiate user3".trim(), d_gameData);
         d_gameData.getD_playerList().get(0).issue_order();
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
@@ -377,7 +380,8 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test if no of armies passed in issue order is greater than actual armies in airlift command
+     * Test if number of armies passed in issue order is greater than actual
+     * armies in airlift command
      */
     @Test
     public void testArmiesInAirliftCommand() {
@@ -391,7 +395,8 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test to check Bomb Command when user enters country from his own country list
+     * Test to check Bomb Command when user enters country from his own country
+     * list
      */
     @Test
     public void testSameCountriesInBombCommand() {
@@ -401,11 +406,10 @@ public class GameEngineServiceTest {
         assertFalse(l_order.executeOrder());
     }
 
-
     /**
-     * Test of winner
-     * when any player owns every country of the map ,then it's a winner
-     * here in demo user has 2 countries owned ,so we'll test to attack on remaining country
+     * Test of winner when any player owns every country of the map ,then it's a
+     * winner here in demo user has 2 countries owned ,so we'll test to attack
+     * on remaining country
      */
     @Test
     public void testWinner() {
@@ -414,18 +418,18 @@ public class GameEngineServiceTest {
         l_country2.setD_continentIndex(1);
         l_country2.setD_countryIndex(3);
         l_country2.setD_countryName("nepal");
-        List<Country> l_countrylist=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
-        l_countrylist.add(l_country2);
-        d_gameData.getD_warMap().getD_continents().get(1).setD_countryList(l_countrylist);
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(l_country2);
+        d_gameData.getD_warMap().getD_continents().get(1).setD_countryList(l_countryList);
 
-        MapHandlingInterface l_map=new MapHandlingImpl();
-        List<String> l_neighbour=d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).getD_neighbourCountries();
+        MapHandlingInterface l_map = new MapHandlingImpl();
+        List<String> l_neighbour = d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).getD_neighbourCountries();
         l_neighbour.add("nepal");
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).setD_neighbourCountries(l_neighbour);
         d_orderProcessor.processOrder("advance china nepal 3".trim(), d_gameData);
         d_gameData.getD_playerList().get(0).issue_order();
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertEquals(true, l_order.executeOrder());
-        assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(),l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
+        assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(), l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
     }
 }

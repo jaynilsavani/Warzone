@@ -111,6 +111,7 @@ public class GameConfigController implements Initializable {
 
     /**
      * This method is used to set the Game Phase
+     *
      * @param p_gameEngine represent the phase to be set
      */
     public void setGameEngine(GameEngine p_gameEngine) {

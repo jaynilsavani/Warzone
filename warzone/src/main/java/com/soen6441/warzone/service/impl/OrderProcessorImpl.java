@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * This is the implementation class of OrderProcessor Interface to process
- * the user's input
+ * This is the implementation class of OrderProcessor Interface to process the
+ * user's input
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -36,19 +36,19 @@ public class OrderProcessorImpl implements OrderProcessor {
     @Override
     public CommandResponse processOrder(String p_orderCommand, GameData p_gameData) {
         CommandResponse l_commandResponse = new CommandResponse();
-        List<String> l_commandData = Arrays.asList( p_orderCommand.split( " " ) );  //list the input according the formation
-        String l_orderName = d_generalUtil.toTitleCase( l_commandData.get( 0 ).toLowerCase() );
-        List<String> l_args = l_commandData.subList( 1, l_commandData.size() );
+        List<String> l_commandData = Arrays.asList(p_orderCommand.split(" "));  //list the input according the formation
+        String l_orderName = d_generalUtil.toTitleCase(l_commandData.get(0).toLowerCase());
+        List<String> l_args = l_commandData.subList(1, l_commandData.size());
         l_orderName += "Order";
         Class l_classObj = null;
         Object l_orderObj = null;
         try {
-            l_classObj = Class.forName( "com.soen6441.warzone.model." + l_orderName );
+            l_classObj = Class.forName("com.soen6441.warzone.model." + l_orderName);
             l_orderObj = l_classObj.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             //Invalid Command 
-            l_commandResponse.setD_isValid( false );
-            l_commandResponse.setD_responseString( "Command Is not valid" );
+            l_commandResponse.setD_isValid(false);
+            l_commandResponse.setD_responseString("Command Is not valid");
         }
 
         Field l_mandatoryField = null;
@@ -60,22 +60,22 @@ public class OrderProcessorImpl implements OrderProcessor {
         List<Object> l_obj = new ArrayList<>();
         List<Class<?>> l_fieldTypes = new ArrayList<>();
         try {
-            l_mandatoryField = l_classObj.getField( "d_mandatoryField" );
-            l_gameData = l_classObj.getField( "d_gameData" );
+            l_mandatoryField = l_classObj.getField("d_mandatoryField");
+            l_gameData = l_classObj.getField("d_gameData");
 
-            l_noOfMandatoryFields = (int) l_mandatoryField.get( l_orderObj );
+            l_noOfMandatoryFields = (int) l_mandatoryField.get(l_orderObj);
             //Iterate over mandatory field
             for (int i = 0; i < l_noOfMandatoryFields; i++) {
-                l_fieldTypes.add( l_fields[i].getType() );
+                l_fieldTypes.add(l_fields[i].getType());
             }
 
             int l_i = 0;
             for (Class<?> l_field : l_fieldTypes) {
-                if (l_field.getTypeName().equalsIgnoreCase( "int" )) {
-                    int l_m = Integer.parseInt( l_args.get( l_i ) );
-                    l_obj.add( l_m );
+                if (l_field.getTypeName().equalsIgnoreCase("int")) {
+                    int l_m = Integer.parseInt(l_args.get(l_i));
+                    l_obj.add(l_m);
                 } else {
-                    l_obj.add( l_args.get( l_i ) );
+                    l_obj.add(l_args.get(l_i));
                 }
                 l_i++;
 
@@ -83,24 +83,24 @@ public class OrderProcessorImpl implements OrderProcessor {
 
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             //Invalid Command Implementation 
-            l_commandResponse.setD_isValid( false );
-            l_commandResponse.setD_responseString( "Command does not have valid Implementation" );
+            l_commandResponse.setD_isValid(false);
+            l_commandResponse.setD_responseString("Command does not have valid Implementation");
         }
 
         Method l_validateMethod = null;
         boolean l_invoke = false;
         try {
-            l_validateMethod = l_classObj.getDeclaredMethod( "validateAndSetData", l_fieldTypes.toArray( new Class<?>[l_fieldTypes.size()] ) );
-            l_invoke = (boolean) l_validateMethod.invoke( l_orderObj, l_obj.toArray() );//validation of method
-            l_gameData.set( l_orderObj, p_gameData );
+            l_validateMethod = l_classObj.getDeclaredMethod("validateAndSetData", l_fieldTypes.toArray(new Class<?>[l_fieldTypes.size()]));
+            l_invoke = (boolean) l_validateMethod.invoke(l_orderObj, l_obj.toArray());//validation of method
+            l_gameData.set(l_orderObj, p_gameData);
             d_order = (Order) l_orderObj;
-            l_commandResponse.setD_isValid( true );
-            l_commandResponse.setD_responseString( "executed successfuly" );
+            l_commandResponse.setD_isValid(true);
+            l_commandResponse.setD_responseString("executed successfuly");
             return l_commandResponse;
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             // Invalid Command arguments
-            l_commandResponse.setD_isValid( false );
-            l_commandResponse.setD_responseString( "Command's argument is not valid" );
+            l_commandResponse.setD_isValid(false);
+            l_commandResponse.setD_responseString("Command's argument is not valid");
         }
         return l_commandResponse;
     }

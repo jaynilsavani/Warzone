@@ -26,7 +26,7 @@ public interface GeneralUtil {
      * This method will validate the I/O given from GUI or terminal
      *
      * @param p_string string you want to validate
-     * @param p_regex  regex for validation
+     * @param p_regex regex for validation
      * @return true if string matches with regex
      */
     public boolean validateIOString(String p_string, String p_regex);
@@ -34,7 +34,7 @@ public interface GeneralUtil {
     /**
      * This method will prepare response of command entered by user
      *
-     * @param p_isValid        to check command is successfully executed or not
+     * @param p_isValid to check command is successfully executed or not
      * @param p_responeMessage response message of command
      */
     public void prepareResponse(boolean p_isValid, String p_responeMessage);
@@ -58,8 +58,8 @@ public interface GeneralUtil {
     /**
      * This method is used to traverse metric
      *
-     * @param p_source        : source node to check graph is connected or not
-     * @param p_visited       : boolean array to store visited node
+     * @param p_source : source node to check graph is connected or not
+     * @param p_visited : boolean array to store visited node
      * @param p_noOfCountries : total number of countries in map
      * @param p_metricesOfMap : metrics of map
      */
@@ -68,7 +68,7 @@ public interface GeneralUtil {
     /**
      * List all files from this given path and extension
      *
-     * @param p_path          directory path of files
+     * @param p_path directory path of files
      * @param p_fileExtension extension of file to be searched
      * @return list of files
      * @throws java.io.IOException throws input/output exception

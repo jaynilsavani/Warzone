@@ -11,12 +11,14 @@ import java.util.List;
  * @author <a href="mailto:jenilsavani009@gmail.com">Jaynil Savani</a>
  */
 public class Observable {
+
     private List<Observer> d_observersList = new ArrayList<Observer>();
 
     /**
      * attach a view to the model.
      *
-     * @param p_observer view to be added to the list of observers to be notified.
+     * @param p_observer view to be added to the list of observers to be
+     * notified.
      */
     public void attach(Observer p_observer) {
         this.d_observersList.add(p_observer);

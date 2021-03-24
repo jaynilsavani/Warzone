@@ -15,6 +15,7 @@ public enum GameCard {
 
     /**
      * used to add the mapping of card to command
+     *
      * @param p_order order from the players order list
      * @return returns the gamecard object with the card related to the order
      */
@@ -33,6 +34,7 @@ public enum GameCard {
 
     /**
      * used to pick the random value of enum
+     *
      * @return returns the gamecard object with the card related
      */
     public static GameCard randomGameCard() {

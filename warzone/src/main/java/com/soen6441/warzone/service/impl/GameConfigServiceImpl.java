@@ -48,14 +48,14 @@ public class GameConfigServiceImpl implements GameConfigService {
     public CommandResponse showPlayerMap(GameData p_gameData) {
         WarMap l_warMap = p_gameData.getD_warMap();
 
-        CommandResponse l_showCountris = d_mapHandlingImpl.showMap( l_warMap );
+        CommandResponse l_showCountris = d_mapHandlingImpl.showMap(l_warMap);
         if (p_gameData.getD_playerList() == null) {
             String l_showMapOfCountris = l_showCountris.getD_responseString();
-            d_generalUtil.prepareResponse( true, l_showMapOfCountris );
+            d_generalUtil.prepareResponse(true, l_showMapOfCountris);
         } else {
             //getting country list and player list with nullable condition
             String l_showMapOfCountris = l_showCountris.getD_responseString();
-            List<Country> l_countryList = d_mapHandlingImpl.getAvailableCountries( l_warMap );
+            List<Country> l_countryList = d_mapHandlingImpl.getAvailableCountries(l_warMap);
             int l_colSize = l_countryList.size() + 1;
             int l_rowSize = p_gameData.getD_playerList().size() + 1;
             String[][] l_playerToCountry = new String[l_rowSize][l_colSize];
@@ -69,23 +69,23 @@ public class GameConfigServiceImpl implements GameConfigService {
                         l_playerToCountry[l_i][l_j] = "";
                         continue;
                     } else if (l_i == 0 && l_j != 0) {
-                        l_playerToCountry[l_i][l_j] = l_countryList.get( l_j - 1 ).getD_countryName();    //get country list for player
+                        l_playerToCountry[l_i][l_j] = l_countryList.get(l_j - 1).getD_countryName();    //get country list for player
                         if (l_maxLength < l_playerToCountry[l_i][l_j].length()) {
                             l_maxLength = l_playerToCountry[l_i][l_j].length();     //get the number of countries
                         }
                     } else if (l_i != 0 && l_j == 0) {
-                        l_playerToCountry[l_i][l_j] = p_gameData.getD_playerList().get( l_i - 1 ).getD_playerName();      //get player name in game
+                        l_playerToCountry[l_i][l_j] = p_gameData.getD_playerList().get(l_i - 1).getD_playerName();      //get player name in game
                         if (l_maxLength < l_playerToCountry[l_i][l_j].length()) {
                             l_maxLength = l_playerToCountry[l_i][l_j].length();
                         }
                     } else {
-                        if (p_gameData.getD_playerList().get( l_i - 1 ).getD_ownedCountries().contains( l_countryList.get( l_j - 1 ) )) {
+                        if (p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().contains(l_countryList.get(l_j - 1))) {
 
                             int l_same = 0;
                             //Iterate over owned country list
-                            while (l_same < p_gameData.getD_playerList().get( l_i - 1 ).getD_ownedCountries().size()) {
-                                if (l_countryList.get( l_j - 1 ).getD_countryName().equalsIgnoreCase( p_gameData.getD_playerList().get( l_i - 1 ).getD_ownedCountries().get( l_same ).getD_countryName() )) {
-                                    l_playerToCountry[l_i][l_j] = String.valueOf( l_countryList.get( l_j - 1 ).getD_noOfArmies() ); //get number of armies for country
+                            while (l_same < p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().size()) {
+                                if (l_countryList.get(l_j - 1).getD_countryName().equalsIgnoreCase(p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().get(l_same).getD_countryName())) {
+                                    l_playerToCountry[l_i][l_j] = String.valueOf(l_countryList.get(l_j - 1).getD_noOfArmies()); //get number of armies for country
                                     break;
                                 }
                                 l_same++;
@@ -100,13 +100,13 @@ public class GameConfigServiceImpl implements GameConfigService {
             //formatting matrix
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
-                    String l_stringFrmat = String.format( "%1$" + l_maxLength + "s", l_playerToCountry[l_i][l_j] );      //string formatting for matrix representation
+                    String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_playerToCountry[l_i][l_j]);      //string formatting for matrix representation
                     l_showMapOfCountris = l_showMapOfCountris + l_stringFrmat + " ";
                 }
                 l_showMapOfCountris = l_showMapOfCountris + "\n";
             }
-            l_showCountris.setD_isValid( true );
-            l_showCountris.setD_responseString( l_showMapOfCountris );
+            l_showCountris.setD_isValid(true);
+            l_showCountris.setD_responseString(l_showMapOfCountris);
 
         }
 
@@ -119,68 +119,68 @@ public class GameConfigServiceImpl implements GameConfigService {
      */
     @Override
     public WarMap loadMap(String p_fileName) throws IOException {
-        return d_mapHandlingImpl.readMap( p_fileName );
+        return d_mapHandlingImpl.readMap(p_fileName);
     }
 
     /**
      * This function is used to update player list
      *
      * @param p_currentGameData : object of GameData model
-     * @param p_command         : updation command
+     * @param p_command : updation command
      * @return Current Updated Gameplay and command response
      */
     @Override
     public AbstractMap.Entry<GameData, CommandResponse> updatePlayer(GameData p_currentGameData, String p_command) {
-        List<String> l_commandSegments = Arrays.asList( p_command.split( " " ) );
+        List<String> l_commandSegments = Arrays.asList(p_command.split(" "));
         String l_playerName;
-        GameData l_currentGameData = new GameData( p_currentGameData );
+        GameData l_currentGameData = new GameData(p_currentGameData);
         //Iterate over command segmentation
         for (int i = 0; i < l_commandSegments.size(); i++) {
-            String l_playerCommand = l_commandSegments.get( i );
-            if (l_playerCommand.equalsIgnoreCase( "-add" ) || l_playerCommand.equalsIgnoreCase( "-remove" )) {
-                if (l_playerCommand.equalsIgnoreCase( "-add" )) {
-                    l_playerName = l_commandSegments.get( i + 1 );
+            String l_playerCommand = l_commandSegments.get(i);
+            if (l_playerCommand.equalsIgnoreCase("-add") || l_playerCommand.equalsIgnoreCase("-remove")) {
+                if (l_playerCommand.equalsIgnoreCase("-add")) {
+                    l_playerName = l_commandSegments.get(i + 1);
                     //Validation of the player name
-                    if (d_generalUtil.validateIOString( l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$" )) {
+                    if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                         //To check if player Exist Or not 
-                        if (getPlayerByName( l_currentGameData, l_playerName ).isEmpty()) {
+                        if (getPlayerByName(l_currentGameData, l_playerName).isEmpty()) {
                             Player l_player = new Player();
-                            l_player.setD_playerName( l_playerName );     //set the player name
+                            l_player.setD_playerName(l_playerName);     //set the player name
                             if (l_currentGameData.getD_playerList() == null) {
-                                l_currentGameData.setD_playerList( new ArrayList<>() );
+                                l_currentGameData.setD_playerList(new ArrayList<>());
                             }
-                            l_currentGameData.getD_playerList().add( l_player );
-                            d_generalUtil.prepareResponse( true, "Player added successfully" );
+                            l_currentGameData.getD_playerList().add(l_player);
+                            d_generalUtil.prepareResponse(true, "Player added successfully");
                         } else {
-                            d_generalUtil.prepareResponse( false, "Player " + l_playerName + " already exist" );
+                            d_generalUtil.prepareResponse(false, "Player " + l_playerName + " already exist");
                             break;
                         }
 
                     } else {
-                        d_generalUtil.prepareResponse( false, "Player name " + l_playerName + " is not valid" );
+                        d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " is not valid");
                         break;
                     }
                 } //For checking Remove condition of the player command
-                else if (l_playerCommand.equalsIgnoreCase( "-remove" )) {
-                    l_playerName = l_commandSegments.get( i + 1 );
+                else if (l_playerCommand.equalsIgnoreCase("-remove")) {
+                    l_playerName = l_commandSegments.get(i + 1);
                     //Validation of the player name
-                    if (d_generalUtil.validateIOString( l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$" )) {
+                    if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
 
                         //To check Whether Player exist or not
-                        if (getPlayerByName( l_currentGameData, l_playerName ).size() > 0) {
-                            Player l_removedPlayer = getPlayerByName( l_currentGameData, l_playerName ).get( 0 );
+                        if (getPlayerByName(l_currentGameData, l_playerName).size() > 0) {
+                            Player l_removedPlayer = getPlayerByName(l_currentGameData, l_playerName).get(0);
                             if (l_currentGameData.getD_playerList() != null || l_currentGameData.getD_playerList().size() > 0) {
-                                l_currentGameData.getD_playerList().remove( l_removedPlayer );        //Remove player from player list
-                                l_currentGameData.setD_playerList( l_currentGameData.getD_playerList() );
-                                d_generalUtil.prepareResponse( true, "Player removed successfully" );
+                                l_currentGameData.getD_playerList().remove(l_removedPlayer);        //Remove player from player list
+                                l_currentGameData.setD_playerList(l_currentGameData.getD_playerList());
+                                d_generalUtil.prepareResponse(true, "Player removed successfully");
                             }
                         } else {
-                            d_generalUtil.prepareResponse( false, "Player " + l_playerName + " does not exist" );
+                            d_generalUtil.prepareResponse(false, "Player " + l_playerName + " does not exist");
                             break;
                         }
 
                     } else {
-                        d_generalUtil.prepareResponse( false, "Player name " + l_playerName + " is not valid" );
+                        d_generalUtil.prepareResponse(false, "Player name " + l_playerName + " is not valid");
                         break;
                     }
                 }
@@ -189,9 +189,9 @@ public class GameConfigServiceImpl implements GameConfigService {
         //to merge updated player list to original gameplay
         if (d_generalUtil.getResponse().isD_isValid()) {
             List<Player> l_playerList = l_currentGameData.getD_playerList();
-            p_currentGameData.setD_playerList( l_playerList );
+            p_currentGameData.setD_playerList(l_playerList);
         }
-        AbstractMap.Entry<GameData, CommandResponse> l_playerResponse = new AbstractMap.SimpleEntry<>( p_currentGameData, d_generalUtil.getResponse() );
+        AbstractMap.Entry<GameData, CommandResponse> l_playerResponse = new AbstractMap.SimpleEntry<>(p_currentGameData, d_generalUtil.getResponse());
         return l_playerResponse;
     }
 
@@ -203,15 +203,15 @@ public class GameConfigServiceImpl implements GameConfigService {
         WarMap l_warMap = p_gameData.getD_warMap();
         //Check Whether player is available in Gameplay or not
         if (p_gameData.getD_playerList() == null) {
-            d_generalUtil.prepareResponse( false, "No player in the game" );
+            d_generalUtil.prepareResponse(false, "No player in the game");
 
-        } else if (p_gameData.getD_playerList().get( 0 ).getD_ownedCountries().size() != 0) {
-            d_generalUtil.prepareResponse( false, "Countries are already assigned" );
+        } else if (p_gameData.getD_playerList().get(0).getD_ownedCountries().size() != 0) {
+            d_generalUtil.prepareResponse(false, "Countries are already assigned");
         } else {
             int l_noOfPlayers = p_gameData.getD_playerList().size();
 
-            int l_noOfCountries = d_mapHandlingImpl.getAvailableCountries( l_warMap ).size(); //store size of country from map
-            List<Country> l_country_check = d_mapHandlingImpl.getAvailableCountries( l_warMap );
+            int l_noOfCountries = d_mapHandlingImpl.getAvailableCountries(l_warMap).size(); //store size of country from map
+            List<Country> l_country_check = d_mapHandlingImpl.getAvailableCountries(l_warMap);
             int l_counter = l_noOfCountries / l_noOfPlayers;
             int l_modulus = l_noOfCountries % l_noOfPlayers;
             List<Country> l_checkCountryOnPlayer = new ArrayList<Country>();
@@ -219,17 +219,17 @@ public class GameConfigServiceImpl implements GameConfigService {
             for (l_i = 0; l_i < l_counter; l_i++) {
                 for (l_j = 0; l_j < l_noOfPlayers; l_j++) {
                     //If player does not have countries 
-                    if (p_gameData.getD_playerList().get( l_j ).getD_ownedCountries() == null) {
+                    if (p_gameData.getD_playerList().get(l_j).getD_ownedCountries() == null) {
                         List<Country> l_country = new ArrayList<Country>();
                         while (true) {
                             Random l_rand = new Random();       //generate random number
-                            int rand_int1 = l_rand.nextInt( l_noOfCountries );
-                            if (!l_checkCountryOnPlayer.contains( l_country_check.get( rand_int1 ) )) {
-                                Country c = new Country( l_country_check.get( rand_int1 ) );
-                                c.setD_countryIndex( 0 );
-                                l_country.add( c );   //add country in list
-                                l_checkCountryOnPlayer.add( l_country_check.get( rand_int1 ) );
-                                p_gameData.getD_playerList().get( l_j ).setD_ownedCountries( l_country );
+                            int rand_int1 = l_rand.nextInt(l_noOfCountries);
+                            if (!l_checkCountryOnPlayer.contains(l_country_check.get(rand_int1))) {
+                                Country c = new Country(l_country_check.get(rand_int1));
+                                c.setD_countryIndex(0);
+                                l_country.add(c);   //add country in list
+                                l_checkCountryOnPlayer.add(l_country_check.get(rand_int1));
+                                p_gameData.getD_playerList().get(l_j).setD_ownedCountries(l_country);
                                 break;
 
                             }
@@ -239,10 +239,10 @@ public class GameConfigServiceImpl implements GameConfigService {
                     else {
                         while (true) {
                             Random l_rand = new Random();
-                            int l_rand_int1 = l_rand.nextInt( l_noOfCountries );
-                            if (!l_checkCountryOnPlayer.contains( l_country_check.get( l_rand_int1 ) )) {
-                                p_gameData.getD_playerList().get( l_j ).getD_ownedCountries().add( l_country_check.get( l_rand_int1 ) );
-                                l_checkCountryOnPlayer.add( l_country_check.get( l_rand_int1 ) );
+                            int l_rand_int1 = l_rand.nextInt(l_noOfCountries);
+                            if (!l_checkCountryOnPlayer.contains(l_country_check.get(l_rand_int1))) {
+                                p_gameData.getD_playerList().get(l_j).getD_ownedCountries().add(l_country_check.get(l_rand_int1));
+                                l_checkCountryOnPlayer.add(l_country_check.get(l_rand_int1));
                                 break;
 
                             }
@@ -256,10 +256,10 @@ public class GameConfigServiceImpl implements GameConfigService {
             for (l_i = 0; l_i < l_modulus; l_i++) {
                 while (true) {
                     Random l_rand = new Random();
-                    int l_rand_int1 = l_rand.nextInt( l_noOfCountries );
-                    if (!l_checkCountryOnPlayer.contains( l_country_check.get( l_rand_int1 ) )) {
-                        p_gameData.getD_playerList().get( l_i ).getD_ownedCountries().add( l_country_check.get( l_rand_int1 ) );
-                        l_checkCountryOnPlayer.add( l_country_check.get( l_rand_int1 ) );
+                    int l_rand_int1 = l_rand.nextInt(l_noOfCountries);
+                    if (!l_checkCountryOnPlayer.contains(l_country_check.get(l_rand_int1))) {
+                        p_gameData.getD_playerList().get(l_i).getD_ownedCountries().add(l_country_check.get(l_rand_int1));
+                        l_checkCountryOnPlayer.add(l_country_check.get(l_rand_int1));
                         break;
 
                     }
@@ -269,19 +269,19 @@ public class GameConfigServiceImpl implements GameConfigService {
             //For creating user friendly response
             String l_response = "";
             for (l_i = 0; l_i < l_noOfPlayers; l_i++) {
-                l_response = l_response + p_gameData.getD_playerList().get( l_i ).getD_playerName() + " owns [";  // Response string got player owned countries
-                for (l_j = 0; l_j < p_gameData.getD_playerList().get( l_i ).getD_ownedCountries().size(); l_j++) {
-                    if (l_j == (p_gameData.getD_playerList().get( l_i ).getD_ownedCountries().size() - 1)) {
-                        l_response = l_response + p_gameData.getD_playerList().get( l_i ).getD_ownedCountries().get( l_j ).getD_countryName();
+                l_response = l_response + p_gameData.getD_playerList().get(l_i).getD_playerName() + " owns [";  // Response string got player owned countries
+                for (l_j = 0; l_j < p_gameData.getD_playerList().get(l_i).getD_ownedCountries().size(); l_j++) {
+                    if (l_j == (p_gameData.getD_playerList().get(l_i).getD_ownedCountries().size() - 1)) {
+                        l_response = l_response + p_gameData.getD_playerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName();
                     } else {
-                        l_response = l_response + p_gameData.getD_playerList().get( l_i ).getD_ownedCountries().get( l_j ).getD_countryName() + ",";
+                        l_response = l_response + p_gameData.getD_playerList().get(l_i).getD_ownedCountries().get(l_j).getD_countryName() + ",";
                     }
 
                 }
                 l_response = l_response + "]\n";    //formatting response
             }
 
-            d_generalUtil.prepareResponse( true, l_response );
+            d_generalUtil.prepareResponse(true, l_response);
         }
 
         return d_generalUtil.getResponse();
@@ -290,13 +290,13 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     /**
      * @param p_currentGameData Object Of current gameplay
-     * @param p_playerName      Player name
+     * @param p_playerName Player name
      * @return The List of player with given name
      */
     public List<Player> getPlayerByName(GameData p_currentGameData, String p_playerName) {
         List<Player> l_players = new ArrayList<Player>();
         if (p_playerName != null && p_currentGameData.getD_playerList() != null) {
-            l_players = p_currentGameData.getD_playerList().stream().filter( l_player -> l_player.getD_playerName().equalsIgnoreCase( p_playerName ) ).collect( Collectors.toList() );
+            l_players = p_currentGameData.getD_playerList().stream().filter(l_player -> l_player.getD_playerName().equalsIgnoreCase(p_playerName)).collect(Collectors.toList());
         }
 
         return l_players;

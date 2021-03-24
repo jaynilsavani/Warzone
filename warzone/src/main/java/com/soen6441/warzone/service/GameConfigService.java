@@ -19,7 +19,8 @@ public interface GameConfigService {
      * Gameplay
      *
      * @param p_gameData gameplay phase of the player
-     * @return command response to show the map of countries with players details
+     * @return command response to show the map of countries with players
+     * details
      */
     public CommandResponse showPlayerMap(GameData p_gameData);
 
@@ -36,7 +37,7 @@ public interface GameConfigService {
      * This function is used to add or remove Player
      *
      * @param p_currentGameData cuurent Gameplay Object
-     * @param p_commnd          player updation command
+     * @param p_commnd player updation command
      * @return updated GameData and command response
      */
     public AbstractMap.Entry<GameData, CommandResponse> updatePlayer(GameData p_currentGameData, String p_commnd);
