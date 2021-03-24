@@ -98,7 +98,7 @@ public class GameConfigServiceTest {
         l_playerToRemove.setD_playerName("user");
         Player l_extraPlayer = new Player();
         l_extraPlayer.setD_playerName("user1");
-        List<Player> l_player=new ArrayList<>();
+        List<Player> l_player = new ArrayList<>();
         l_player.add(l_playerToRemove);
         l_player.add(l_extraPlayer);
         d_gameData.setD_playerList(l_player);
@@ -109,26 +109,26 @@ public class GameConfigServiceTest {
     }
 
     /**
-     * This method is used to test whether countries are assigned to player or not
+     * This method is used to test whether countries are assigned to player or
+     * not
      *
      */
     @Test
     public void testAssignCountries() throws IOException {
-        MapHandlingInterface l_mapHandlingImpl=new MapHandlingImpl();
+        MapHandlingInterface l_mapHandlingImpl = new MapHandlingImpl();
         Player l_player1 = new Player();
         l_player1.setD_playerName("user1");
         Player l_player2 = new Player();
         l_player2.setD_playerName("user2");
-        List<Player> l_player=new ArrayList<>();
+        List<Player> l_player = new ArrayList<>();
         l_player.add(l_player1);
         l_player.add(l_player2);
         d_gameData.setD_playerList(l_player);
         d_gameData.setD_warMap(l_mapHandlingImpl.readMap("asia.map"));
-        CommandResponse l_result=d_gameConfigService.assignCountries(d_gameData);
+        CommandResponse l_result = d_gameConfigService.assignCountries(d_gameData);
         assertTrue(l_result.isD_isValid());
-        for(Player l_p:d_gameData.getD_playerList())
-        {
-            assertTrue(l_p.getD_ownedCountries().size()>0);
+        for (Player l_p : d_gameData.getD_playerList()) {
+            assertTrue(l_p.getD_ownedCountries().size() > 0);
         }
     }
 }

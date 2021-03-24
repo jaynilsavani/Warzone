@@ -19,7 +19,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * This class provides map management functionalities such as add an existing map, create a new map.
+ * This class provides map management functionalities such as add an existing
+ * map, create a new map.
  *
  * @author <a href="mailto:patelvicky1995@gmail.com">Vicky Patel</a>
  */
@@ -37,19 +38,19 @@ public class MapController implements Initializable {
     private MapHandlingInterface d_maphandlinginterface;
 
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
-    private WriteLogFile d_writeLogFile = new WriteLogFile( d_logEntryBuffer );
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 
     /**
      * This is the initialization method of this controller
      *
-     * @param p_location  of the FXML file
+     * @param p_location of the FXML file
      * @param p_resources is properties information
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
      * java.util.ResourceBundle)
      */
     @Override
     public void initialize(URL p_location, ResourceBundle p_resources) {
-        d_commandResponse.setStyle( "-fx-font-family: monospace" );
+        d_commandResponse.setStyle("-fx-font-family: monospace");
     }
 
     /**
@@ -59,7 +60,7 @@ public class MapController implements Initializable {
      */
     @FXML
     void backToWelcome(ActionEvent p_event) {
-        d_stageManager.switchScene( FxmlView.HOME, null, "" );
+        d_stageManager.switchScene(FxmlView.HOME, null, "");
     }
 
     /**
@@ -72,11 +73,11 @@ public class MapController implements Initializable {
     public void getData(ActionEvent p_event) {
         String l_s = d_ExecuteCommand.getText().trim();
 
-        d_logEntryBuffer.setLogEntryBuffer( "Command:: " + l_s );
-        CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand( l_s );
-        d_logEntryBuffer.setLogEntryBuffer( "Response:: " + l_commandRespose.getD_responseString() );
+        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_s);
+        CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(l_s);
+        d_logEntryBuffer.setLogEntryBuffer("Response:: " + l_commandRespose.getD_responseString());
 
         d_ExecuteCommand.clear();
-        d_commandResponse.setText( l_commandRespose.toString() );
+        d_commandResponse.setText(l_commandRespose.toString());
     }
 }

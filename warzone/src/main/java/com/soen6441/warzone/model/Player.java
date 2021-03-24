@@ -127,6 +127,7 @@ public class Player {
 
     /**
      * used to check whether the player has a card or not
+     *
      * @param p_gameCard object having the list of card of the layer
      * @return true/false based on whether player has card or not
      */

@@ -42,7 +42,7 @@ public class DeployOrder extends Order {
      */
     @Override
     public boolean executeOrder() {
-        int l_playerIndex=d_gameData.getD_playerList().indexOf(d_player);
+        int l_playerIndex = d_gameData.getD_playerList().indexOf(d_player);
         for (Country l_country : d_player.getD_ownedCountries()) {          //loop for countries owned by player
             if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() >= d_noOfArmies)) {  //checks the country,and no. of armies from player is greater than armies in the command
 
@@ -53,7 +53,7 @@ public class DeployOrder extends Order {
                 d_noOfArmies = d_noOfArmies + l_getArmy;
                 l_country.setD_noOfArmies(d_noOfArmies);                      //add the no. of armies to the country owned by player
                 d_gameData.getD_playerList().remove(l_playerIndex);
-                d_gameData.getD_playerList().add(l_playerIndex,d_player);
+                d_gameData.getD_playerList().add(l_playerIndex, d_player);
 
                 if (d_gameData.getD_warMap().getD_continents() != null) {
                     for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
@@ -73,23 +73,21 @@ public class DeployOrder extends Order {
 
                 d_player.setD_noOfArmies(0);
                 d_gameData.getD_playerList().remove(l_playerIndex);
-                d_gameData.getD_playerList().add(l_playerIndex,d_player);
+                d_gameData.getD_playerList().add(l_playerIndex, d_player);
 
                 return true;
             }
         }
-        if(d_noOfArmies > d_player.getD_noOfArmies())  //deduct the armies from player if the country mentioned inn the order is not owned by player
+        if (d_noOfArmies > d_player.getD_noOfArmies()) //deduct the armies from player if the country mentioned inn the order is not owned by player
         {
             d_player.setD_noOfArmies(0);
-        }
-        else
-        {
+        } else {
             d_player.setD_noOfArmies(d_player.getD_noOfArmies() - d_noOfArmies);
 
         }
 
         d_gameData.getD_playerList().remove(l_playerIndex);
-        d_gameData.getD_playerList().add(l_playerIndex,d_player);
+        d_gameData.getD_playerList().add(l_playerIndex, d_player);
         return false;
 
     }
@@ -100,7 +98,7 @@ public class DeployOrder extends Order {
      * @param p_noOfArmies No of armies
      * @return validity Of Command
      */
-    public boolean validateAndSetData(String p_countryName,int p_noOfArmies) {
+    public boolean validateAndSetData(String p_countryName, int p_noOfArmies) {
         if (!p_countryName.isEmpty()) {
             this.setD_CountryName(p_countryName);
             this.setD_noOfArmies(p_noOfArmies);

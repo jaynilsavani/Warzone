@@ -291,7 +291,7 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testAdvanceCommand() {
-        List<Country> l_countryList=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
         l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
@@ -307,12 +307,12 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test airlift command can advance the attack if country where
-     * attack should occur is not neighbour to the attacking country
+     * Test airlift command can advance the attack if country where attack
+     * should occur is not neighbour to the attacking country
      */
     @Test
     public void testAirliftCommand() {
-        List<Country> l_countryList=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
         l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
         d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
@@ -380,7 +380,8 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test if number of armies passed in issue order is greater than actual armies in airlift command
+     * Test if number of armies passed in issue order is greater than actual
+     * armies in airlift command
      */
     @Test
     public void testArmiesInAirliftCommand() {
@@ -394,7 +395,8 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test to check Bomb Command when user enters country from his own country list
+     * Test to check Bomb Command when user enters country from his own country
+     * list
      */
     @Test
     public void testSameCountriesInBombCommand() {
@@ -404,11 +406,10 @@ public class GameEngineServiceTest {
         assertFalse(l_order.executeOrder());
     }
 
-
     /**
-     * Test of winner
-     * when any player owns every country of the map ,then it's a winner
-     * here in demo user has 2 countries owned ,so we'll test to attack on remaining country
+     * Test of winner when any player owns every country of the map ,then it's a
+     * winner here in demo user has 2 countries owned ,so we'll test to attack
+     * on remaining country
      */
     @Test
     public void testWinner() {
@@ -417,18 +418,18 @@ public class GameEngineServiceTest {
         l_country2.setD_continentIndex(1);
         l_country2.setD_countryIndex(3);
         l_country2.setD_countryName("nepal");
-        List<Country> l_countryList=d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
         l_countryList.add(l_country2);
         d_gameData.getD_warMap().getD_continents().get(1).setD_countryList(l_countryList);
 
-        MapHandlingInterface l_map=new MapHandlingImpl();
-        List<String> l_neighbour=d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).getD_neighbourCountries();
+        MapHandlingInterface l_map = new MapHandlingImpl();
+        List<String> l_neighbour = d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).getD_neighbourCountries();
         l_neighbour.add("nepal");
         d_gameData.getD_playerList().get(0).getD_ownedCountries().get(1).setD_neighbourCountries(l_neighbour);
         d_orderProcessor.processOrder("advance china nepal 3".trim(), d_gameData);
         d_gameData.getD_playerList().get(0).issue_order();
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertEquals(true, l_order.executeOrder());
-        assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(),l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
+        assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(), l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
     }
 }

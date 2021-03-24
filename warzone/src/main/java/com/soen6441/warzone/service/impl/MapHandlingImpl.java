@@ -272,8 +272,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     d_generalUtil.prepareResponse(false, "Please enter valid country name or continent name");
                 }
 
-            }
-            //remove country from the list
+            } //remove country from the list
             else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
                 l_countryName = l_editCountryCommandString.get(i + 1);
 
@@ -431,7 +430,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         boolean l_fileExtension = false;
         //For managing extension of .map in given name
         if (l_fileName.contains(".")) {
-           String l_extension = l_fileName.split("\\.")[1];
+            String l_extension = l_fileName.split("\\.")[1];
 
             if (l_extension.equals("map")) {
                 l_fileExtension = true;
@@ -474,6 +473,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
 
         return d_generalUtil.getResponse();
     }
+
     /**
      * {@inheritDoc }
      */
@@ -894,8 +894,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                     //for setting country and continent name
                     int l_conintentIndex = p_countries.get(l_i - 1).getD_continentIndex();
                     String l_continentName = getContinentNameByContinentId(p_warMap.getD_continents(), l_conintentIndex);
-                    int l_armies=p_countries.get(l_i-1).getD_noOfArmies();
-                    l_mapMetrices[l_i][l_j] = p_countries.get(l_i - 1).getD_countryName() +" "+l_armies+ " (" + l_continentName + ") ";
+                    int l_armies = p_countries.get(l_i - 1).getD_noOfArmies();
+                    l_mapMetrices[l_i][l_j] = p_countries.get(l_i - 1).getD_countryName() + " " + l_armies + " (" + l_continentName + ") ";
                     if (l_maxLength < l_mapMetrices[l_i][l_j].length()) {
                         l_maxLength = l_mapMetrices[l_i][l_j].length();
                     }
@@ -1165,7 +1165,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method will return  index from  name
+     * This method will return index from name
      *
      * @param p_warMap is object of WarMap model
      * @param p_countryName is the name of
@@ -1197,7 +1197,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * This method is used for getting  index by  name
+     * This method is used for getting index by name
      *
      * @param p_continentMap
      * @param p_countryName
@@ -1285,7 +1285,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     public ArrayList<String> getAvailableContinentName(WarMap p_warMap) {
         if (p_warMap != null) {
             List<String> l_continent = new ArrayList<String>();
-            if(p_warMap.getD_continents()!=null) {
+            if (p_warMap.getD_continents() != null) {
                 for (Map.Entry<Integer, Continent> l_entries : p_warMap.getD_continents().entrySet()) {
                     l_continent.add(l_entries.getValue().getD_continentName().toLowerCase());
                 }
@@ -1342,7 +1342,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         int l_maxLength = 0;
         if (p_country != null) {
             for (Country l_country : p_country) {
-                if (l_country.getD_countryIndex()> l_maxLength) {
+                if (l_country.getD_countryIndex() > l_maxLength) {
                     l_maxLength = l_country.getD_countryIndex();
                 }
             }

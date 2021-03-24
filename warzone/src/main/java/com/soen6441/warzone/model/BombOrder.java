@@ -43,17 +43,17 @@ public class BombOrder extends Order {
         }
         for (Country l_country : d_player.getD_ownedCountries()) {
 
-                //checkcing adjacency 
-                for (String l_neighbour : l_country.getD_neighbourCountries()) {
-                    if (d_countryName.equalsIgnoreCase(l_neighbour)) {
-                        l_countryName = getCountryObjectByCountryName(d_countryName);
-                        if (l_countryName != null && l_countryName.getD_noOfArmies() > 0) {
-                            int l_army = l_countryName.getD_noOfArmies();
-                            l_army = l_army / 2;
-                            l_countryName.setD_noOfArmies(l_army);
-                            return true;
-                        }
+            //checkcing adjacency 
+            for (String l_neighbour : l_country.getD_neighbourCountries()) {
+                if (d_countryName.equalsIgnoreCase(l_neighbour)) {
+                    l_countryName = getCountryObjectByCountryName(d_countryName);
+                    if (l_countryName != null && l_countryName.getD_noOfArmies() > 0) {
+                        int l_army = l_countryName.getD_noOfArmies();
+                        l_army = l_army / 2;
+                        l_countryName.setD_noOfArmies(l_army);
+                        return true;
                     }
+                }
 
             }
         }
@@ -62,6 +62,7 @@ public class BombOrder extends Order {
 
     /**
      * used to validate the data of this class
+     *
      * @param p_countryName County name in the Command
      * @return validity Of Command
      */
@@ -86,7 +87,9 @@ public class BombOrder extends Order {
             for (Country l_country : l_entry.getValue().getD_countryList()) {
                 if (p_countryName.equalsIgnoreCase(l_country.getD_countryName())) {
                     l_countryName = l_country;
-                } } }
+                }
+            }
+        }
         return l_countryName;
     }
 

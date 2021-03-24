@@ -11,11 +11,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WriteLogFile implements Observer {
+
     /**
      * logger object to write message in log file
      */
     private static final Logger d_logger = LogManager.getLogger(WriteLogFile.class.getName());
-    
+
     /**
      * Constructor that attaches the controller to the observer.
      *

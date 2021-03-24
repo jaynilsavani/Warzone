@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameEngineServiceImpl implements GameEngineService {
 
-
     /**
      * {@inheritDoc }
      */
@@ -33,8 +32,8 @@ public class GameEngineServiceImpl implements GameEngineService {
             for (Map.Entry<Integer, Continent> l_continentEntry : p_gameData.getD_warMap().getD_continents().entrySet()) {
                 Continent l_continent = l_continentEntry.getValue();
                 //Check whether player owned all countries of continent or not
-                if (p_player.getD_ownedCountries().containsAll( l_continent.getD_countryList() )) {
-                    l_continents.add( l_continent );
+                if (p_player.getD_ownedCountries().containsAll(l_continent.getD_countryList())) {
+                    l_continents.add(l_continent);
                 }
             }
         }

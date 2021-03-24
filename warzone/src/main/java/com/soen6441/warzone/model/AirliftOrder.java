@@ -1,12 +1,10 @@
 package com.soen6441.warzone.model;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Map;
-
 
 /**
  * This Class is used for The airlift order Command Three annotations
@@ -20,6 +18,7 @@ import java.util.Map;
 @Setter
 @ToString
 public class AirliftOrder extends Order {
+
     /**
      * source country in this order
      */
@@ -69,7 +68,7 @@ public class AirliftOrder extends Order {
                 return false;
             }
             //condition matches if both countries owned by same player and countryto is neighbour to countryfrom
-            if (d_player.getD_ownedCountries().contains(l_countryTo) && l_countryfrom!=l_countryTo) {
+            if (d_player.getD_ownedCountries().contains(l_countryTo) && l_countryfrom != l_countryTo) {
                 int l_toArmies = l_countryTo.getD_noOfArmies();
                 l_countryToIndex = d_player.getD_ownedCountries().indexOf(l_countryTo);
                 if (l_countryfrom.getD_noOfArmies() >= d_noOfArmies) {
@@ -94,7 +93,7 @@ public class AirliftOrder extends Order {
             } else {
                 //checks for attack to intialize if country to is not owned by the same player or
                 //country has no player and should be neighbour
-                if (l_countryTo != null && l_countryfrom!=l_countryTo) {
+                if (l_countryTo != null && l_countryfrom != l_countryTo) {
                     for (Player l_player : d_gameData.getD_playerList()) {
                         if (l_player.getD_ownedCountries().contains(l_countryTo)) {
                             l_targetPlayer = l_player;
@@ -115,11 +114,10 @@ public class AirliftOrder extends Order {
                         l_fromArmies = l_fromArmies - d_noOfArmies;
                         l_countryfrom.setD_noOfArmies(l_fromArmies);
                         d_player.getD_ownedCountries().add(l_countryTo);
-                        if(l_targetPlayer!=null) {
+                        if (l_targetPlayer != null) {
                             l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
                         }
-                    }
-                    //when attack happens but could not win the country due to less attacking armies than opponent armies
+                    } //when attack happens but could not win the country due to less attacking armies than opponent armies
                     else {
                         l_toArmies = l_toArmies - l_attackArmiesFrom;
                         int l_remainingCountries;
@@ -133,16 +131,15 @@ public class AirliftOrder extends Order {
                         l_countryTo.setD_noOfArmies(l_toArmies);
                         d_player.getD_ownedCountries().remove(l_countryFromIndex);
                         d_player.getD_ownedCountries().add(l_countryFromIndex, l_countryfrom);
-                        if(l_targetPlayer!=null) {
+                        if (l_targetPlayer != null) {
                             l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
                             l_targetPlayer.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
                         }
                     }
 
-
                     d_gameData.getD_playerList().remove(l_playerFromIndex);
                     d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
-                    if(l_targetPlayer!=null) {
+                    if (l_targetPlayer != null) {
                         d_gameData.getD_playerList().remove(l_playerToIndex);
                         d_gameData.getD_playerList().add(l_playerToIndex, l_targetPlayer);
                     }
@@ -172,15 +169,14 @@ public class AirliftOrder extends Order {
 
     /**
      * this method is sed to get the country object
+     *
      * @param p_cName string having the countryname
      * @return gives the country object from the given name
      */
     public Country getPlayerCountrybyName(String p_cName) {
         for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
-            for(Country l_country:l_entry.getValue().getD_countryList())
-            {
-                if(l_country.getD_countryName().equalsIgnoreCase(p_cName))
-                {
+            for (Country l_country : l_entry.getValue().getD_countryList()) {
+                if (l_country.getD_countryName().equalsIgnoreCase(p_cName)) {
                     return l_country;
                 }
             }
@@ -189,9 +185,9 @@ public class AirliftOrder extends Order {
         return null;
     }
 
-
     /**
      * used to validate the data of this class
+     *
      * @param p_countryFromName country name of players
      * @param p_countryNameTo country name of opponent player or orphan country
      * @param p_noOfArmies no. of armies given in issue orders

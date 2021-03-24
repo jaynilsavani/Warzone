@@ -15,7 +15,7 @@ public interface OrderProcessor {
      * This method is used to process the user order
      *
      * @param p_orderCommand string of issue order
-     * @param p_gameData     data used for manipulation of string
+     * @param p_gameData data used for manipulation of string
      * @return result of issuing order execution
      */
     public CommandResponse processOrder(String p_orderCommand, GameData p_gameData);

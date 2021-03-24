@@ -142,7 +142,7 @@ public class GeneralUtilImpl implements GeneralUtil {
     }
 
     /**
-     * 
+     *
      * {@inheritDoc }
      */
     @Override
@@ -151,14 +151,14 @@ public class GeneralUtilImpl implements GeneralUtil {
         boolean l_nextTitleCase = true;
 
         for (char p_c : p_input.toCharArray()) {
-            if (Character.isSpaceChar( p_c )) {
+            if (Character.isSpaceChar(p_c)) {
                 l_nextTitleCase = true;
             } else if (l_nextTitleCase) {
-                p_c = Character.toTitleCase( p_c );
+                p_c = Character.toTitleCase(p_c);
                 l_nextTitleCase = false;
             }
 
-            l_titleCase.append( p_c );
+            l_titleCase.append(p_c);
         }
 
         return l_titleCase.toString();
