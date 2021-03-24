@@ -30,6 +30,12 @@ public class NegotiateOrder extends Order {
      */
     public int d_mandatoryField = 1;
 
+    /**
+     * {@inheritdoc}
+     *<p>
+     *     This method negotiates with the player
+     *</p>
+     */
     @Override
     public boolean executeOrder() {
         Player l_player = this.getPlayerFromName(d_playerName);

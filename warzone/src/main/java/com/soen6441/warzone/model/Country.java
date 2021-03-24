@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 @ToString
 @Component
 @NoArgsConstructor
-//@EqualsAndHashCode
 public class Country {
 
     /**
@@ -48,28 +47,17 @@ public class Country {
     private int d_noOfArmies;
 
     /**
-     * to use the hashcode for this object
-     *
-     * @return hashcode
-     */
-//    @Override
-//    public int hashCode() {
-//        int hash = 3;
-//        hash = 67 * hash + Objects.hashCode(this.d_countryName);
-//        return hash;
-//    }
-    /**
      * compares the objects
      *
-     * @param o object that needs to comapre
+     * @param p_obj object that needs to comapre
      * @return result of comparision
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Country country = (Country) o;
-        return d_continentIndex == country.d_continentIndex && d_countryName.equals(country.d_countryName);
+    public boolean equals(Object p_obj) {
+        if (this == p_obj) return true;
+        if (p_obj == null || getClass() != p_obj.getClass()) return false;
+        Country l_country = (Country) p_obj;
+        return d_continentIndex == l_country.d_continentIndex && d_countryName.equals(l_country.d_countryName);
     }
 
     /**
@@ -81,27 +69,6 @@ public class Country {
     public int hashCode() {
         return Objects.hash(d_countryName, d_continentIndex);
     }
-
-
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        if (obj == null) {
-//            return false;
-//        }
-//        if (getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        final Country other = (Country) obj;
-//        if (!Objects.equals(this.d_countryName, other.d_countryName)) {
-//            return false;
-//        }
-//        return true;
-//    }
-
-
 
     public Country(Country p_country) {
         this.d_countryIndex = p_country.d_countryIndex;

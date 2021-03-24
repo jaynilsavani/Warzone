@@ -32,8 +32,8 @@ public class BlockadeOrder extends Order {
 
     /**
      * {@inheritDoc }
-     * <p>
-     * This method triple the number of army and make neutral country
+     *
+     *
      */
     @Override
     public boolean executeOrder() {
@@ -45,15 +45,6 @@ public class BlockadeOrder extends Order {
                 if (l_countryName != null) {
                     int l_army = l_countryName.getD_noOfArmies() * 3;
                     l_countryName.setD_noOfArmies(l_army);
-                    
-                    //set country object into gamedata
-                    /*for (Map.Entry<Integer, Continent> l_continent : d_gameData.getD_warMap().getD_continents().entrySet()) {
-                        for (Country l_countryObj : l_continent.getValue().getD_countryList()) {
-                            if (l_countryObj.getD_countryName().equals(l_countryName.getD_countryName())) {
-                                l_continent.getValue().getD_countryList().set(l_countryObj.getD_countryIndex(), l_countryName);
-                            }
-                        }
-                    }*/
                     l_status = true;
                 }
             }
@@ -79,7 +70,7 @@ public class BlockadeOrder extends Order {
     }
 
     /**
-     *
+     * used to validate the data of this class
      * @param p_countryName County name in the Command
      * @return validity Of Command
      */

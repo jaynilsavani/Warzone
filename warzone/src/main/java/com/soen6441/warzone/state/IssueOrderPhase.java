@@ -6,7 +6,6 @@ import com.soen6441.warzone.model.Order;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.observerpattern.LogEntryBuffer;
 import com.soen6441.warzone.observerpattern.WriteLogFile;
-import com.soen6441.warzone.service.impl.OrderProcessorImpl;
 import javafx.scene.Parent;
 
 import java.util.ArrayList;
@@ -14,9 +13,6 @@ import java.util.List;
 
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER;
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
-import com.soen6441.warzone.service.OrderProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -27,8 +23,6 @@ import org.springframework.stereotype.Component;
  */
 public class IssueOrderPhase extends GamePlay {
 
-    //@Autowired
-    //OrderProcessor d_orderProcessor;
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 

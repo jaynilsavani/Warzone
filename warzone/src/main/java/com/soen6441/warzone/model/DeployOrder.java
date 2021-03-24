@@ -35,8 +35,6 @@ public class DeployOrder extends Order {
      */
     public int d_mandatoryField = 2;
 
-
-
     /**
      * {@inheritDoc }
      * <p>
@@ -77,15 +75,6 @@ public class DeployOrder extends Order {
                 d_gameData.getD_playerList().remove(l_playerIndex);
                 d_gameData.getD_playerList().add(l_playerIndex,d_player);
 
-                if (d_gameData.getD_warMap().getD_continents() != null) {
-                    for (Map.Entry<Integer, Continent> l_entry : d_gameData.getD_warMap().getD_continents().entrySet()) {
-                        for (Country l_countries : l_entry.getValue().getD_countryList()) {
-                            if (l_countries.getD_countryName().equalsIgnoreCase(l_country.getD_countryName())) {
-                                l_countries.setD_noOfArmies(d_noOfArmies);                              //sets the no. of armies to the country of map
-                            }
-                        }
-                    }
-                }
                 return true;
             }
         }
@@ -118,5 +107,4 @@ public class DeployOrder extends Order {
         }
         return false;
     }
-
 }
