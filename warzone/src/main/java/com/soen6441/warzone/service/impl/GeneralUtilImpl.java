@@ -140,4 +140,27 @@ public class GeneralUtilImpl implements GeneralUtil {
 
         return l_files;
     }
+
+    /**
+     *
+     * {@inheritDoc }
+     */
+    @Override
+    public String toTitleCase(String p_input) {
+        StringBuilder l_titleCase = new StringBuilder(p_input.length());
+        boolean l_nextTitleCase = true;
+
+        for (char p_c : p_input.toCharArray()) {
+            if (Character.isSpaceChar(p_c)) {
+                l_nextTitleCase = true;
+            } else if (l_nextTitleCase) {
+                p_c = Character.toTitleCase(p_c);
+                l_nextTitleCase = false;
+            }
+
+            l_titleCase.append(p_c);
+        }
+
+        return l_titleCase.toString();
+    }
 }

@@ -20,4 +20,9 @@ public class WarzoneConstants {
     public static final String COUNTRIES = "[countries]";
     public static final String BORDERS = "[borders]";
 
+    public static final String PHASE_MAP = "MAP";
+    public static final String PHASE_GAME_START_UP = "GAMESTARTUP";
+    public static final String PHASE_ISSUE_ORDER = "ISSUE_ORDER";
+    public static final String PHASE_EXECUTE = "EXECUTE";
+
 }

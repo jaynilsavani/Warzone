@@ -1,12 +1,12 @@
 package com.soen6441.warzone.service;
 
 import com.soen6441.warzone.model.CommandResponse;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
 /**
- *
  * This interface is used for Utility of General Functions and GeneralUtilImpl
  * is the implementation of it.
  *
@@ -82,4 +82,10 @@ public interface GeneralUtil {
      * @throws java.io.IOException throws IO Exception
      */
     public List<String> getAvailableMapFiles() throws IOException;
+
+    /**
+     * @param p_input input String
+     * @return TitleCase String
+     */
+    public String toTitleCase(String p_input);
 }

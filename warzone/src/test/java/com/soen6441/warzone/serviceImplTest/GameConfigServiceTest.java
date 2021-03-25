@@ -1,9 +1,11 @@
 package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.model.CommandResponse;
-import com.soen6441.warzone.model.GamePlay;
+import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameConfigService;
+import com.soen6441.warzone.service.MapHandlingInterface;
+import com.soen6441.warzone.service.impl.MapHandlingImpl;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -15,7 +17,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * This Class will test business logic of GameConfigService.
@@ -33,7 +36,7 @@ public class GameConfigServiceTest {
     GameConfigService d_gameConfigService;
 
     @Autowired
-    GamePlay d_gamePlay;
+    GameData d_gameData;
 
     /**
      * This method is used to load SpringBoot Application Context
@@ -56,7 +59,7 @@ public class GameConfigServiceTest {
 
     @Before
     public void setUp() {
-        d_gamePlay = new GamePlay();
+        d_gameData = new GameData();
     }
 
     @After
@@ -74,13 +77,58 @@ public class GameConfigServiceTest {
         l_expectedPlayer.setD_playerName("user");
         Player l_actualPlayer = new Player();
 
-        Map.Entry<GamePlay, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gamePlay, "gameplayer -add " + l_expectedPlayer.getD_playerName());
+        Map.Entry<GameData, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gameData, "gameplayer -add " + l_expectedPlayer.getD_playerName());
         if (l_gamePlayCommandResponseEntry.getValue().isD_isValid()) {
-            GamePlay l_gamePlay = l_gamePlayCommandResponseEntry.getKey();
-            if (!l_gamePlay.getD_playerList().isEmpty()) {
-                l_actualPlayer = l_gamePlay.getD_playerList().get(0);
+            GameData l_gameData = l_gamePlayCommandResponseEntry.getKey();
+            if (!l_gameData.getD_playerList().isEmpty()) {
+                l_actualPlayer = l_gameData.getD_playerList().get(0);
             }
         }
         assertEquals(l_expectedPlayer, l_actualPlayer);
+    }
+
+    /**
+     * This method is used to test whether player is removed or not
+     *
+     */
+    @Test
+    public void testForRemovePlayer() {
+
+        Player l_playerToRemove = new Player();
+        l_playerToRemove.setD_playerName("user");
+        Player l_extraPlayer = new Player();
+        l_extraPlayer.setD_playerName("user1");
+        List<Player> l_player = new ArrayList<>();
+        l_player.add(l_playerToRemove);
+        l_player.add(l_extraPlayer);
+        d_gameData.setD_playerList(l_player);
+        Map.Entry<GameData, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gameData, "gameplayer -remove " + l_playerToRemove.getD_playerName());
+        assertTrue(l_gamePlayCommandResponseEntry.getValue().isD_isValid());
+        assertFalse(d_gameData.getD_playerList().contains(l_playerToRemove));
+        assertTrue(d_gameData.getD_playerList().contains(l_extraPlayer));
+    }
+
+    /**
+     * This method is used to test whether countries are assigned to player or
+     * not
+     *
+     */
+    @Test
+    public void testAssignCountries() throws IOException {
+        MapHandlingInterface l_mapHandlingImpl = new MapHandlingImpl();
+        Player l_player1 = new Player();
+        l_player1.setD_playerName("user1");
+        Player l_player2 = new Player();
+        l_player2.setD_playerName("user2");
+        List<Player> l_player = new ArrayList<>();
+        l_player.add(l_player1);
+        l_player.add(l_player2);
+        d_gameData.setD_playerList(l_player);
+        d_gameData.setD_warMap(l_mapHandlingImpl.readMap("asia.map"));
+        CommandResponse l_result = d_gameConfigService.assignCountries(d_gameData);
+        assertTrue(l_result.isD_isValid());
+        for (Player l_p : d_gameData.getD_playerList()) {
+            assertTrue(l_p.getD_ownedCountries().size() > 0);
+        }
     }
 }

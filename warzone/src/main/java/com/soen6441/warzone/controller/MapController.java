@@ -2,6 +2,8 @@ package com.soen6441.warzone.controller;
 
 import com.soen6441.warzone.config.StageManager;
 import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.observerpattern.LogEntryBuffer;
+import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.view.FxmlView;
 import javafx.event.ActionEvent;
@@ -17,7 +19,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * This class provides map management functionalities such as add an existing map, create a new map.
+ * This class provides map management functionalities such as add an existing
+ * map, create a new map.
  *
  * @author <a href="mailto:patelvicky1995@gmail.com">Vicky Patel</a>
  */
@@ -33,6 +36,9 @@ public class MapController implements Initializable {
     private TextArea d_commandResponse;
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
+
+    private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 
     /**
      * This is the initialization method of this controller
@@ -54,8 +60,7 @@ public class MapController implements Initializable {
      */
     @FXML
     void backToWelcome(ActionEvent p_event) {
-
-        d_stageManager.switchScene(FxmlView.HOME, null);
+        d_stageManager.switchScene(FxmlView.HOME, null, "");
     }
 
     /**
@@ -65,10 +70,12 @@ public class MapController implements Initializable {
      * @param p_event will represents value sent from view
      */
     @FXML
-    void getData(ActionEvent p_event) {
+    public void getData(ActionEvent p_event) {
         String l_s = d_ExecuteCommand.getText().trim();
 
+        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_s);
         CommandResponse l_commandRespose = d_maphandlinginterface.validateCommand(l_s);
+        d_logEntryBuffer.setLogEntryBuffer("Response:: " + l_commandRespose.getD_responseString());
 
         d_ExecuteCommand.clear();
         d_commandResponse.setText(l_commandRespose.toString());

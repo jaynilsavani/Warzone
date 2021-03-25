@@ -1,6 +1,11 @@
 package com.soen6441.warzone.controller;
 
 import com.soen6441.warzone.config.StageManager;
+
+import static com.soen6441.warzone.config.WarzoneConstants.*;
+
+import com.soen6441.warzone.observerpattern.LogEntryBuffer;
+import com.soen6441.warzone.observerpattern.WriteLogFile;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.view.FxmlView;
 import javafx.event.ActionEvent;
@@ -13,6 +18,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 /**
@@ -23,15 +29,16 @@ import java.util.ResourceBundle;
 @Controller
 public class WelcomeController implements Initializable {
 
+    public boolean d_printTimeStamp = true;
     @FXML
     private Button d_BtnExit;
-
     @Lazy
     @Autowired
     private StageManager d_stageManager;
-
     @Autowired
     private MapHandlingInterface d_mapHandlingInterface;
+    private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 
     /**
      * This method takes a user to map creation, where player can create mad and
@@ -41,7 +48,8 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void createMap(ActionEvent p_event) {
-        d_stageManager.switchScene(FxmlView.MAPMANAGER, null);
+        d_stageManager.switchScene(FxmlView.GAMEENGINE, null, PHASE_MAP);
+
     }
 
     /**
@@ -51,7 +59,7 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void playGame(ActionEvent p_event) {
-        d_stageManager.switchScene(FxmlView.GAMECONFIG, null);
+        d_stageManager.switchScene(FxmlView.GAMEENGINE, null, PHASE_GAME_START_UP);
     }
 
     /**
@@ -61,6 +69,7 @@ public class WelcomeController implements Initializable {
      */
     @FXML
     void exitGame(ActionEvent p_event) {
+        d_logEntryBuffer.setLogEntryBuffer("Exit Game\n");
         Stage l_stage = (Stage) d_BtnExit.getScene().getWindow();
         l_stage.close();
     }
@@ -75,7 +84,10 @@ public class WelcomeController implements Initializable {
      */
     @Override
     public void initialize(URL p_location, ResourceBundle p_resources) {
-
+        if (d_printTimeStamp) {
+            d_logEntryBuffer.setLogEntryBuffer("\n======================================" + new Date().toString() + "======================================");
+            d_printTimeStamp = false;
+        }
     }
 
 }

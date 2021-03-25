@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration status="info">
+    <Properties>
+        <Property name="layout">%d %-5level %logger{36} - %m%n</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="Console">
+            <PatternLayout pattern="${layout}" />
+        </Console>
+
+        <File name="MyFile" fileName="warzone/src/main/resources/logs/app.log">
+            <PatternLayout pattern="${layout}" />
+        </File>
+
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="com.soen6441.warzone" level="info" additivity="false" >
+            <AppenderRef ref="MyFile" />
+        </Logger>
+
+        <Root level="error">
+            <AppenderRef ref="Console" />
+        </Root>
+
+    </Loggers>
+</Configuration>
