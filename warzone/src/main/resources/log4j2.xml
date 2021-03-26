@@ -10,7 +10,7 @@
             <PatternLayout pattern="${layout}" />
         </Console>
 
-        <File name="MyFile" fileName="warzone/src/main/resources/logs/app.log">
+        <File name="MyFile" fileName="C:\Users\HP\Downloads\Refactoring-Warzone\Warzone\warzone\src\main\resources\logs\app.log">
             <PatternLayout pattern="${layout}" />
         </File>
 
