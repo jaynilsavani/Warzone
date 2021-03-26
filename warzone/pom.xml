@@ -99,6 +99,13 @@
                     <mainClass>com.soen6441.warzone.WarzoneApplication</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalJOption>-Xdoclint:missing</additionalJOption>
+                </configuration>
+            </plugin>
             <plugin>    
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
