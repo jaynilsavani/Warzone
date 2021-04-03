@@ -175,7 +175,7 @@ public class GameEngine implements Initializable {
         String l_commandString = d_CommandLine.getText().trim();
         String[] l_validatestr = l_commandString.split("\\s");
         boolean l_winner = false;
-        if ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z]+\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
+        if ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
             l_issueorder.d_gameData = d_gameData;
@@ -277,6 +277,7 @@ public class GameEngine implements Initializable {
         l_issueorder.assignReinforcements();                    //for reinforcement
         d_gameData = l_issueorder.d_gameData;
         d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
+        d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
     }
 
 }
