@@ -65,3 +65,8 @@ Go to Build-01-documents Directory
 ```
 cd Build-01-documents 
 ```
+Go to Build-02-documents Directory
+
+```
+cd Build-02-documents 
+```
