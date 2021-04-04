@@ -18,6 +18,7 @@ public class WarzoneConstants {
     public static final String FILES = "[files]";
     public static final String CONTINENTS = "[continents]";
     public static final String COUNTRIES = "[countries]";
+    public static final String TERRITORIES = "[territories]";
     public static final String BORDERS = "[borders]";
 
     public static final String PHASE_MAP = "MAP";
