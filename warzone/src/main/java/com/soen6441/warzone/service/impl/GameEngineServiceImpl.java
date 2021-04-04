@@ -63,7 +63,7 @@ public class GameEngineServiceImpl implements GameEngineService {
             for (Country l_cn : l_player.getD_ownedCountries()) {
                 l_responseString += l_cn.getD_countryName() + " , ";
             }
-            l_responseString += " ] \n ";
+            l_responseString += " ] \n";
         }
         return l_responseString;
     }

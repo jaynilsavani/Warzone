@@ -4,36 +4,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="646.0" prefWidth="755.0" style="-fx-background-color: #EDF1FF;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.GameEngine">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" style="-fx-background-color: #EDF1FF;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soen6441.warzone.controller.GameEngine">
     <children>
-        <Button fx:id="d_BtnExit" layoutX="595.0" layoutY="13.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="30.0" prefWidth="128.0" text="Exit Game">
+        <Button fx:id="d_BtnExit" layoutX="992.0" layoutY="13.0" mnemonicParsing="false" onAction="#exitGame" prefHeight="18.0" prefWidth="90.0" text="Exit Game">
             <font>
                 <Font name="System Italic" size="14.0" />
             </font>
         </Button>
-        <Label layoutX="88.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Territory List">
+        <Label layoutX="70.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Territory List">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>
         </Label>
-        <Label layoutX="296.0" layoutY="28.0" prefHeight="20.0" prefWidth="177.0" text="Adjacent Owned Territory">
+        <Label layoutX="770.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Continents">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>
         </Label>
-        <Label fx:id="d_playerTurn" layoutX="14.0" layoutY="225.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
+        <Label layoutX="345.0" layoutY="28.0" prefHeight="20.0" prefWidth="177.0" text="Adjacent Owned Territory">
+            <font>
+                <Font name="System Bold Italic" size="14.0" />
+            </font>
+        </Label>
+        <Label fx:id="d_playerTurn" layoutX="73.0" layoutY="310.0" prefHeight="20.0" prefWidth="99.0" text="Command Line">
             <font>
                 <Font name="System Bold" size="14.0" />
             </font>
         </Label>
-        <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="120.0" layoutY="222.0" prefHeight="26.0" prefWidth="467.0" promptText="Please Enter Command for Gameplay Phase" />
-        <Button fx:id="d_FireCommand" layoutX="611.0" layoutY="220.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="128.0" text="Fire Command">
+        <TextField fx:id="d_CommandLine" alignment="CENTER" layoutX="190.0" layoutY="310.0" prefHeight="26.0" prefWidth="580.0" promptText="Please Enter Command for Gameplay Phase" />
+        <Button fx:id="d_FireCommand" layoutX="800.0" layoutY="306.0" mnemonicParsing="false" onAction="#getData" prefHeight="30.0" prefWidth="128.0" text="Fire Command">
             <font>
                 <Font name="System Italic" size="14.0" />
             </font>
         </Button>
-        <TextArea fx:id="d_FireCommandList" layoutX="73.0" layoutY="278.0" prefHeight="356.0" prefWidth="611.0" />
-      <TextArea layoutX="55.0" layoutY="56.0" prefHeight="142.0" prefWidth="144.0" />
-      <TextArea layoutX="275.0" layoutY="56.0" prefHeight="142.0" prefWidth="219.0" />
+        <TextArea fx:id="d_FireCommandList" layoutX="73.0" layoutY="350.0" prefHeight="390.0" prefWidth="900.0" />
+      <TextArea fx:id="d_countriesList" layoutX="10.0" layoutY="56.0" prefHeight="235.0" prefWidth="200.0" />
+      <TextArea fx:id="d_neighboursList" layoutX="220.0" layoutY="56.0" prefHeight="235.0" prefWidth="420.0" />
+        <TextArea fx:id="d_continentToCountry" layoutX="650.0" layoutY="56.0" prefHeight="235.0" prefWidth="320.0" />
     </children>
 </AnchorPane>

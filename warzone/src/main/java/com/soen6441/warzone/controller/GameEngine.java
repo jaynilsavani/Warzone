@@ -83,6 +83,12 @@ public class GameEngine implements Initializable {
     private Button d_FireCommand;
     @FXML
     private Label d_playerTurn;
+    @FXML
+    private  TextArea d_countriesList;
+    @FXML
+    private  TextArea d_neighboursList;
+    @FXML
+    private TextArea d_continentToCountry;
     @Autowired
     private GameConfigService d_gameConfig;
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
@@ -266,6 +272,7 @@ public class GameEngine implements Initializable {
     public void setGamePlay() {
         GamePlay l_gamePlay = (GamePlay) gamePhase;
         d_gameData = l_gamePlay.d_gameData;
+        showMapContents(l_gamePlay);
         d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
@@ -277,6 +284,34 @@ public class GameEngine implements Initializable {
         l_issueorder.assignReinforcements();                    //for reinforcement
         d_gameData = l_issueorder.d_gameData;
         d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
+    }
+
+    /**
+     * used to add the data of warmap to ui
+     * @param p_gameplay object to fetch the data of warmap from game engine
+     */
+    public void showMapContents(GamePlay p_gameplay)
+    {
+        String l_seperator=" ==> ";
+        String l_coutriesList="",l_neighbourList="",l_continents="";
+        for (Map.Entry<Integer, Continent> l_entry : p_gameplay.d_gameData.getD_warMap().getD_continents().entrySet()) {
+            l_continents=l_continents+l_entry.getValue().getD_continentName()+l_seperator;
+            for (Country l_country : l_entry.getValue().getD_countryList()) {
+                l_continents=l_continents+l_country.getD_countryName()+" , " ;
+            l_coutriesList=l_coutriesList+l_country.getD_countryName()+" ("+l_entry.getValue().getD_continentName()+")\n";
+                l_neighbourList=l_neighbourList+l_country.getD_countryName()+l_seperator;
+                for(String l_neighnoours :l_country.getD_neighbourCountries())
+                {
+                    l_neighbourList=l_neighbourList+l_neighnoours+" , ";
+                }
+                l_neighbourList=l_neighbourList+"\n";
+            }
+            l_continents=l_continents+"\n";
+        }
+        d_countriesList.appendText(l_coutriesList);
+        d_neighboursList.appendText(l_neighbourList);
+        d_continentToCountry.appendText(l_continents);
+
     }
 
 }
