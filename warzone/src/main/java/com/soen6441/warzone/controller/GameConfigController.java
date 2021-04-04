@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,7 @@ import java.util.ResourceBundle;
  *
  * @author <a href="mailto:patelvicky1995@gmail.com">Vicky Patel</a>
  */
+@EqualsAndHashCode
 @Controller
 public class GameConfigController implements Initializable {
 

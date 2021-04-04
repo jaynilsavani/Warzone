@@ -10,19 +10,38 @@ package com.soen6441.warzone.model;
  */
 public abstract class Order {
 
+    /**
+     * Player For Which Player is being created
+     */
     public Player d_player;
     /**
      * GameData in current Game
      */
     public GameData d_gameData;
+    /**
+     * Order response of the Executed Order
+     */
+    public CommandResponse d_orderResponse;
 
     /**
      * @return Whether Order Executed or not
      */
     abstract public boolean executeOrder();
 
+    /**
+     *
+     * @return Updated GameData
+     */
     public GameData getGameData() {
         return d_gameData;
+    }
+
+    /**
+     *
+     * @return OrderResponse in CommandResponse Form
+     */
+    public CommandResponse getOrderResponse() {
+        return d_orderResponse;
     }
 
 }
