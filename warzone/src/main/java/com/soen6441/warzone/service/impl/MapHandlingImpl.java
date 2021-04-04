@@ -39,6 +39,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int CountryId = 1;
     private static int NeighbourId = 1;
 
+    private static String StringRegex = "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$";  // regex to check continent and country name
+
     /**
      * {@inheritDoc }
      */
@@ -136,7 +138,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_continentName = l_commandString.get(l_i + 1);
                 l_continetValue = l_commandString.get(l_i + 2);
                 // match continent name exist or not
-                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$") && d_generalUtil.validateIOString(l_continetValue, "[1-9][0-9]*")) {
+                if (d_generalUtil.validateIOString(l_continentName, StringRegex) && d_generalUtil.validateIOString(l_continetValue, "[1-9][0-9]*")) {
                     boolean l_isValidName = true;
 
                     if (d_warMap.getD_continents() != null) {
@@ -162,7 +164,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             } //For removal of the continent
             else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
-                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$")) {
+                if (d_generalUtil.validateIOString(l_continentName, StringRegex)) {
                     //to delete the continent
                     if (deleteContinent(l_continentName)) {
                         d_generalUtil.prepareResponse(true, "Continent deleted successfully");
@@ -228,8 +230,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_countryName = l_editCountryCommandString.get(i + 1);
                 l_continentName = l_editCountryCommandString.get(i + 2);
                 //check whether entered country name and continent is valid or not
-                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$")
-                        && d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$")) {
+                if (d_generalUtil.validateIOString(l_countryName, StringRegex)
+                        && d_generalUtil.validateIOString(l_continentName, StringRegex)) {
 
                     // prepare country list of continent entered by user
                     ArrayList<Country> l_countryList = getAvailableCountries(d_warMap);
@@ -276,7 +278,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
                 l_countryName = l_editCountryCommandString.get(i + 1);
 
-                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$")) {
+                if (d_generalUtil.validateIOString(l_countryName, StringRegex)) {
                     CommandResponse l_resp = deleteCountry(l_countryName);
                     d_generalUtil.prepareResponse(l_resp.isD_isValid(), l_resp.getD_responseString());  //Response string for deleted country
 
@@ -329,7 +331,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         for (int l_i = 0; l_i < (l_commandString.size() - 2); l_i++) {
             l_countryName = l_commandString.get(l_i + 1);
             l_neighbourCountryName = l_commandString.get(l_i + 2);
-            if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$") && d_generalUtil.validateIOString(l_neighbourCountryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$")) {
+            if (d_generalUtil.validateIOString(l_countryName, StringRegex) && d_generalUtil.validateIOString(l_neighbourCountryName, StringRegex)) {
                 //For addition of the neighbour
                 if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
                     if (d_warMap.getD_continents() != null) {

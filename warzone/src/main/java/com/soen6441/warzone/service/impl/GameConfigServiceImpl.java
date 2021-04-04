@@ -47,8 +47,8 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Override
     public CommandResponse showPlayerMap(GameData p_gameData) {
         WarMap l_warMap = p_gameData.getD_warMap();
-        String mapTitle = "\nMap of countries(1 indicates adjacency between two countries)::\n" + d_mapHandlingImpl.showMap(l_warMap).getD_responseString();
-        CommandResponse l_showCountris = new CommandResponse(true, mapTitle);
+        String l_mapTitle = "\nMap of countries(1 indicates adjacency between two countries)::\n" + d_mapHandlingImpl.showMap(l_warMap).getD_responseString();
+        CommandResponse l_showCountris = new CommandResponse(true, l_mapTitle);
         if (p_gameData.getD_playerList() == null) {
             String l_showMapOfCountris = l_showCountris.getD_responseString();
             d_generalUtil.prepareResponse(true, l_showMapOfCountris);
