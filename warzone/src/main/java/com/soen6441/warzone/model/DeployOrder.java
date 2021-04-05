@@ -88,6 +88,8 @@ public class DeployOrder extends Order {
 
         d_gameData.getD_playerList().remove(l_playerIndex);
         d_gameData.getD_playerList().add(l_playerIndex, d_player);
+        d_orderResponse.setD_isValid(false);
+        d_orderResponse.setD_responseString("Given Country is not Owned Country");
         return false;
 
     }

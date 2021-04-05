@@ -38,6 +38,8 @@ public class BombOrder extends Order {
         //checking that target country is opponent country
         for (Country l_country : d_player.getD_ownedCountries()) {
             if (l_country.getD_countryName().equalsIgnoreCase(d_countryName)) {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("Given Country is own Country");
                 return false;
             }
         }
@@ -57,6 +59,8 @@ public class BombOrder extends Order {
 
             }
         }
+        d_orderResponse.setD_isValid(false);
+        d_orderResponse.setD_responseString("Given Country is not neighbour Country");
         return false;
     }
 
