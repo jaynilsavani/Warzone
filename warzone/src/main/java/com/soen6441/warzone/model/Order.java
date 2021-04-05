@@ -21,7 +21,7 @@ public abstract class Order {
     /**
      * Order response of the Executed Order
      */
-    public CommandResponse d_orderResponse;
+    public CommandResponse d_orderResponse=new CommandResponse();
 
     /**
      * @return Whether Order Executed or not
