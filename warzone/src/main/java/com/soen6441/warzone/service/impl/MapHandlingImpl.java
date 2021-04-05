@@ -39,6 +39,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int CountryId = 1;
     private static int NeighbourId = 1;
 
+    private static String StringRegex = "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$";  // regex to check continent and country name
+
     /**
      * {@inheritDoc }
      */
@@ -108,7 +110,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
         //validate the edit continent command
-        if (d_generalUtil.validateIOString(p_editContinentCommand, "editcontinent((\\s-add\\s[a-z|A-Z]+\\s[0-9]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
+        if (d_generalUtil.validateIOString(p_editContinentCommand, "editcontinent((\\s-add\\s[a-z|A-Z|_-]+\\s[0-9]+)|(\\s-remove\\s[a-z|A-Z|_-]+))+")) {
             List<String> l_continentNames = getAvailableContinentName(d_warMap);
             for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
                 //check for remove command
@@ -136,7 +138,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_continentName = l_commandString.get(l_i + 1);
                 l_continetValue = l_commandString.get(l_i + 2);
                 // match continent name exist or not
-                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && d_generalUtil.validateIOString(l_continetValue, "[1-9][0-9]*")) {
+                if (d_generalUtil.validateIOString(l_continentName, StringRegex) && d_generalUtil.validateIOString(l_continetValue, "[1-9][0-9]*")) {
                     boolean l_isValidName = true;
 
                     if (d_warMap.getD_continents() != null) {
@@ -162,7 +164,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             } //For removal of the continent
             else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
-                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (d_generalUtil.validateIOString(l_continentName, StringRegex)) {
                     //to delete the continent
                     if (deleteContinent(l_continentName)) {
                         d_generalUtil.prepareResponse(true, "Continent deleted successfully");
@@ -194,7 +196,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
         //validate the edit country command
-        if (d_generalUtil.validateIOString(p_editCountryCommand, "editcountry((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
+        if (d_generalUtil.validateIOString(p_editCountryCommand, "editcountry((\\s-add\\s[a-z|A-Z|_-]+\\s[a-z|A-Z|_-]+)|(\\s-remove\\s[a-z|A-Z|_-]+))+")) {
             List<String> l_continentNames = getAvailableContinentName(d_warMap);
             List<String> l_cName = getAvailableCountryName(d_warMap);
             for (int l_i = 0; l_i < l_editCountryCommandString.size(); l_i++) {
@@ -228,8 +230,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_countryName = l_editCountryCommandString.get(i + 1);
                 l_continentName = l_editCountryCommandString.get(i + 2);
                 //check whether entered country name and continent is valid or not
-                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")
-                        && d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (d_generalUtil.validateIOString(l_countryName, StringRegex)
+                        && d_generalUtil.validateIOString(l_continentName, StringRegex)) {
 
                     // prepare country list of continent entered by user
                     ArrayList<Country> l_countryList = getAvailableCountries(d_warMap);
@@ -276,7 +278,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
                 l_countryName = l_editCountryCommandString.get(i + 1);
 
-                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (d_generalUtil.validateIOString(l_countryName, StringRegex)) {
                     CommandResponse l_resp = deleteCountry(l_countryName);
                     d_generalUtil.prepareResponse(l_resp.isD_isValid(), l_resp.getD_responseString());  //Response string for deleted country
 
@@ -308,7 +310,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_neighbourCountryName = "";
         List<String> l_commandString = Arrays.asList(p_neighbour.split(" "));
         //validate the map command
-        if (d_generalUtil.validateIOString(p_neighbour, "editneighbour((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+\\s[a-z|A-Z]+))+")) {
+        if (d_generalUtil.validateIOString(p_neighbour, "editneighbour((\\s-add\\s[a-z|A-Z|_-]+\\s[a-z|A-Z|_-]+)|(\\s-remove\\s[a-z|A-Z|_-]+\\s[a-z|A-Z|_-]+))+")) {
             List<String> l_cName = getAvailableCountryName(d_warMap);
             //Iterate for add and remove command
             for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
@@ -329,7 +331,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         for (int l_i = 0; l_i < (l_commandString.size() - 2); l_i++) {
             l_countryName = l_commandString.get(l_i + 1);
             l_neighbourCountryName = l_commandString.get(l_i + 2);
-            if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && d_generalUtil.validateIOString(l_neighbourCountryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+            if (d_generalUtil.validateIOString(l_countryName, StringRegex) && d_generalUtil.validateIOString(l_neighbourCountryName, StringRegex)) {
                 //For addition of the neighbour
                 if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
                     if (d_warMap.getD_continents() != null) {
