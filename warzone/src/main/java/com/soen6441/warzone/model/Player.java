@@ -1,6 +1,7 @@
 package com.soen6441.warzone.model;
 
 import com.soen6441.warzone.service.OrderProcessor;
+import com.soen6441.warzone.strategy.Strategy;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -56,6 +57,11 @@ public class Player {
      * reinforcementPool Of the player
      */
     private int d_noOfArmies;
+
+    /**
+     * This is the player strategy
+     */
+    private Strategy d_stragey;
 
     /**
      * Name country for execution of the command for source Country
