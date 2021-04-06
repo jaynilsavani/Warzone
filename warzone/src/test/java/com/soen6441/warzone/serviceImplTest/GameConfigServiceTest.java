@@ -4,6 +4,7 @@ import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameConfigService;
+import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.service.impl.MapHandlingImpl;
 import org.junit.After;
@@ -37,6 +38,9 @@ public class GameConfigServiceTest {
 
     @Autowired
     GameData d_gameData;
+    
+    @Autowired
+    GeneralUtil d_generalUtil;
 
     /**
      * This method is used to load SpringBoot Application Context
@@ -124,7 +128,7 @@ public class GameConfigServiceTest {
         l_player.add(l_player1);
         l_player.add(l_player2);
         d_gameData.setD_playerList(l_player);
-        d_gameData.setD_warMap(l_mapHandlingImpl.readMap("asia.map"));
+        d_gameData.setD_warMap(d_generalUtil.readMapByType("asia.map"));
         CommandResponse l_result = d_gameConfigService.assignCountries(d_gameData);
         assertTrue(l_result.isD_isValid());
         for (Player l_p : d_gameData.getD_playerList()) {
