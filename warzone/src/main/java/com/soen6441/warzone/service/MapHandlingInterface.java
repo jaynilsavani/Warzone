@@ -23,22 +23,6 @@ public interface MapHandlingInterface {
      */
     public CommandResponse validateCommand(String p_command);
 
-    /**
-     * This method will store WarMap model to file
-     *
-     * @param p_warMap is the object of WarMap model
-     * @return true if map is successfully written to the file
-     */
-    boolean writeMapToFile(WarMap p_warMap);
-
-    /**
-     * This method will read map file and store data into WarMap model object
-     *
-     * @param p_fileName fileName to read Map
-     * @return WarMap model
-     * @throws java.io.IOException throws input/output exception
-     */
-    public WarMap readMap(String p_fileName) throws IOException;
 
     /**
      * This method is used to show the map in 2D matrix containing Countries as
@@ -66,20 +50,5 @@ public interface MapHandlingInterface {
      */
     public ArrayList<Country> getAvailableCountries(WarMap p_continentMap);
     
-     /**
-     * This method will read conquest map file and store data into WarMap model object
-     *
-     * @param p_fileName fileName to read Map
-     * @return WarMap model
-     * @throws java.io.IOException throws input/output exception
-     */
-    public WarMap readNewMap(String p_fileName) throws IOException;
-    
-    /**
-     * This method will store WarMap model to conquest map file
-     *
-     * @param p_warMap is the object of WarMap model
-     * @return true if map is successfully written to the file
-     */
-    boolean writeNewMapToFile(WarMap p_warMap);
-}
+     
+    }

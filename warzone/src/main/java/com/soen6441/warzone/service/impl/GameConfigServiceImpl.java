@@ -1,5 +1,8 @@
 package com.soen6441.warzone.service.impl;
 
+import com.soen6441.warzone.adapterpattern.ConquestMapReader;
+import com.soen6441.warzone.adapterpattern.DominationMapReader;
+import com.soen6441.warzone.adapterpattern.FileReaderAdapter;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
@@ -120,7 +123,7 @@ public class GameConfigServiceImpl implements GameConfigService {
      */
     @Override
     public WarMap loadMap(String p_fileName) throws IOException {
-        return d_mapHandlingImpl.readMap(p_fileName);
+        return d_generalUtil.readMapByType(p_fileName);
     }
 
     /**
