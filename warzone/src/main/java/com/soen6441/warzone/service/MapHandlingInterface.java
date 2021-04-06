@@ -65,4 +65,21 @@ public interface MapHandlingInterface {
      * @return array list of the country
      */
     public ArrayList<Country> getAvailableCountries(WarMap p_continentMap);
+    
+     /**
+     * This method will read conquest map file and store data into WarMap model object
+     *
+     * @param p_fileName fileName to read Map
+     * @return WarMap model
+     * @throws java.io.IOException throws input/output exception
+     */
+    public WarMap readNewMap(String p_fileName) throws IOException;
+    
+    /**
+     * This method will store WarMap model to conquest map file
+     *
+     * @param p_warMap is the object of WarMap model
+     * @return true if map is successfully written to the file
+     */
+    boolean writeNewMapToFile(WarMap p_warMap);
 }
