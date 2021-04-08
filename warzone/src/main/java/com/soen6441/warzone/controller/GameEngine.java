@@ -315,32 +315,5 @@ public class GameEngine implements Initializable {
 
     }
 
-    /**
-     * used to add the data of warmap to ui
-     * @param p_gameplay object to fetch the data of warmap from game engine
-     */
-    public void showMapContents(GamePlay p_gameplay)
-    {
-        String l_seperator=" ==> ";
-        String l_coutriesList="",l_neighbourList="",l_continents="";
-        for (Map.Entry<Integer, Continent> l_entry : p_gameplay.d_gameData.getD_warMap().getD_continents().entrySet()) {
-            l_continents=l_continents+l_entry.getValue().getD_continentName()+l_seperator;
-            for (Country l_country : l_entry.getValue().getD_countryList()) {
-                l_continents=l_continents+l_country.getD_countryName()+" , " ;
-            l_coutriesList=l_coutriesList+l_country.getD_countryName()+" ("+l_entry.getValue().getD_continentName()+")\n";
-                l_neighbourList=l_neighbourList+l_country.getD_countryName()+l_seperator;
-                for(String l_neighnoours :l_country.getD_neighbourCountries())
-                {
-                    l_neighbourList=l_neighbourList+l_neighnoours+" , ";
-                }
-                l_neighbourList=l_neighbourList+"\n";
-            }
-            l_continents=l_continents+"\n";
-        }
-        d_countriesList.appendText(l_coutriesList);
-        d_neighboursList.appendText(l_neighbourList);
-        d_continentToCountry.appendText(l_continents);
-
-    }
 
 }
