@@ -172,7 +172,7 @@ public class GameConfigController implements Initializable {
         } else if (l_command.toLowerCase().startsWith(GAME_PLAYER)) {                                  //if user wants to add or remove players
             if (AssignCountryFlag == 1) {                                                  //if countries are assigned already then ,this condition won't allow to add player again
                 l_gmConfigRes.setD_isValid(false);
-                l_gmConfigRes.setD_responseString("countries are already assigned to each player");
+                l_gmConfigRes.setD_responseString("Countries are already assigned to each player");
             } else {
                 if (d_gameData.getD_warMap() != null) {
                     if ((l_commandSegments.size() - 1) % 2 == 0) {                                 //validates the command
@@ -180,7 +180,7 @@ public class GameConfigController implements Initializable {
 
                         if (l_updatedGamePlay.getValue().isD_isValid()) {
                             d_gameData = l_updatedGamePlay.getKey();
-                            String l_playerName = "\n Players : \n[";
+                            String l_playerName = "\nPlayers : \n[";
                             if (d_gameData.getD_playerList() != null) {
                                 for (Player l_p : d_gameData.getD_playerList()) {           //stores players name and print
                                     l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";
