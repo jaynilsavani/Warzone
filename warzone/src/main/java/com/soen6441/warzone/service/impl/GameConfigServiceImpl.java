@@ -1,5 +1,8 @@
 package com.soen6441.warzone.service.impl;
 
+import com.soen6441.warzone.adapterpattern.ConquestMapReader;
+import com.soen6441.warzone.adapterpattern.DominationMapReader;
+import com.soen6441.warzone.adapterpattern.FileReaderAdapter;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
@@ -47,8 +50,8 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Override
     public CommandResponse showPlayerMap(GameData p_gameData) {
         WarMap l_warMap = p_gameData.getD_warMap();
-
-        CommandResponse l_showCountris = d_mapHandlingImpl.showMap(l_warMap);
+        String l_mapTitle = "\nMap of countries(1 indicates adjacency between two countries)::\n" + d_mapHandlingImpl.showMap(l_warMap).getD_responseString();
+        CommandResponse l_showCountris = new CommandResponse(true, l_mapTitle);
         if (p_gameData.getD_playerList() == null) {
             String l_showMapOfCountris = l_showCountris.getD_responseString();
             d_generalUtil.prepareResponse(true, l_showMapOfCountris);
@@ -96,7 +99,8 @@ public class GameConfigServiceImpl implements GameConfigService {
                     }
                 }
             }
-            l_showMapOfCountris = l_showMapOfCountris + "\n";
+            String l_titleMessage = "\nList of country owned by each player with armies:: \n";
+            l_showMapOfCountris = l_showMapOfCountris + l_titleMessage;
             //formatting matrix
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
@@ -119,7 +123,7 @@ public class GameConfigServiceImpl implements GameConfigService {
      */
     @Override
     public WarMap loadMap(String p_fileName) throws IOException {
-        return d_mapHandlingImpl.readMap(p_fileName);
+        return d_generalUtil.readMapByType(p_fileName);
     }
 
     /**

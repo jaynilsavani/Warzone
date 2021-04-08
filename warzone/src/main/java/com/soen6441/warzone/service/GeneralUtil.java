@@ -1,6 +1,7 @@
 package com.soen6441.warzone.service;
 
 import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.model.WarMap;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -88,4 +89,22 @@ public interface GeneralUtil {
      * @return TitleCase String
      */
     public String toTitleCase(String p_input);
+
+    /**
+     *
+     * @param p_fileName Name of the file to read
+     * @return Object of the WarMap that is read from the Given File
+     * @throws IOException
+     */
+    public WarMap readMapByType(String p_fileName) throws IOException;
+
+    /**
+     *
+     * @param p_warMap WarMap object to write into file
+     * @param p_isConquest Whether Given Object needs to save as Conquest Format
+     * or not
+     * @return Whether File is being saved or not
+     * @throws IOException
+     */
+    public boolean writeMapByType(WarMap p_warMap, boolean p_isConquest) throws IOException;
 }

@@ -13,11 +13,13 @@ public class WarzoneConstants {
     public static final int DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER = 3;
     public static final int DEFAULT_ASSIGN_REINFORCEMENT_IN_TURN = 5;
     //Constants of Map Editor
-    public static final String MAP_DEF_PATH = "src/main/resources/maps/";
+    public static final String MAP_DEF_PATH = "./src/main/resources/maps/";
     public static final String NAME = "name";
     public static final String FILES = "[files]";
+    public static final String MAP = "[Map]";
     public static final String CONTINENTS = "[continents]";
     public static final String COUNTRIES = "[countries]";
+    public static final String TERRITORIES = "[territories]";
     public static final String BORDERS = "[borders]";
 
     public static final String PHASE_MAP = "MAP";

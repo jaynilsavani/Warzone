@@ -181,7 +181,7 @@ public class GameEngine implements Initializable {
         String l_commandString = d_CommandLine.getText().trim();
         String[] l_validatestr = l_commandString.split("\\s");
         boolean l_winner = false;
-        if ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z]+\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
+        if ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
             l_issueorder.d_gameData = d_gameData;
@@ -284,6 +284,35 @@ public class GameEngine implements Initializable {
         l_issueorder.assignReinforcements();                    //for reinforcement
         d_gameData = l_issueorder.d_gameData;
         d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
+        d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
+    }
+
+    /**
+     * used to add the data of warmap to ui
+     * @param p_gameplay object to fetch the data of warmap from game engine
+     */
+    public void showMapContents(GamePlay p_gameplay)
+    {
+        String l_seperator=" ==> ";
+        String l_coutriesList="",l_neighbourList="",l_continents="";
+        for (Map.Entry<Integer, Continent> l_entry : p_gameplay.d_gameData.getD_warMap().getD_continents().entrySet()) {
+            l_continents=l_continents+l_entry.getValue().getD_continentName()+l_seperator;
+            for (Country l_country : l_entry.getValue().getD_countryList()) {
+                l_continents=l_continents+l_country.getD_countryName()+" , " ;
+            l_coutriesList=l_coutriesList+l_country.getD_countryName()+" ("+l_entry.getValue().getD_continentName()+")\n";
+                l_neighbourList=l_neighbourList+l_country.getD_countryName()+l_seperator;
+                for(String l_neighnoours :l_country.getD_neighbourCountries())
+                {
+                    l_neighbourList=l_neighbourList+l_neighnoours+" , ";
+                }
+                l_neighbourList=l_neighbourList+"\n";
+            }
+            l_continents=l_continents+"\n";
+        }
+        d_countriesList.appendText(l_coutriesList);
+        d_neighboursList.appendText(l_neighbourList);
+        d_continentToCountry.appendText(l_continents);
+
     }
 
     /**
