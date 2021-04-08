@@ -50,7 +50,6 @@ public class BlockadeOrder extends Order {
             } else {
                 d_orderResponse.setD_isValid(false);
                 d_orderResponse.setD_responseString("Given Country does not Owned By Player");
-                return false;
             }
         }
         if (l_status) {
