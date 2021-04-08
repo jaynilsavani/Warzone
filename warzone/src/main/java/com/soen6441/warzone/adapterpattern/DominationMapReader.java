@@ -22,8 +22,10 @@ import lombok.Setter;
 
 /**
  *
- * This Class is used for Reading and Writing Domination Map File This is Target
- * Class in Adapter Pattern
+ * This Class is used for Reading and Writing Domination Map File. This is the Target
+ * Class in Adapter Pattern. Three annotations (Getter,Setter, NoArgsConstructor),
+ * you can see on the top of the class are lombok dependencies to automatically
+ * generate getter, setter method and default Constructor in the code.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -150,6 +152,8 @@ public class DominationMapReader {
     }
 
     /**
+     * This method is used to check whether the WarMap object is successfully
+     * saved into Domination map File or not.
      *
      * @param p_warMap Warmap Object to Write
      * @return Whether File is being Saved or not
