@@ -97,6 +97,7 @@ public class AdvanceOrder extends Order {
                 d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
 
                 d_orderResponse.setD_isValid(true);
+                d_orderResponse.setD_responseString("advance command executed successfully");
                 return true;
             } else {
                 //checks for attack to intialize if country to is not owned by the same player or
@@ -151,6 +152,7 @@ public class AdvanceOrder extends Order {
                         d_gameData.getD_playerList().remove(l_playerToIndex);
                         d_gameData.getD_playerList().add(l_playerToIndex, l_targetPlayer);
                     }
+                    d_orderResponse.setD_responseString("advance command executed successfully");
                     return true;
                 }
                 //Check HEre If command response needed or nor

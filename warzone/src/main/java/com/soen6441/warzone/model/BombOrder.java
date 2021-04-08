@@ -53,6 +53,8 @@ public class BombOrder extends Order {
                         int l_army = l_countryName.getD_noOfArmies();
                         l_army = l_army / 2;
                         l_countryName.setD_noOfArmies(l_army);
+                        d_orderResponse.setD_isValid(true);
+                        d_orderResponse.setD_responseString("bomb command is executed successfully");
                         return true;
                     }
                 }
