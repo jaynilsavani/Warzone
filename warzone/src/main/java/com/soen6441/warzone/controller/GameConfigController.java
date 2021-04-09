@@ -216,7 +216,10 @@ public class GameConfigController implements Initializable {
                 }
             }
 
-        } else {
+        }else if(l_command.toLowerCase().startsWith("savegame")){
+            GameEngine ge = new GameEngine();
+            ge.saveGame(d_gameData,"abc1233");
+        }else {
             d_generalUtil.prepareResponse(false, "Please enter valid command");              //general command if none of the above condition matches
             l_gmConfigRes = d_generalUtil.getResponse();
 

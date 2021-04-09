@@ -466,7 +466,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                             d_warMap.setD_mapName(l_fileName.toLowerCase());
                         }
                         d_generalUtil.writeMapByType(d_warMap, l_isConquestMap);
-                        d_generalUtil.prepareResponse(true, "Map file succesfully saved");
+                        d_generalUtil.prepareResponse(true, "Map file successfully saved");
                     } else {
                         d_generalUtil.prepareResponse(false, "Map is not valid");
                     }

@@ -28,6 +28,10 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.*;
 
@@ -315,4 +319,211 @@ public class GameEngine implements Initializable {
 
     }
 
+    /**
+     * This method is used to save game data in file
+     *
+     * @param p_gameData current game data
+     */
+    public boolean saveGame(GameData p_gameData, String p_fileName) {
+        // for managing the .txt extension of the file
+        if (p_fileName.contains(".")) {
+            String l_fileNameSplit = p_fileName.split("\\.")[1];
+            if (!l_fileNameSplit.equals("txt")) {
+                p_fileName = p_fileName.concat(".txt");
+            }
+        } else {
+            p_fileName = p_fileName.concat(".txt");
+        }
+        boolean l_status;
+        try {
+            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(GAME_DEF_PATH + p_fileName), "utf-8")));) {
+                List<StringBuilder> l_stringBuilderList = new ArrayList<>();
+
+                l_stringBuilderList.addAll(writeMapData(p_gameData));
+                l_stringBuilderList.addAll(writePlayerData(p_gameData));
+
+                writer.println("Date: " + (new Date()).toString());
+                writer.println("Author: " + System.getProperty("user.name"));
+                writer.println();
+                writer.println("Game Data");
+                writer.println();
+                writer.println("[map_name]");
+                writer.println(p_gameData.getD_warMap().getD_mapName());
+                writer.println();
+                for(StringBuilder l_stringBuilder : l_stringBuilderList){
+                    writer.println(l_stringBuilder.toString());
+                }
+                l_status = true;
+            }
+        } catch (Exception e) {
+            l_status = false;
+        }
+
+        return l_status;
+    }
+
+    /**
+     * This method is used to write map data
+     *
+     * @param p_gameData current game data object
+     * @return string of continents, countries, neighbours
+     */
+    public List<StringBuilder> writeMapData(GameData p_gameData)
+    {
+        List<StringBuilder> l_stringBuilderList = new ArrayList<>();
+
+        //creation of content to write into file
+        StringBuilder l_continentStringBuilder = new StringBuilder(CONTINENTS).append(System.lineSeparator());
+        StringBuilder l_countryStringBuilder = new StringBuilder(COUNTRIES).append(System.lineSeparator());
+        StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
+        Map<Integer, Continent> l_continentMap = p_gameData.getD_warMap().getD_continents();
+        //for storing continent of the map
+
+        for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
+            Continent l_currentContinent = l_entry.getValue();
+
+            //here all continents will store into the l_continentStringBuilder
+            l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
+            if (l_currentContinent.getD_countryList() != null) {
+                List<Country> l_countryList = l_currentContinent.getD_countryList();
+                for (Country l_country : l_countryList) {
+
+                    //here all countries will store into the l_countryStringBuilder
+                    l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " " + l_country.getD_noOfArmies())
+                            .append(System.lineSeparator());
+
+                    if (l_country.getD_neighbourCountries() != null) {
+                        List<String> l_neighborList = l_country.getD_neighbourCountries();
+                        if (!l_neighborList.isEmpty() && l_neighborList != null) {
+                            l_neighborStringBuilder.append(l_country.getD_countryIndex());
+                            for (String l_neighborName : l_neighborList) {
+                                //here all neighbors will store into the l_neighborStringBuilder
+                                l_neighborStringBuilder.append(" " + getCountryIndexByCountryName(p_gameData.getD_warMap(), l_neighborName));
+                            }
+                            l_neighborStringBuilder.append(System.lineSeparator());
+                        }
+                    }
+                }
+            }
+        }
+        l_stringBuilderList.add(l_continentStringBuilder);
+        l_stringBuilderList.add(l_countryStringBuilder);
+        l_stringBuilderList.add(l_neighborStringBuilder);
+
+        return l_stringBuilderList;
+    }
+
+    /**
+     * This method is used to write player information 
+     * @param p_gameData current game data object
+     * @return list of player, countries owned by players and orders issued by player
+     */
+    public List<StringBuilder> writePlayerData(GameData p_gameData) {
+        List<StringBuilder> l_stringBuilderList = new ArrayList<>();
+        StringBuilder l_players = new StringBuilder(PLAYERS).append(System.lineSeparator());
+        StringBuilder l_ownedCountries = new StringBuilder(OWNED_COUNTRIES).append(System.lineSeparator());
+        StringBuilder l_orders = new StringBuilder(ORDERS).append(System.lineSeparator());
+        StringBuilder l_cards = new StringBuilder(CARDS).append(System.lineSeparator());
+        StringBuilder l_negotiatePlayers = new StringBuilder(NEGOTIATE_PLAYERS).append(System.lineSeparator());
+        StringBuilder l_playerFlag = new StringBuilder(PLAYER_FLAG).append(System.lineSeparator());
+        StringBuilder l_gamePhase = new StringBuilder(GAME_PHASE).append(System.lineSeparator());
+
+        if(p_gameData.getD_playerList() != null) {
+            for (Player l_player : p_gameData.getD_playerList()) {
+                // prepare player data
+                l_players.append(l_player.getD_playerName() + " " + l_player.getD_noOfArmies() + " " + l_player.getD_stragey() + System.lineSeparator());
+
+                // prepare owned countries data
+                if (!l_player.getD_ownedCountries().isEmpty()) {
+                    l_ownedCountries.append(l_player.getD_playerName());
+                    for (Country l_country : l_player.getD_ownedCountries()) {
+                        l_ownedCountries.append(" " + l_country.getD_countryName());
+                    }
+                    l_ownedCountries.append(System.lineSeparator());
+                }
+
+                // prepare orders data
+                if (!l_player.getD_orders().isEmpty()) {
+                    l_orders.append(l_player.getD_playerName());
+                    for (Order l_order : l_player.getD_orders()) {
+                        l_orders.append(" " + l_order.toString());
+                    }
+                    l_orders.append(System.lineSeparator());
+                }
+
+                // prepare cards data
+                if (!l_player.getD_cards().isEmpty()) {
+                    l_cards.append(l_player.getD_playerName());
+                    for (GameCard l_card : l_player.getD_cards()) {
+                        l_cards.append(" " + l_card.toString());
+                    }
+                    l_cards.append(System.lineSeparator());
+                }
+
+                // prepare negotiate player data
+                if (l_player.getD_negotiatePlayerList() != null && !l_player.getD_negotiatePlayerList().isEmpty()) {
+                    l_negotiatePlayers.append(l_player.getD_playerName());
+                    for (Player l_negotiatePlayer : l_player.getD_negotiatePlayerList()) {
+                        l_negotiatePlayers.append(" " + l_negotiatePlayer.toString());
+                    }
+                    l_negotiatePlayers.append(System.lineSeparator());
+                }
+            }
+        }
+
+        // prepare player flag
+        if (d_playerFlag != null && d_playerFlag.length > 0) {
+            for (int i = 0; i < d_playerFlag.length; i++) {
+                l_playerFlag.append(d_playerFlag[i] + " ");
+            }
+            l_playerFlag.append(System.lineSeparator());
+        }
+        l_gamePhase.append(p_gameData.getD_gamePhase());
+        l_gamePhase.append(System.lineSeparator());
+
+        // prepare result response
+        l_stringBuilderList.add(l_players);
+        l_stringBuilderList.add(l_ownedCountries);
+        l_stringBuilderList.add(l_orders);
+        l_stringBuilderList.add(l_cards);
+        l_stringBuilderList.add(l_negotiatePlayers);
+        l_stringBuilderList.add(l_playerFlag);
+        l_stringBuilderList.add(l_gamePhase);
+
+        return l_stringBuilderList;
+    }
+
+    /**
+     * This method will return index from name
+     *
+     * @param p_warMap is object of WarMap model
+     * @param p_countryName is the name of
+     * @return index of
+     */
+    private int getCountryIndexByCountryName(WarMap p_warMap, String p_countryName) {
+        int l_countryIndex = 0;
+        Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
+
+        for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
+            Continent l_currentContinent = l_entry.getValue();
+            //getting the  list
+            if (l_currentContinent.getD_countryList() != null) {
+                List<Country> l_countryList = l_currentContinent.getD_countryList();
+                if (l_countryList != null) {
+                    for (Country l_country : l_countryList) {
+                        //Comparing  name with give  name
+                        if (l_country != null) {
+                            if (l_country.getD_countryName().equalsIgnoreCase(p_countryName)) {
+                                l_countryIndex = l_country.getD_countryIndex();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return l_countryIndex;
+    }
 }
