@@ -19,17 +19,12 @@ public class HumanStartegy extends Strategy {
     public HumanStartegy(GameData p_gameData, Player p_player) {
         super(p_gameData, p_player);
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
-        l_allowedOrders.add(OrderTypes.DEPLOY);
-        l_allowedOrders.add(OrderTypes.ADVANCE);
-        l_allowedOrders.add(OrderTypes.AIRLIFT);
-        l_allowedOrders.add(OrderTypes.BOMB);
         this.setD_allowedOrders(l_allowedOrders);
     }
 
     @Override
     public Order createOrder() {
-        //implement create Order logic 
-        return null;
+       return d_player.getOrderProcessor().getOrder();
     }
 
 }

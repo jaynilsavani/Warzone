@@ -140,7 +140,8 @@ public class GameConfigController implements Initializable {
      */
     public void getData(ActionEvent p_event) {
         String l_command = d_CommandLine.getText().trim();
-        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_command);       //write log about command
+        //write log about command
+        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_command);
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
 
@@ -175,7 +176,7 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes.setD_responseString("countries are already assigned to each player");
             } else {
                 if (d_gameData.getD_warMap() != null) {
-                    if ((l_commandSegments.size() - 1) % 2 == 0) {                                 //validates the command
+//                    if ((l_commandSegments.size() - 1) % 2 == 0) {                                 //validates the command
                         Map.Entry<GameData, CommandResponse> l_updatedGamePlay = d_gameConfigService.updatePlayer(d_gameData, l_command);
 
                         if (l_updatedGamePlay.getValue().isD_isValid()) {
@@ -190,9 +191,9 @@ public class GameConfigController implements Initializable {
                             l_updatedGamePlay.getValue().setD_responseString(l_updatedGamePlay.getValue().getD_responseString() + l_playerName);
                         }
                         d_generalUtil.prepareResponse(l_updatedGamePlay.getValue().isD_isValid(), l_updatedGamePlay.getValue().getD_responseString());
-                    } else {                                                                    //if command is not valid
-                        d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
-                    }
+//                    } else {                                                                    //if command is not valid
+//                        d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
+//                    }
                     l_gmConfigRes = d_generalUtil.getResponse();
                 } else {                                                                     //if map of game engine is empty
                     l_gmConfigRes.setD_isValid(false);

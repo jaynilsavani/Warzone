@@ -17,6 +17,7 @@ import com.soen6441.warzone.state.IssueOrderPhase;
 import com.soen6441.warzone.state.MapPhase;
 import com.soen6441.warzone.state.Phase;
 import com.soen6441.warzone.state.StartUpPhase;
+import com.soen6441.warzone.strategy.HumanStartegy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -84,9 +85,9 @@ public class GameEngine implements Initializable {
     @FXML
     private Label d_playerTurn;
     @FXML
-    private  TextArea d_countriesList;
+    private TextArea d_countriesList;
     @FXML
-    private  TextArea d_neighboursList;
+    private TextArea d_neighboursList;
     @FXML
     private TextArea d_continentToCountry;
     @Autowired
@@ -179,17 +180,76 @@ public class GameEngine implements Initializable {
      */
     public void getData(ActionEvent p_event) {
         String l_commandString = d_CommandLine.getText().trim();
+        playerIteration(l_commandString, false);
+    }
+
+    /**
+     * This is used for setting GameConfig for GameEngine
+     */
+    public void setGamePlay() {
+        GamePlay l_gamePlay = (GamePlay) gamePhase;
+        d_gameData = l_gamePlay.d_gameData;
+        showMapContents(l_gamePlay);
+        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
+        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+        d_playerFlag = new int[d_gameData.getD_playerList().size()];
+        Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
+        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
+        IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
+        l_issueorder.d_gameData = d_gameData;
+        l_issueorder.assignReinforcements();                    //for reinforcement
+        d_gameData = l_issueorder.d_gameData;
+        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
+        d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
+    }
+
+    /**
+     * used to add the data of warmap to ui
+     *
+     * @param p_gameplay object to fetch the data of warmap from game engine
+     */
+    public void showMapContents(GamePlay p_gameplay) {
+        String l_seperator = " ==> ";
+        String l_coutriesList = "", l_neighbourList = "", l_continents = "";
+        for (Map.Entry<Integer, Continent> l_entry : p_gameplay.d_gameData.getD_warMap().getD_continents().entrySet()) {
+            l_continents = l_continents + l_entry.getValue().getD_continentName() + l_seperator;
+            for (Country l_country : l_entry.getValue().getD_countryList()) {
+                l_continents = l_continents + l_country.getD_countryName() + " , ";
+                l_coutriesList = l_coutriesList + l_country.getD_countryName() + " (" + l_entry.getValue().getD_continentName() + ")\n";
+                l_neighbourList = l_neighbourList + l_country.getD_countryName() + l_seperator;
+                for (String l_neighnoours : l_country.getD_neighbourCountries()) {
+                    l_neighbourList = l_neighbourList + l_neighnoours + " , ";
+                }
+                l_neighbourList = l_neighbourList + "\n";
+            }
+            l_continents = l_continents + "\n";
+        }
+        d_countriesList.appendText(l_coutriesList);
+        d_neighboursList.appendText(l_neighbourList);
+        d_continentToCountry.appendText(l_continents);
+
+    }
+
+    /**
+     *
+     * @param l_commandString
+     */
+    private void playerIteration(String l_commandString, boolean isNotHumanPlayer) {
         String[] l_validatestr = l_commandString.split("\\s");
         boolean l_winner = false;
-        if ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done")) { //validating that user input should be in "deploy string int"
+        if (isNotHumanPlayer || ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done"))) {
+            //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
             l_issueorder.d_gameData = d_gameData;
-            l_issueorder.issueOrder(l_commandString);                    //to invoke the issue order after player gives the command
+            l_issueorder.issueOrder(l_commandString);
+            //to invoke the issue order after player gives the command
             CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
             d_gameData = l_issueorder.d_gameData;
             d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");
-            while (true) {                                                       //loop to check for which player gets a turn
+            while (true) {
+                //loop to check for which player gets a turn
                 int l_j = 0;
                 for (int l_i = 0; l_i < d_playerFlag.length; l_i++) {
                     if (d_playerFlag[l_i] == 1) {
@@ -243,17 +303,23 @@ public class GameEngine implements Initializable {
                 }
 
                 d_playCounter++;
+
                 if (d_playCounter == d_playerFlag.length) {                                   //to reset the counter if it matches the number of player
                     d_playCounter = 0;
                 }
 
                 if (d_playerFlag[d_playCounter] == 1) {                                            //it checks that plalyer is done with issues and continue loop
                     continue;
-                } else if (d_playerFlag[d_playCounter] == 0) {                                       //break the loop if finds the next player available to issue an order
-                    d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
-                    d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
-                    d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
-                    d_CommandLine.clear();
+                } else if (d_playerFlag[d_playCounter] == 0) {
+                    //break the loop if finds the next player available to issue an order
+                    if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy) {
+                        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
+                        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+                        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+                        d_CommandLine.clear();
+                    }else{
+                        playerIteration("", true);
+                    }
                     break;
                 }
             }
@@ -264,55 +330,6 @@ public class GameEngine implements Initializable {
             l_alert.setContentText("Invalid Command!!!");   //message shown in of alert
             l_alert.showAndWait();
         }
-    }
-
-    /**
-     * This is used for setting GameConfig for GameEngine
-     */
-    public void setGamePlay() {
-        GamePlay l_gamePlay = (GamePlay) gamePhase;
-        d_gameData = l_gamePlay.d_gameData;
-        showMapContents(l_gamePlay);
-        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
-        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
-        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
-        d_playerFlag = new int[d_gameData.getD_playerList().size()];
-        Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
-        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
-        IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
-        l_issueorder.d_gameData = d_gameData;
-        l_issueorder.assignReinforcements();                    //for reinforcement
-        d_gameData = l_issueorder.d_gameData;
-        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
-        d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
-    }
-
-    /**
-     * used to add the data of warmap to ui
-     * @param p_gameplay object to fetch the data of warmap from game engine
-     */
-    public void showMapContents(GamePlay p_gameplay)
-    {
-        String l_seperator=" ==> ";
-        String l_coutriesList="",l_neighbourList="",l_continents="";
-        for (Map.Entry<Integer, Continent> l_entry : p_gameplay.d_gameData.getD_warMap().getD_continents().entrySet()) {
-            l_continents=l_continents+l_entry.getValue().getD_continentName()+l_seperator;
-            for (Country l_country : l_entry.getValue().getD_countryList()) {
-                l_continents=l_continents+l_country.getD_countryName()+" , " ;
-            l_coutriesList=l_coutriesList+l_country.getD_countryName()+" ("+l_entry.getValue().getD_continentName()+")\n";
-                l_neighbourList=l_neighbourList+l_country.getD_countryName()+l_seperator;
-                for(String l_neighnoours :l_country.getD_neighbourCountries())
-                {
-                    l_neighbourList=l_neighbourList+l_neighnoours+" , ";
-                }
-                l_neighbourList=l_neighbourList+"\n";
-            }
-            l_continents=l_continents+"\n";
-        }
-        d_countriesList.appendText(l_coutriesList);
-        d_neighboursList.appendText(l_neighbourList);
-        d_continentToCountry.appendText(l_continents);
-
     }
 
 }
