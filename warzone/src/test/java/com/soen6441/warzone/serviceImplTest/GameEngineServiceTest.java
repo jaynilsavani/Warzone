@@ -144,6 +144,8 @@ public class GameEngineServiceTest {
         l_player2.setD_playerName("User2");
         l_player2.setD_ownedCountries(l_countrylist2);
         d_gameData.getD_playerList().add(l_player2);
+        l_player2.setD_stragey(Strategies.strategyToObjectMapper(Strategies.stringToStrategyMapper("human"), d_gameData));
+        d_player.setD_stragey(Strategies.strategyToObjectMapper(Strategies.stringToStrategyMapper("human"), d_gameData));
 
     }
 

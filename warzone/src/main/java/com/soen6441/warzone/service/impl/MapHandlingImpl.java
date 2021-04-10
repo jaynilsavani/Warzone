@@ -1055,6 +1055,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * {@inheritDoc }
      */
+    @Override
     public ArrayList<Country> getAvailableCountries(WarMap p_continentMap) {
 
         List<Country> l_countries = new ArrayList<Country>();
