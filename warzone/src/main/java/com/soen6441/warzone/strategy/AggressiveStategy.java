@@ -19,16 +19,7 @@ import lombok.NoArgsConstructor;
  */
 public class AggressiveStategy extends Strategy {
 
-    /**
-     * This is a parameterize constructor used to invoke Constructor of Strategy Class
-     * and it also initializes a list to add specific orders which are allowed in this
-     * strategy
-     *
-     * @param p_gameData GameData Object needed for the player GameData
-     * @param p_player Player Object on which Strategy being Applied
-     */
-    public AggressiveStategy(GameData p_gameData, Player p_player) {
-        super(p_gameData, p_player);
+    public AggressiveStategy() {
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         l_allowedOrders.add(OrderTypes.DEPLOY);
         l_allowedOrders.add(OrderTypes.ADVANCE);
@@ -37,9 +28,27 @@ public class AggressiveStategy extends Strategy {
         this.setD_allowedOrders(l_allowedOrders);
     }
 
+    public AggressiveStategy(GameData p_gameData, Player p_player) {
+        super(p_gameData, p_player);
+
+    }
+
     /**
-     * {@inheritDoc }
+     *
+     * @return
      */
+    public Country moveFrom() {
+//        int l_fromCountryIndex = generateUniqueRandomNumber(0, d_player.getD_ownedCountries().size()-1);
+        return getStrongestCountry();
+//        d_player.getD_ownedCountries().get(l_fromCountryIndex);
+    }
+
+    public Country moveTo(boolean p_isNeighbour, Country p_fromCountry) {
+        List<Country> l_opponentCountries = getOpponentCountries(p_isNeighbour, p_fromCountry);
+        int l_toCountryIndex = generateUniqueRandomNumber(0, l_opponentCountries.size() - 1);
+        return l_opponentCountries.get(l_toCountryIndex);
+    }
+
     @Override
     public Order createOrder() {
         Country l_fromCountry;
@@ -50,7 +59,8 @@ public class AggressiveStategy extends Strategy {
             d_player.getOrderProcessor().processOrder("deploy " + moveFrom().getD_countryName() + " " + l_noOfArmies, d_gameData);
             d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
         } else {
-            int a =  generateUniqueRandomNumber(2, this.d_allowedOrders.size());
+            int a = 4;
+//            generateUniqueRandomNumber(2, this.d_allowedOrders.size());
             switch (a) {
                 case 2:
                     l_fromCountry = moveFrom();
