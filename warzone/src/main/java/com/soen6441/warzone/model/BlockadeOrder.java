@@ -47,6 +47,9 @@ public class BlockadeOrder extends Order {
                     l_countryName.setD_noOfArmies(l_army);
                     l_status = true;
                 }
+            } else {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("Given Country does not Owned By Player");
             }
         }
         if (l_status) {

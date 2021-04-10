@@ -8,7 +8,10 @@ import lombok.Setter;
 
 /**
  *
- * This Class is used for Adapting ConquestMapReader to Existing map System
+ * This Class is used for Adapting ConquestMapReader to Existing map System.
+ * Three annotations (Getter,Setter, NoArgsConstructor), you can see on the
+ * top of the class are lombok dependencies to automatically generate getter,
+ * setter method and default Constructor in the code.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */

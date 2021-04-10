@@ -22,7 +22,9 @@ import lombok.Setter;
 /**
  *
  * This Class is used for Reading and Writing Conquest Map File. This is Adaptee
- * Class in Adapter Pattern
+ * Class in Adapter Pattern. Three annotations (Getter,Setter, NoArgsConstructor),
+ * you can see on the top of the class are lombok dependencies to automatically
+ * generate getter, setter method and default Constructor in the code.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -132,6 +134,8 @@ public class ConquestMapReader {
     }
 
     /**
+     * This method is used to check whether the WarMap object is successfully
+     * saved into Conquest map file or not.
      *
      * @param p_warMap Warmap file object to write
      * @return Whether Map file is being saved or not
@@ -186,6 +190,11 @@ public class ConquestMapReader {
                     l_countryStringBuilder.append(System.lineSeparator());
                 }
                 writer.println("[Map]");
+                writer.println("author=" + System.getProperty("user.name"));
+                writer.println("image=" + p_warMap.getD_mapName().split("\\.")[0] + ".bmp");
+                writer.println("wrap=yes");
+                writer.println("scroll=horizontal");
+                writer.println("warn=yes");
                 writer.println();
                 writer.println("name " + p_warMap.getD_mapName());
                 writer.println();
