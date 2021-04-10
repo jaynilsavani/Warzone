@@ -59,8 +59,7 @@ public class AggressiveStategy extends Strategy {
             d_player.getOrderProcessor().processOrder("deploy " + moveFrom().getD_countryName() + " " + l_noOfArmies, d_gameData);
             d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
         } else {
-            int a = 4;
-//            generateUniqueRandomNumber(2, this.d_allowedOrders.size());
+            int a =  generateUniqueRandomNumber(2, this.d_allowedOrders.size()+1);
             switch (a) {
                 case 2:
                     l_fromCountry = moveFrom();

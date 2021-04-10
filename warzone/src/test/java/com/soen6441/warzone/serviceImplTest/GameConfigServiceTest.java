@@ -81,7 +81,7 @@ public class GameConfigServiceTest {
         l_expectedPlayer.setD_playerName("user");
         Player l_actualPlayer = new Player();
 
-        Map.Entry<GameData, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gameData, "gameplayer -add " + l_expectedPlayer.getD_playerName());
+        Map.Entry<GameData, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gameData, "gameplayer -add " + l_expectedPlayer.getD_playerName()+" human");
         if (l_gamePlayCommandResponseEntry.getValue().isD_isValid()) {
             GameData l_gameData = l_gamePlayCommandResponseEntry.getKey();
             if (!l_gameData.getD_playerList().isEmpty()) {
