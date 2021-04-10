@@ -47,6 +47,9 @@ public class BlockadeOrder extends Order {
                     l_countryName.setD_noOfArmies(l_army);
                     l_status = true;
                 }
+            } else {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("Given Country does not Owned By Player");
             }
         }
         if (l_status) {
@@ -65,6 +68,13 @@ public class BlockadeOrder extends Order {
             if (!l_playerIndex.isEmpty()) {
                 d_gameData.getD_playerList().set(l_playerIndex.get(0), d_player);
             }
+            d_orderResponse.setD_isValid(true);
+            d_orderResponse.setD_responseString("blockade command executed successfully");
+        }
+        else
+        {
+            d_orderResponse.setD_isValid(false);
+            d_orderResponse.setD_responseString("blockade command failed due to invalid country");
         }
         return l_status;
     }

@@ -317,7 +317,7 @@ public class GameEngine implements Initializable {
                         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                         d_CommandLine.clear();
-                    }else{
+                    } else {
                         playerIteration("", true);
                     }
                     break;
