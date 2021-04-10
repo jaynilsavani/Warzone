@@ -93,6 +93,8 @@ public class AirliftOrder extends Order {
                 d_player.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
                 d_gameData.getD_playerList().remove(l_playerFromIndex);
                 d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
+                d_orderResponse.setD_isValid(true);
+                d_orderResponse.setD_responseString("advance command executed successfully");
                 return true;
             } else {
                 //checks for attack to intialize if country to is not owned by the same player or
@@ -160,6 +162,8 @@ public class AirliftOrder extends Order {
                             }
                         }
                     }
+                    d_orderResponse.setD_isValid(true);
+                    d_orderResponse.setD_responseString("advance command executed successfully");
                     return true;
                 }
 

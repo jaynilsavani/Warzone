@@ -210,6 +210,9 @@ public class DominationMapReader {
                         }
                     }
                 }
+                writer.println("; map: " + p_warMap.getD_mapName());
+                writer.println("; map made with the map maker");
+                writer.println("; yura.net Risk 1.0.9.5\n");
                 writer.println("name " + p_warMap.getD_mapName());
                 writer.println();
                 writer.println(FILES);

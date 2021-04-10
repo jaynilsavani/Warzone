@@ -190,6 +190,11 @@ public class ConquestMapReader {
                     l_countryStringBuilder.append(System.lineSeparator());
                 }
                 writer.println("[Map]");
+                writer.println("author=" + System.getProperty("user.name"));
+                writer.println("image=" + p_warMap.getD_mapName().split("\\.")[0] + ".bmp");
+                writer.println("wrap=yes");
+                writer.println("scroll=horizontal");
+                writer.println("warn=yes");
                 writer.println();
                 writer.println("name " + p_warMap.getD_mapName());
                 writer.println();

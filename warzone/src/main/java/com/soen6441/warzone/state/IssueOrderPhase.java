@@ -13,6 +13,7 @@ import java.util.List;
 
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER;
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
+import com.soen6441.warzone.strategy.HumanStartegy;
 
 /**
  * ConcreteState of the State pattern.This Phase is used to take order from each
@@ -85,14 +86,26 @@ public class IssueOrderPhase extends GamePlay {
                 List<Order> l_order = new ArrayList<>();
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_orders(l_order);
             }
-            d_issueResponse = d_gameEngine.d_orderProcessor.processOrder(p_command.trim(), d_gameData);
-            if (d_issueResponse.isD_isValid()) {
-                Player l_p = d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);
-                l_p.setOrderProcessor(d_gameEngine.d_player.getOrderProcessor());
-                l_p.issue_order();
-                d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + p_command + " | " + l_player.getD_playerName());
+            if (l_player.getD_stragey() instanceof HumanStartegy) {
+                d_issueResponse = d_gameEngine.d_orderProcessor.processOrder(p_command.trim(), d_gameData);
+            }
+            //These needs to Uncomment
+//            if (d_issueResponse.isD_isValid()) {
+//            Player l_p = d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);
+            l_player.setOrderProcessor(d_gameEngine.d_player.getOrderProcessor());
+            l_player.getD_stragey().setD_gameData(d_gameData);
+            l_player.issue_order();
+            if (l_player.getOrderProcessor().getOrderString().equalsIgnoreCase("done")) {
+                d_gameEngine.d_playerFlag[d_gameEngine.d_playCounter] = 1;
+                String l_response = l_player.getD_playerName() + " : done with issuing orders";
+                d_gameEngine.d_generalUtil.prepareResponse(true, l_response);
+                d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
+            } else {
+                d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + l_player.getOrderProcessor().getOrderString() + " | " + l_player.getD_playerName());
                 d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
             }
+
+//            }
         }
     }
 
@@ -118,6 +131,7 @@ public class IssueOrderPhase extends GamePlay {
                         }
                     }
                     l_player.setD_noOfArmies(l_noOfArmy);
+                    l_player.setD_issuedNoOfArmies(l_noOfArmy);
 
                 }
             }

@@ -75,6 +75,8 @@ public class ExecuteOrderPhase extends GamePlay {
                             l_executeOrder = l_order.executeOrder();                           //invokes the order
                             d_gameData = l_order.getGameData();
                             d_gameData.getD_playerList().get(l_j).removeCard(l_gameCard);
+                        }else{
+                            l_order.setOrderResponse(new CommandResponse(false, "Player Does not have the Card"));
                         }
                     } else {
 
@@ -92,9 +94,9 @@ public class ExecuteOrderPhase extends GamePlay {
                         l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully\n"));
                         d_logEntryBuffer.setLogEntryBuffer("Order Executed Successfully: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully");
                     }
-                    if (!l_executeOrder && (l_order instanceof DeployOrder)) {                                                              //return false ,if the deployment is failed
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() +" :: "+ l_order.getOrderResponse()));
-                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + l_order.getOrderResponse());
+                    if (!l_executeOrder) {                                                              //return false ,if the deployment is failed
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() +" :: "+ l_order.getOrderResponse().getD_responseString()));
+                        d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + l_order.getOrderResponse().getD_responseString());
                     }
 //                    if (!l_executeOrder && (l_order instanceof AdvanceOrder)) {                                                              //return false ,if the deployment is failed
 //                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() + " (advance) either countryfrom or countryto is incorrect or not enough armies or player has negotiated\n"));
