@@ -95,7 +95,7 @@ public class ExecuteOrderPhase extends GamePlay {
                         d_logEntryBuffer.setLogEntryBuffer("Order Executed Successfully: " + d_gameData.getD_playerList().get(l_j).getD_playerName() + "'s command executed successfully");
                     }
                     if (!l_executeOrder) {                                                              //return false ,if the deployment is failed
-                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() +" :: "+ l_order.getOrderResponse().getD_responseString()));
+                        l_orderStatus.add(new CommandResponse(l_executeOrder, d_gameData.getD_playerList().get(l_j).getD_playerName() +" :: "+ l_order.getOrderResponse().getD_responseString()+"\n"));
                         d_logEntryBuffer.setLogEntryBuffer("Order Execution Failed: " + l_order.getOrderResponse().getD_responseString());
                     }
 //                    if (!l_executeOrder && (l_order instanceof AdvanceOrder)) {                                                              //return false ,if the deployment is failed

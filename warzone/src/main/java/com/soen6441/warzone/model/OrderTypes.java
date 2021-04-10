@@ -12,7 +12,7 @@ public enum OrderTypes {
     /**
      * enum variable of order type used to select order
      */
-    DEPLOY, ADVANCE, AIRLIFT, BOMB, BLOCKADE;
+    DEPLOY, ADVANCE, AIRLIFT, BOMB, BLOCKADE, DIPLOMACY;
 
     /**
      * used to pick the random value of enum
