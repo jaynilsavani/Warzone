@@ -21,7 +21,7 @@ public abstract class Order {
     /**
      * Order response of the Executed Order
      */
-    public CommandResponse d_orderResponse=new CommandResponse();
+    public CommandResponse d_orderResponse = new CommandResponse();
 
     /**
      * @return Whether Order Executed or not
@@ -42,6 +42,14 @@ public abstract class Order {
      */
     public CommandResponse getOrderResponse() {
         return d_orderResponse;
+    }
+
+    /**
+     *
+     * @param p_orderResponse
+     */
+    public void setOrderResponse(CommandResponse p_orderResponse) {
+        d_orderResponse = p_orderResponse;
     }
 
 }

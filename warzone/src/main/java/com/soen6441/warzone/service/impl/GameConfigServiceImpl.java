@@ -1,8 +1,5 @@
 package com.soen6441.warzone.service.impl;
 
-import com.soen6441.warzone.adapterpattern.ConquestMapReader;
-import com.soen6441.warzone.adapterpattern.DominationMapReader;
-import com.soen6441.warzone.adapterpattern.FileReaderAdapter;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
@@ -136,7 +133,7 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Override
     public AbstractMap.Entry<GameData, CommandResponse> updatePlayer(GameData p_currentGameData, String p_command) {
         List<String> l_commandSegments = Arrays.asList(p_command.split(" "));
-        String l_playerName;
+        String l_playerName,l_strategy;
         GameData l_currentGameData = new GameData(p_currentGameData);
         //Iterate over command segmentation
         for (int i = 0; i < l_commandSegments.size(); i++) {
@@ -144,12 +141,14 @@ public class GameConfigServiceImpl implements GameConfigService {
             if (l_playerCommand.equalsIgnoreCase("-add") || l_playerCommand.equalsIgnoreCase("-remove")) {
                 if (l_playerCommand.equalsIgnoreCase("-add")) {
                     l_playerName = l_commandSegments.get(i + 1);
+                    l_strategy = l_commandSegments.get(i+2);
                     //Validation of the player name
                     if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                         //To check if player Exist Or not 
                         if (getPlayerByName(l_currentGameData, l_playerName).isEmpty()) {
                             Player l_player = new Player();
                             l_player.setD_playerName(l_playerName);     //set the player name
+                            l_player.setD_stragey(Strategies.strategyToObjectMapper(Strategies.stringToStrategyMapper(l_strategy), p_currentGameData));
                             if (l_currentGameData.getD_playerList() == null) {
                                 l_currentGameData.setD_playerList(new ArrayList<>());
                             }

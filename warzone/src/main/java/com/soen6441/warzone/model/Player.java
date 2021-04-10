@@ -63,6 +63,8 @@ public class Player {
      */
     private Strategy d_stragey;
 
+    private int d_issuedNoOfArmies;
+
     /**
      * Name country for execution of the command for source Country
      */
@@ -101,9 +103,12 @@ public class Player {
      *
      */
     public void issue_order() {
-        Order l_orderObj = orderProcessor.getOrder();
-        l_orderObj.d_player = this;
-        d_orders.add(l_orderObj);
+        this.d_stragey.setD_player(this);
+        Order l_orderObj = this.d_stragey.createOrder();
+        if (l_orderObj != null) {
+            l_orderObj.d_player = this;
+            d_orders.add(l_orderObj);
+        }
     }
 
     /**
