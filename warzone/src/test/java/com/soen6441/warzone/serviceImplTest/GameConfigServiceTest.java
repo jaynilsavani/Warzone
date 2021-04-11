@@ -1,7 +1,8 @@
 package com.soen6441.warzone.serviceImplTest;
 
-import com.soen6441.warzone.controller.GameEngine;
-import com.soen6441.warzone.model.*;
+import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.model.GameData;
+import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
