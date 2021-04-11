@@ -43,9 +43,12 @@ import org.springframework.context.annotation.Lazy;
 @Controller
 public class GameEngine implements Initializable {
 
+    /**
+     * phase of the game
+     */
     public Phase gamePhase;
     /**
-     * array of falg that shows that whether player is done with issuing order
+     * array of flag that shows that whether player is done with issuing order
      * or not for particular round
      */
     public int[] d_playerFlag;
@@ -232,18 +235,20 @@ public class GameEngine implements Initializable {
     }
 
     /**
+     *  This method is used to iterate the players for their turn
      *
-     * @param l_commandString
+     * @param p_commandString command response string
+     * @param p_isNotHumanPlayer to check whether the player is Human or not
      */
-    private void playerIteration(String l_commandString, boolean isNotHumanPlayer) {
-        String[] l_validatestr = l_commandString.split("\\s");
+    private void playerIteration(String p_commandString, boolean p_isNotHumanPlayer) {
+        String[] l_validatestr = p_commandString.split("\\s");
         boolean l_winner = false;
-        if (isNotHumanPlayer || ((d_generalUtil.validateIOString(l_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(l_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(l_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || l_commandString.equalsIgnoreCase("done"))) {
+        if (p_isNotHumanPlayer || ((d_generalUtil.validateIOString(p_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(p_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(p_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || p_commandString.equalsIgnoreCase("done"))) {
             //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
             l_issueorder.d_gameData = d_gameData;
-            l_issueorder.issueOrder(l_commandString);
+            l_issueorder.issueOrder(p_commandString);
             //to invoke the issue order after player gives the command
             CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
             d_gameData = l_issueorder.d_gameData;

@@ -90,6 +90,11 @@ public abstract class Strategy {
         return p_startNumber;
     }
 
+    /**
+     * This method is used to get available countries of all continents
+     * @param p_gameMap objects of WarMap model
+     * @return list of available countries
+     */
     public ArrayList<Country> getAvailableCountries(WarMap p_gameMap) {
 
         List<Country> l_countries = new ArrayList<Country>();
