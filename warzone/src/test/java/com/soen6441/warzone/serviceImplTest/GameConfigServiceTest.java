@@ -133,21 +133,5 @@ public class GameConfigServiceTest {
         for (Player l_p : d_gameData.getD_playerList()) {
             assertTrue(l_p.getD_ownedCountries().size() > 0);
         }
-        List<Order> l_orders = new ArrayList<>();
-        l_orders.add(new DeployOrder());
-        l_orders.add(new NegotiateOrder());
-        l_player1.setD_orders(l_orders);
-
-        List<Player> l_nPlayer = new ArrayList<>();
-        l_nPlayer.add(l_player2);
-        l_player1.setD_negotiatePlayerList(l_nPlayer);
-
-        List<GameCard> cards = new ArrayList<>();
-        cards.add(GameCard.BLOCKADE);
-        cards.add(GameCard.AIRLIFT);
-        l_player2.setD_cards(cards);
-
-        GameEngine gameData = new GameEngine();
-        gameData.saveGame(d_gameData, "abc12");
     }
 }

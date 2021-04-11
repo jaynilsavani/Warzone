@@ -1,5 +1,8 @@
 package com.soen6441.warzone.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * This interface is used for and OrderImpl is the implementation of it. Three
  * annotations (Getter,Setter, toString), you can see on the top of the class
@@ -8,6 +11,8 @@ package com.soen6441.warzone.model;
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
+@Getter
+@Setter
 public abstract class Order {
 
     /**
