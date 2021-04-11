@@ -26,27 +26,38 @@ public abstract class Order {
     /**
      * Order response of the Executed Order
      */
-    public CommandResponse d_orderResponse=new CommandResponse();
+    public CommandResponse d_orderResponse = new CommandResponse();
 
     /**
+     * This method is used to for order execution
      * @return Whether Order Executed or not
      */
     abstract public boolean executeOrder();
 
     /**
+     * This method is used to get GameData from player
      *
-     * @return Updated GameData
+     * @return Updated GameData By the player
      */
     public GameData getGameData() {
         return d_gameData;
     }
 
     /**
+     * This method is used to get an order from command response
      *
      * @return OrderResponse in CommandResponse Form
      */
     public CommandResponse getOrderResponse() {
         return d_orderResponse;
+    }
+
+    /**
+     * This method is used to set any order in command response
+     * @param p_orderResponse  OrderResponse in CommandResponse Form
+     */
+    public void setOrderResponse(CommandResponse p_orderResponse) {
+        d_orderResponse = p_orderResponse;
     }
 
 }

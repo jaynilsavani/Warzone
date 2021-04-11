@@ -107,4 +107,11 @@ public interface GeneralUtil {
      * @throws IOException
      */
     public boolean writeMapByType(WarMap p_warMap, boolean p_isConquest) throws IOException;
+    /**
+     * 
+     * @param p_startNumber starting number of the Series
+     * @param p_endNumber Ending Number of the Series
+     * @return Random Number
+     */
+    public int uniqueRandomNumberGenerate(int p_startNumber, int p_endNumber);
 }

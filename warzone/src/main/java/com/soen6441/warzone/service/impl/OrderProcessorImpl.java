@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 public class OrderProcessorImpl implements OrderProcessor {
 
     Order d_order;
+    
+    String d_command;
 
     @Autowired
     GeneralUtil d_generalUtil;
@@ -35,7 +37,12 @@ public class OrderProcessorImpl implements OrderProcessor {
      */
     @Override
     public CommandResponse processOrder(String p_orderCommand, GameData p_gameData) {
+        d_command = p_orderCommand;
         CommandResponse l_commandResponse = new CommandResponse();
+        if(p_orderCommand.equalsIgnoreCase("done")){
+           d_order = null;
+           return l_commandResponse;
+        }
         List<String> l_commandData = Arrays.asList(p_orderCommand.split(" "));  //list the input according the formation
         String l_orderName = d_generalUtil.toTitleCase(l_commandData.get(0).toLowerCase());
         List<String> l_args = l_commandData.subList(1, l_commandData.size());
@@ -111,6 +118,16 @@ public class OrderProcessorImpl implements OrderProcessor {
     @Override
     public Order getOrder() {
         return d_order;
+    }
+    
+    @Override
+    public String getOrderString(){
+        return d_command;
+    }
+
+    @Override
+    public void setOrderString(String p_order) {
+        d_command = p_order;
     }
 
 }
