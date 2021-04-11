@@ -100,7 +100,7 @@ public class AdvanceOrder extends Order {
                 d_orderResponse.setD_responseString("advance command executed successfully");
                 return true;
             }
-            if (isneighbourCountry(d_CountryNameTo, l_countryfrom)) {
+            if (!d_player.getD_ownedCountries().contains(l_countryTo) && isneighbourCountry(d_CountryNameTo, l_countryfrom)) {
                 //checks for attack to intialize if country to is not owned by the same player or
                 //country has no player and should be neighbour
                 for (Player l_player : d_gameData.getD_playerList()) {
@@ -157,16 +157,18 @@ public class AdvanceOrder extends Order {
 
                 //Check HEre If command response needed or nor
             }
+            else
+            {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("Countries are not neighbouur to each other");
+                return false;
+            }
 
         } else {
             d_orderResponse.setD_isValid(false);
             d_orderResponse.setD_responseString("Given Country does not Owned By Player");
             return false;
         }
-        d_orderResponse.setD_isValid(false);
-        d_orderResponse.setD_responseString("Given Command is not Valid");
-        return false;
-
     }
 
     /**

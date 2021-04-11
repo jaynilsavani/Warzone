@@ -45,9 +45,8 @@ public class BenevolentStategy extends Strategy {
         int l_noOfArmies;
         int l_turns=9;
         int a;
-        if (d_player.getD_issuedNoOfArmies() > 0) {
+        if (d_player.getD_issuedNoOfArmies() > 0 && d_player.getD_ownedCountries()!=null) {
             l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_issuedNoOfArmies());
-            System.out.println(l_noOfArmies);
             d_player.getOrderProcessor().processOrder("deploy " + moveFromCountry().getD_countryName() + " " + l_noOfArmies, d_gameData);
             d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
         } else {
@@ -66,7 +65,7 @@ public class BenevolentStategy extends Strategy {
                     l_noOfArmies = generateUniqueRandomNumber(1, l_fromCountry.getD_noOfArmies());
                     d_player.getOrderProcessor().processOrder("advance " + l_fromCountry.getD_countryName() + " " + moveToCountry(l_fromCountry).getD_countryName() + " " + l_noOfArmies, d_gameData);
                     break;
-                default:
+                case 3:
                     d_player.getOrderProcessor().setOrderString("done");
                     d_player.getOrderProcessor().processOrder("done", d_gameData);
                     break;
@@ -86,7 +85,13 @@ public class BenevolentStategy extends Strategy {
             }
         }
         int l_index=generateUniqueRandomNumber(0,l_countryToList.size()-1);
-        l_country=l_countryToList.get(l_index);
+        if(l_countryToList.size()>0) {
+            l_country = l_countryToList.get(l_index);
+        }
+        if(l_country==null)
+        {
+            l_country=p_country;
+        }
         return l_country;
     }
     public Country moveFromCountry() {
@@ -97,40 +102,12 @@ public class BenevolentStategy extends Strategy {
         }
         for(Country l_c:d_player.getD_ownedCountries())
         {
-            System.out.println("**"+l_c.getD_noOfArmies());
             if(l_c.getD_noOfArmies()<l_country.getD_noOfArmies())
             {
                 l_country=l_c;
-                System.out.println("##"+l_country.getD_noOfArmies());
             }
         }
         return l_country;
-    }
-    private List<Country> getRandomCountries() {
-        List<Country> l_randomCountries = new ArrayList<Country>();
-        List<Country> l_getOpponentCountries = new ArrayList<>();
-        int l_index = generateUniqueRandomNumber(0, d_player.getD_ownedCountries().size() - 1);
-        l_randomCountries.add(d_player.getD_ownedCountries().get(l_index));
-        Country l_moveFromCountry = l_randomCountries.get(0);
-        Country l_moveToCountry = null;
-        for (Country l_countries : getAvailableCountries(d_gameData.getD_warMap())) {
-            if ((d_player.getD_ownedCountries().contains(l_countries) || l_moveFromCountry.getD_neighbourCountries().contains(l_countries.getD_countryName())) && (l_countries != l_moveFromCountry)) {
-                l_getOpponentCountries.add(l_countries);
-            }
-        }
-        l_index = generateUniqueRandomNumber(0, l_getOpponentCountries.size() - 1);
-        l_randomCountries.add(l_getOpponentCountries.get(l_index));
-        return l_randomCountries;
-    }
-
-    private List<Country> getOpponentCountries() {
-        List<Country> l_getOpponentCountries = new ArrayList<>();
-        for (Country l_countries : getAvailableCountries(d_gameData.getD_warMap())) {
-            if ((!d_player.getD_ownedCountries().contains(l_countries))) {
-                l_getOpponentCountries.add(l_countries);
-            }
-        }
-        return l_getOpponentCountries;
     }
 
 }

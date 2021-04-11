@@ -56,9 +56,11 @@ public class RandomStrategy extends Strategy {
         } else {
             a = generateUniqueRandomNumber(1, this.d_allowedOrders.size());
         }
-
-        System.out.println(a);
         List<Country> l_randomCountries = getRandomCountries();
+        if(l_randomCountries.size()==0)
+        {
+            a=7;
+        }
         switch (a) {
             case 1:
                 l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_noOfArmies());
@@ -66,13 +68,17 @@ public class RandomStrategy extends Strategy {
                 //d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
                 break;
             case 2:
-                l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
-                d_player.getOrderProcessor().processOrder("advance " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
-                break;
+                if(l_randomCountries.size()==2) {
+                    l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
+                    d_player.getOrderProcessor().processOrder("advance " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
+                    break;
+                }
             case 3:
-                l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
-                d_player.getOrderProcessor().processOrder("airlift " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
-                break;
+                if(l_randomCountries.size()==2) {
+                    l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
+                    d_player.getOrderProcessor().processOrder("airlift " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
+                    break;
+                }
             case 4:
                 List<Country> l_opponentCountries=getOpponentCountries();
                 l_index=generateUniqueRandomNumber(0,l_opponentCountries.size()-1);
