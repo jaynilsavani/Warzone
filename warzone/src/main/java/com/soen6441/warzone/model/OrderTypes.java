@@ -10,18 +10,34 @@ import java.util.Random;
  */
 public enum OrderTypes {
     /**
-     * enum variable of order type used to select order
+     * enum variable for DEPLOY order
      */
-    DEPLOY, ADVANCE, AIRLIFT, BOMB, BLOCKADE;
+    DEPLOY,
+    /**
+     * enum variable for ADVANCE order
+     */
+    ADVANCE,
+    /**
+     * enum variable for AIRLIFT order
+     */
+    AIRLIFT,
+    /**
+     * enum variable for BOMB order
+     */
+    BOMB,
+    /**
+     * enum variable for BLOCKADE order
+     */
+    BLOCKADE;
 
     /**
-     * used to pick the random value of enum
+     * This method is used to pick the random game card
      *
-     * @param p_allowedOrder List of allowed ORder
+     * @param p_allowedOrder List of allowed Order
      * @return returns the OrderTypes object
      */
     public static OrderTypes randomGameCard(List<OrderTypes> p_allowedOrder) {
-        int l_pick = new Random().nextInt(p_allowedOrder.size());
+        int l_pick = new Random().nextInt( p_allowedOrder.size() );
         return OrderTypes.values()[l_pick];
     }
 }
