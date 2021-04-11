@@ -11,14 +11,17 @@ import lombok.NoArgsConstructor;
 
 /**
  *
- * This Class is used for Implementing Aggressive Strategy of a Player. A NoArgsConstructor
- * annotation top of the class is a lombok dependency to automatically generate default
- * Constructor in the code.
+ * This Class is used for Implementing Aggressive Strategy of a Player.
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 public class AggressiveStategy extends Strategy {
 
+    /**
+     * This is a default constructor used to initializes a list to
+     * add specific orders which are allowed in this strategy
+     *
+     */
     public AggressiveStategy() {
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         l_allowedOrders.add(OrderTypes.DEPLOY);
@@ -28,27 +31,39 @@ public class AggressiveStategy extends Strategy {
         this.setD_allowedOrders(l_allowedOrders);
     }
 
+    /**
+     * This is a parameterize constructor used to invoke Constructor of Strategy Class
+     *
+     * @param p_gameData GameData Object needed for the player GameData
+     * @param p_player Player Object on which Strategy being Applied
+     */
     public AggressiveStategy(GameData p_gameData, Player p_player) {
         super(p_gameData, p_player);
 
     }
 
-    /**
+    /** This method is used to get Strongest Country of a Player
      *
-     * @return
+     * @return Strongest Country
      */
     public Country moveFrom() {
-//        int l_fromCountryIndex = generateUniqueRandomNumber(0, d_player.getD_ownedCountries().size()-1);
         return getStrongestCountry();
-//        d_player.getD_ownedCountries().get(l_fromCountryIndex);
     }
-
+    /**
+     * This method is used choose opponent's country randomly to attack from a strongest country
+     *
+     * @param p_isNeighbour to check whether it is a neighbour country or not
+     * @param p_fromCountry country from where to attack
+     * @return randomly selected opponent's country
+     */
     public Country moveTo(boolean p_isNeighbour, Country p_fromCountry) {
         List<Country> l_opponentCountries = getOpponentCountries(p_isNeighbour, p_fromCountry);
         int l_toCountryIndex = generateUniqueRandomNumber(0, l_opponentCountries.size() - 1);
         return l_opponentCountries.get(l_toCountryIndex);
     }
-
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Order createOrder() {
         Country l_fromCountry;
@@ -84,7 +99,11 @@ public class AggressiveStategy extends Strategy {
         }
         return d_player.getOrderProcessor().getOrder();
     }
-
+    /**
+     * This method is used to get Strongest Country from owned countries of a Player.
+     *
+     * @return Strongest country
+     */
     private Country getStrongestCountry() {
         Country l_strongestCountry = null;
         if (d_player.getD_ownedCountries() != null || d_player.getD_ownedCountries().size() != 0) {
@@ -97,7 +116,13 @@ public class AggressiveStategy extends Strategy {
         }
         return l_strongestCountry;
     }
-
+    /**
+     * This method is used to get a list of opponent countries
+     *
+     * @param p_isNeighbour to check whether it is a neighbour country or not
+     * @param p_fromCountry country from where to attack
+     * @return list of opponent's countries to attack
+     */
     private List<Country> getOpponentCountries(boolean p_isNeighbour, Country p_fromCountry) {
         List<Country> l_defenderCountries = new ArrayList<Country>();
         for (Country l_country : getAvailableCountries(d_gameData.getD_warMap())) {
