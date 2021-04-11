@@ -176,7 +176,7 @@ public class GameConfigController implements Initializable {
                 l_gmConfigRes.setD_responseString("Countries are already assigned to each player");
             } else {
                 if (d_gameData.getD_warMap() != null) {
-//                    if ((l_commandSegments.size() - 1) % 2 == 0) {                                 //validates the command
+                    if (d_generalUtil.validateIOString(l_command, "gameplayer((\\s-add\\s[a-z|A-Z|_-]+\\s(human|random|cheater|aggressive|benevolent))|(\\s-remove\\s[a-z|A-Z|_-]+))+")) {                                 //validates the command
                         Map.Entry<GameData, CommandResponse> l_updatedGamePlay = d_gameConfigService.updatePlayer(d_gameData, l_command);
 
                         if (l_updatedGamePlay.getValue().isD_isValid()) {
@@ -191,9 +191,9 @@ public class GameConfigController implements Initializable {
                             l_updatedGamePlay.getValue().setD_responseString(l_updatedGamePlay.getValue().getD_responseString() + l_playerName);
                         }
                         d_generalUtil.prepareResponse(l_updatedGamePlay.getValue().isD_isValid(), l_updatedGamePlay.getValue().getD_responseString());
-//                    } else {                                                                    //if command is not valid
-//                        d_generalUtil.prepareResponse(false, "Please enter valid Game Player command");
-//                    }
+                    } else {                                                                    //if command is not valid
+                        d_generalUtil.prepareResponse(false, "Please enter valid Game Player command!@");
+                    }
                     l_gmConfigRes = d_generalUtil.getResponse();
                 } else {                                                                     //if map of game engine is empty
                     l_gmConfigRes.setD_isValid(false);
