@@ -28,7 +28,12 @@ public enum OrderTypes {
     /**
      * enum variable for BLOCKADE order
      */
-    BLOCKADE;
+    BLOCKADE,
+      /**
+     * enum variable for diplomacy(negotiate) order
+     */
+    DIPLOMACY;
+
 
     /**
      * This method is used to pick the random game card
