@@ -195,18 +195,33 @@ public class GameEngine implements Initializable {
         GamePlay l_gamePlay = (GamePlay) gamePhase;
         d_gameData = l_gamePlay.d_gameData;
         showMapContents(l_gamePlay);
+        int l_i=0;
+        while(l_i<l_gamePlay.d_gameData.getD_playerList().size())
+        {
+            if(l_gamePlay.d_gameData.getD_playerList().get(l_i).getD_stragey() instanceof HumanStartegy)
+            {
+                d_playerTurn.setText(d_gameData.getD_playerList().get(l_i).getD_playerName() + "'s turn");  //shows whose turn now is
+                break;
+            }
+            l_i++;
+        }
         d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         d_playerFlag = new int[d_gameData.getD_playerList().size()];
         Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
-        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
         IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
         l_issueorder.d_gameData = d_gameData;
         l_issueorder.assignReinforcements();                    //for reinforcement
         d_gameData = l_issueorder.d_gameData;
-        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
         d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
+        d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
+        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData)+"\n");
+        d_FireCommandList.appendText("------------ORDERS------------\n");
+        if(!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStartegy))
+        {
+            playerIteration("", true);
+        }
     }
 
     /**
@@ -284,7 +299,6 @@ public class GameEngine implements Initializable {
                         }
                     }
                     if (!l_winner) {
-                        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
                         CommandResponse l_map = d_gameConfig.showPlayerMap(d_gameData);           //to show the map and player*country table
                         d_FireCommandList.appendText(l_map.getD_responseString());
                         for (Player l_player : d_gameData.getD_playerList()) {
@@ -299,11 +313,27 @@ public class GameEngine implements Initializable {
                         l_issueorder.assignReinforcements();                    //for reinforcement
                         d_gameData = l_issueorder.d_gameData;
                         d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gameData));
-                        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s tsdurn");
-                        //label to show player's turn
-                        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
-                        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
-                        d_CommandLine.clear();
+                        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData)+"\n");
+                        d_FireCommandList.appendText("------------ORDERS------------\n");
+                        int l_ind=0;
+                        while(l_ind<d_gameData.getD_playerList().size())
+                        {
+                            if(d_gameData.getD_playerList().get(l_ind).getD_stragey() instanceof HumanStartegy)
+                            {
+                                d_playerTurn.setText(d_gameData.getD_playerList().get(l_ind).getD_playerName() + "'s turn");  //shows whose turn now is
+                                d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+                                d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+                                break;
+                            }
+                            l_ind++;
+                        }
+                        if(!(d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy))
+                        {
+                            playerIteration("",true);
+                        }
+                        if(!l_winner) {
+                            d_CommandLine.clear();
+                        }
 
                     }
                     break;

@@ -43,6 +43,7 @@ public class OrderProcessorImpl implements OrderProcessor {
             d_order = null;
             return l_commandResponse;
         }
+        //System.out.println(p_orderCommand);
         List<String> l_commandData = Arrays.asList(p_orderCommand.split(" "));  //list the input according the formation
         String l_orderName = d_generalUtil.toTitleCase(l_commandData.get(0).toLowerCase());
         List<String> l_args = l_commandData.subList(1, l_commandData.size());

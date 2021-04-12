@@ -67,29 +67,40 @@ public class AggressiveStategy extends Strategy {
     @Override
     public Order createOrder() {
         Country l_fromCountry;
-        int l_noOfArmies;
+        int l_noOfArmies,a;
 
-        if (d_player.getD_issuedNoOfArmies() > 0) {
+        if (d_player.getD_issuedNoOfArmies() > 0 && d_player.getD_ownedCountries()!=null &&d_player.getD_ownedCountries().size()!=0) {
             l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_issuedNoOfArmies());
             d_player.getOrderProcessor().processOrder("deploy " + moveFrom().getD_countryName() + " " + l_noOfArmies, d_gameData);
             d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
         } else {
-            int a =  generateUniqueRandomNumber(2, this.d_allowedOrders.size()+1);
+
+            if(d_player.getD_ownedCountries()==null | d_player.getD_ownedCountries().size()==0)
+            {
+                a=8;
+            }
+            else
+            {
+                a =  generateUniqueRandomNumber(2, this.d_allowedOrders.size()+1);
+            }
             switch (a) {
                 case 2:
                     l_fromCountry = moveFrom();
+                    //System.out.println(l_fromCountry.getD_countryName());
                     l_noOfArmies = generateUniqueRandomNumber(1, l_fromCountry.getD_noOfArmies());
                     d_player.getOrderProcessor().processOrder("advance " + l_fromCountry.getD_countryName() + " " + moveTo(true, l_fromCountry).getD_countryName() + " " + l_noOfArmies, d_gameData);
                     break;
                 case 3:
                     l_fromCountry = moveFrom();
+                    //System.out.println(l_fromCountry.getD_countryName());
                     l_noOfArmies = generateUniqueRandomNumber(1, l_fromCountry.getD_noOfArmies());
                     d_player.getOrderProcessor().processOrder("airlift " + l_fromCountry.getD_countryName() + " " + moveTo(false, l_fromCountry).getD_countryName() + " " + l_noOfArmies, d_gameData);
                     break;
                 case 4:
                     l_fromCountry = moveFrom();
+                    //System.out.println(l_fromCountry.getD_countryName());
                     l_noOfArmies = generateUniqueRandomNumber(1, l_fromCountry.getD_noOfArmies());
-                    d_player.getOrderProcessor().processOrder("bomb " + moveTo(false, l_fromCountry).getD_countryName() + " " + l_noOfArmies, d_gameData);
+                    d_player.getOrderProcessor().processOrder("bomb " + moveTo(false, l_fromCountry).getD_countryName(), d_gameData);
                     break;
                 default:
                     d_player.getOrderProcessor().setOrderString("done");
@@ -106,11 +117,11 @@ public class AggressiveStategy extends Strategy {
      */
     private Country getStrongestCountry() {
         Country l_strongestCountry = null;
-        if (d_player.getD_ownedCountries() != null || d_player.getD_ownedCountries().size() != 0) {
+        if (d_player.getD_ownedCountries() != null && d_player.getD_ownedCountries().size() != 0) {
             l_strongestCountry = d_player.getD_ownedCountries().get(0);
         }
         for (Country l_country : d_player.getD_ownedCountries()) {
-            if (l_country.getD_noOfArmies() >= l_strongestCountry.getD_noOfArmies()) {
+            if (l_country.getD_noOfArmies() > l_strongestCountry.getD_noOfArmies()) {
                 l_strongestCountry = l_country;
             }
         }

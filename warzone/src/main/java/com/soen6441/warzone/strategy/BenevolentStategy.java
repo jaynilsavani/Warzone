@@ -47,12 +47,18 @@ public class BenevolentStategy extends Strategy {
         Country l_fromCountry;
         int l_noOfArmies,l_index;
         int a;
-        if (d_player.getD_issuedNoOfArmies() > 0 && d_player.getD_ownedCountries()!=null) {
+        if (d_player.getD_issuedNoOfArmies() > 0 && d_player.getD_ownedCountries()!=null && d_player.getD_ownedCountries().size()!=0) {
             l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_issuedNoOfArmies());
             d_player.getOrderProcessor().processOrder("deploy " + moveFromCountry().getD_countryName() + " " + l_noOfArmies, d_gameData);
             d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
         } else {
-                a =  generateUniqueRandomNumber(2, this.d_allowedOrders.size()+1);
+            if(d_player.getD_ownedCountries()==null && d_player.getD_ownedCountries().size()==0)
+            {
+                a=6;
+            }
+            else {
+                a = generateUniqueRandomNumber(2, this.d_allowedOrders.size() + 1);
+            }
             switch (a) {
                 case 2:
                     l_fromCountry = moveFromCountry();
