@@ -58,6 +58,7 @@ public class GameEngine implements Initializable {
      * counter that invokes after each order issued by player
      */
     public int d_playCounter = 0;
+    public boolean l_winner = false;
 
     @FXML
     public TextArea d_TerritoryListText;
@@ -81,13 +82,13 @@ public class GameEngine implements Initializable {
     @Autowired
     private GameData d_gameData;
     @FXML
-    private TextField d_CommandLine;
+    public TextField d_CommandLine;
     @FXML
     private TextArea d_FireCommandList;
     @FXML
-    private Button d_FireCommand;
+    public Button d_FireCommand;
     @FXML
-    private Label d_playerTurn;
+    public Label d_playerTurn;
     @FXML
     private TextArea d_countriesList;
     @FXML
@@ -236,14 +237,13 @@ public class GameEngine implements Initializable {
     }
 
     /**
-     *  This method is used to iterate the players for their turn
+     * This method is used to iterate the players for their turn
      *
      * @param p_commandString command response string
      * @param p_isNotHumanPlayer to check whether the player is Human or not
      */
     private void playerIteration(String p_commandString, boolean p_isNotHumanPlayer) {
         String[] l_validatestr = p_commandString.split("\\s");
-        boolean l_winner = false;
         if (p_isNotHumanPlayer || ((d_generalUtil.validateIOString(p_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(p_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(p_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || p_commandString.equalsIgnoreCase("done"))) {
             //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
@@ -272,7 +272,7 @@ public class GameEngine implements Initializable {
                     List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
-                        //to check the winner
+                        //To check the winner
                         if (l_commandList.get(l_i).getD_responseString().contains("IS WINNER!!!")) {
                             l_winner = true;
                             d_CommandLine.setText(l_commandList.get(l_i).getD_responseString());
@@ -299,7 +299,8 @@ public class GameEngine implements Initializable {
                         l_issueorder.assignReinforcements();                    //for reinforcement
                         d_gameData = l_issueorder.d_gameData;
                         d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gameData));
-                        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");    //label to show player's turn
+                        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s tsdurn");
+                        //label to show player's turn
                         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
                         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                         d_CommandLine.clear();
@@ -318,13 +319,17 @@ public class GameEngine implements Initializable {
                     continue;
                 } else if (d_playerFlag[d_playCounter] == 0) {
                     //break the loop if finds the next player available to issue an order
-                    if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy) {
-                        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
-                        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
-                        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
-                        d_CommandLine.clear();
-                    } else {
-                        playerIteration("", true);
+                    if (!l_winner) {
+                        if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy) {
+
+                            d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
+                            d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+                            d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+                            d_CommandLine.clear();
+
+                        } else {
+                            playerIteration("", true);
+                        }
                     }
                     break;
                 }

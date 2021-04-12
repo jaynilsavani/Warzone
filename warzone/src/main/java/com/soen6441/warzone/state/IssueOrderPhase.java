@@ -13,6 +13,9 @@ import java.util.List;
 
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER;
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
+import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.service.MapHandlingInterface;
+import com.soen6441.warzone.service.impl.MapHandlingImpl;
 import com.soen6441.warzone.strategy.HumanStartegy;
 
 /**
@@ -25,6 +28,7 @@ public class IssueOrderPhase extends GamePlay {
 
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
+    MapHandlingInterface l_map = new MapHandlingImpl();
 
     /**
      * This parameterized constructor is used to invoke Phase Constructor and
@@ -104,8 +108,15 @@ public class IssueOrderPhase extends GamePlay {
                 d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + l_player.getOrderProcessor().getOrderString() + " | " + l_player.getD_playerName());
                 d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
             }
+            if (l_player.getD_ownedCountries().size() == l_map.getAvailableCountries(d_gameData.getD_warMap()).size()) {
+                l_player.setD_isWinner(true);
+                d_gameEngine.d_CommandLine.setText(l_player.getD_playerName()+"  IS WINNER!!!\n");
+                d_gameEngine.d_FireCommand.setDisable(true);
+                d_gameEngine.d_CommandLine.setDisable(true);
+                d_gameEngine.d_playerTurn.setText("");
+                d_gameEngine.l_winner = true;
+            }
 
-//            }
         }
     }
 
