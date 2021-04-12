@@ -49,7 +49,7 @@
                 <Font name="System Bold" size="16.0"/>
             </font>
         </Label>
-        <TextArea layoutX="98.0" layoutY="109.0" prefHeight="125.0" prefWidth="487.0"
+        <TextArea fx:id="d_userGuide" layoutX="98.0" layoutY="109.0" prefHeight="125.0" prefWidth="487.0"
                   text="Startup Phase commands:&#10;&#10;To add/delete player: &#10;gameplayer -add playername -remove playername&#10;&#10;To display map:&#10;showmap&#10;&#10;To load map:&#10;loadmap filename&#10;&#10;To assign countries:&#10;assigncountries">
             <font>
                 <Font name="System Italic" size="12.0"/>
