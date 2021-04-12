@@ -2,6 +2,7 @@ package com.soen6441.warzone.service;
 
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
+import com.soen6441.warzone.model.Tournament;
 import com.soen6441.warzone.model.WarMap;
 
 import java.io.IOException;
@@ -50,4 +51,18 @@ public interface GameConfigService {
      * countries
      */
     public CommandResponse assignCountries(GameData p_gameData);
+
+    /**
+     *
+     * @param p_command Command Of the Tournament
+     * @return Tournament Object or null Object
+     * @throws IOException
+     */
+    public Tournament createTournament(String p_command) throws IOException;
+
+    /**
+     *
+     * @return CommandResponse
+     */
+    public CommandResponse getResponse();
 }
