@@ -33,6 +33,9 @@ public class BenevolentStategy extends Strategy {
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         l_allowedOrders.add(OrderTypes.DEPLOY);
         l_allowedOrders.add(OrderTypes.ADVANCE);
+        l_allowedOrders.add(OrderTypes.AIRLIFT);
+        l_allowedOrders.add(OrderTypes.BLOCKADE);
+        l_allowedOrders.add(OrderTypes.DIPLOMACY);
         this.setD_allowedOrders(l_allowedOrders);
     }
 
@@ -42,23 +45,14 @@ public class BenevolentStategy extends Strategy {
     @Override
     public Order createOrder() {
         Country l_fromCountry;
-        int l_noOfArmies;
-        int l_turns=9;
+        int l_noOfArmies,l_index;
         int a;
         if (d_player.getD_issuedNoOfArmies() > 0 && d_player.getD_ownedCountries()!=null) {
             l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_issuedNoOfArmies());
             d_player.getOrderProcessor().processOrder("deploy " + moveFromCountry().getD_countryName() + " " + l_noOfArmies, d_gameData);
             d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
         } else {
-            int l_round=d_player.getD_orders().size();
-            if(d_player.getD_orders().size()<l_turns)
-            {
-                a =2;
-            }
-            else
-            {
                 a =  generateUniqueRandomNumber(2, this.d_allowedOrders.size()+1);
-            }
             switch (a) {
                 case 2:
                     l_fromCountry = moveFromCountry();
@@ -66,6 +60,25 @@ public class BenevolentStategy extends Strategy {
                     d_player.getOrderProcessor().processOrder("advance " + l_fromCountry.getD_countryName() + " " + moveToCountry(l_fromCountry).getD_countryName() + " " + l_noOfArmies, d_gameData);
                     break;
                 case 3:
+                    l_fromCountry = moveFromCountry();
+                    l_noOfArmies = generateUniqueRandomNumber(1, l_fromCountry.getD_noOfArmies());
+                    d_player.getOrderProcessor().processOrder("airlift " + l_fromCountry.getD_countryName() + " " + moveToCountry(l_fromCountry).getD_countryName() + " " + l_noOfArmies, d_gameData);
+                    break;
+                case 4:
+                    l_fromCountry = moveFromCountry();
+                    d_player.getOrderProcessor().processOrder("blockade " + l_fromCountry.getD_countryName(), d_gameData);
+                    break;
+                case 5:
+                    while(true) {
+                        l_index = generateUniqueRandomNumber(0, d_gameData.getD_playerList().size() - 1);
+                        if(!d_gameData.getD_playerList().get(l_index).getD_playerName().equalsIgnoreCase(d_player.getD_playerName()))
+                        {
+                            break;
+                        }
+                    }
+                    d_player.getOrderProcessor().processOrder("negotiate " + d_gameData.getD_playerList().get(l_index).getD_playerName(), d_gameData);
+                    break;
+                case 6:
                     d_player.getOrderProcessor().setOrderString("done");
                     d_player.getOrderProcessor().processOrder("done", d_gameData);
                     break;
