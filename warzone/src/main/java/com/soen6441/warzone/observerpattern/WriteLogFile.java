@@ -32,6 +32,6 @@ public class WriteLogFile implements Observer {
      * @param p_observable object that contains the information to be displayed
      */
     public void update(Observable p_observable) {
-        d_logger.info(((LogEntryBuffer) p_observable).getD_message());
+//        d_logger.info(((LogEntryBuffer) p_observable).getD_message());
     }
 }

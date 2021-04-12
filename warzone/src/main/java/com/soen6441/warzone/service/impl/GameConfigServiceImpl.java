@@ -59,10 +59,14 @@ public class GameConfigServiceImpl implements GameConfigService {
             int l_colSize = l_countryList.size() + 1;
             int l_rowSize = p_gameData.getD_playerList().size() + 1;
             String[][] l_playerToCountry = new String[l_rowSize][l_colSize];
+            String l_playerRowData="";
             int l_maxLength = 0;
             //Iterate over player list
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 //Iterate over country list
+                if(l_i>0) {
+                    l_playerRowData = l_playerRowData + p_gameData.getD_playerList().get(l_i-1).getD_playerName().toUpperCase() + " : ";
+                }
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     if (l_i == 0 && l_j == 0) {
 
@@ -86,6 +90,10 @@ public class GameConfigServiceImpl implements GameConfigService {
                             while (l_same < p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().size()) {
                                 if (l_countryList.get(l_j - 1).getD_countryName().equalsIgnoreCase(p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().get(l_same).getD_countryName())) {
                                     l_playerToCountry[l_i][l_j] = String.valueOf(l_countryList.get(l_j - 1).getD_noOfArmies()); //get number of armies for country
+                                    if(l_countryList.get(l_j - 1).getD_noOfArmies()>0)
+                                    {
+                                        l_playerRowData=l_playerRowData+l_countryList.get(l_j - 1).getD_countryName()+"-"+l_countryList.get(l_j - 1).getD_noOfArmies()+",";
+                                    }
                                     break;
                                 }
                                 l_same++;
@@ -94,18 +102,24 @@ public class GameConfigServiceImpl implements GameConfigService {
                             l_playerToCountry[l_i][l_j] = "0";
                         }
                     }
+
+                }
+                if(l_i>0) {
+                    l_playerRowData = l_playerRowData + "\n";
                 }
             }
             String l_titleMessage = "\nList of country owned by each player with armies:: \n";
             l_showMapOfCountris = l_showMapOfCountris + l_titleMessage;
             //formatting matrix
-            for (int l_i = 0; l_i < l_rowSize; l_i++) {
+            /*for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_playerToCountry[l_i][l_j]);      //string formatting for matrix representation
                     l_showMapOfCountris = l_showMapOfCountris + l_stringFrmat + " ";
                 }
                 l_showMapOfCountris = l_showMapOfCountris + "\n";
-            }
+
+            }*/
+            l_showMapOfCountris=l_showMapOfCountris+l_playerRowData;
             l_showCountris.setD_isValid(true);
             l_showCountris.setD_responseString(l_showMapOfCountris);
 

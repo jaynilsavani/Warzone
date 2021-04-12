@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER;
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
@@ -74,7 +75,6 @@ public class IssueOrderPhase extends GamePlay {
     @Override
     public void issueOrder(String p_command) {
         Player l_player = d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);              //assigns the current player using the playcounter
-        d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_player.getD_playerName() + "'s turn -> " + p_command);
         if (d_gameData.getD_maxNumberOfTurns() < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
             d_gameData.setD_maxNumberOfTurns(l_player.getD_orders().size());
         }
@@ -85,7 +85,7 @@ public class IssueOrderPhase extends GamePlay {
             d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
 
         } else {                                                   //issue and order to that player
-            String[] l_commands = p_command.split("\\s+");
+            //String[] l_commands = p_command.split("\\s+");
             if (l_player.getD_orders() == null) {
                 List<Order> l_order = new ArrayList<>();
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_orders(l_order);
@@ -99,6 +99,7 @@ public class IssueOrderPhase extends GamePlay {
             l_player.setOrderProcessor(d_gameEngine.d_player.getOrderProcessor());
             l_player.getD_stragey().setD_gameData(d_gameData);
             l_player.issue_order();
+            d_logEntryBuffer.setLogEntryBuffer("Command:: " + l_player.getD_playerName() + "'s turn -> " + l_player.getOrderProcessor().getOrderString());
             if (l_player.getOrderProcessor().getOrderString().equalsIgnoreCase("done")) {
                 d_gameEngine.d_playerFlag[d_gameEngine.d_playCounter] = 1;
                 String l_response = l_player.getD_playerName() + " : done with issuing orders";
@@ -110,7 +111,7 @@ public class IssueOrderPhase extends GamePlay {
             }
             if (l_player.getD_ownedCountries().size() == l_map.getAvailableCountries(d_gameData.getD_warMap()).size()) {
                 l_player.setD_isWinner(true);
-                d_gameEngine.d_CommandLine.setText(l_player.getD_playerName()+"  IS WINNER!!!\n");
+                d_gameEngine.d_CommandLine.setText(l_player.getD_playerName().toUpperCase()+"  IS WINNER!!!\n");
                 d_gameEngine.d_FireCommand.setDisable(true);
                 d_gameEngine.d_CommandLine.setDisable(true);
                 d_gameEngine.d_playerTurn.setText("");
