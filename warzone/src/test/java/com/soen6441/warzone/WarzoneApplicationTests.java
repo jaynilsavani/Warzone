@@ -1,5 +1,6 @@
 package com.soen6441.warzone;
 
+import com.soen6441.warzone.adapterpattenTest.adapterPatternTestSuite;
 import com.soen6441.warzone.serviceImplTest.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @RunWith(Suite.class)
-@SuiteClasses({MapHandlingTestSuite.class, GameConfigTestSuite.class, GameEngineTestSuite.class})
+@SuiteClasses({MapHandlingTestSuite.class, GameConfigTestSuite.class, GameEngineTestSuite.class, adapterPatternTestSuite.class})
 public class WarzoneApplicationTests {
 
     /**

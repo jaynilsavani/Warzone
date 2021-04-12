@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -57,6 +58,7 @@ public class GameEngine implements Initializable {
      * counter that invokes after each order issued by player
      */
     public int d_playCounter = 0;
+    public boolean l_winner = false;
 
     @FXML
     public TextArea d_TerritoryListText;
@@ -80,13 +82,13 @@ public class GameEngine implements Initializable {
     @Autowired
     private GameData d_gameData;
     @FXML
-    private TextField d_CommandLine;
+    public TextField d_CommandLine;
     @FXML
     private TextArea d_FireCommandList;
     @FXML
-    private Button d_FireCommand;
+    public Button d_FireCommand;
     @FXML
-    private Label d_playerTurn;
+    public Label d_playerTurn;
     @FXML
     private TextArea d_countriesList;
     @FXML
@@ -193,32 +195,18 @@ public class GameEngine implements Initializable {
         GamePlay l_gamePlay = (GamePlay) gamePhase;
         d_gameData = l_gamePlay.d_gameData;
         showMapContents(l_gamePlay);
-        int l_i=0;
-        while(l_i<l_gamePlay.d_gameData.getD_playerList().size())
-        {
-            if(l_gamePlay.d_gameData.getD_playerList().get(l_i).getD_stragey() instanceof HumanStartegy)
-            {
-                d_playerTurn.setText(d_gameData.getD_playerList().get(l_i).getD_playerName() + "'s turn");  //shows whose turn now is
-                break;
-            }
-            l_i++;
-        }
+        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         d_playerFlag = new int[d_gameData.getD_playerList().size()];
         Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
+        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
         IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
         l_issueorder.d_gameData = d_gameData;
         l_issueorder.assignReinforcements();                    //for reinforcement
         d_gameData = l_issueorder.d_gameData;
-        d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
         d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
-        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData)+"\n");
-        d_FireCommandList.appendText("------------ORDERS------------\n");
-        if(!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStartegy))
-        {
-            playerIteration("", true);
-        }
+        d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
     }
 
     /**
@@ -249,14 +237,13 @@ public class GameEngine implements Initializable {
     }
 
     /**
-     *  This method is used to iterate the players for their turn
+     * This method is used to iterate the players for their turn
      *
      * @param p_commandString command response string
      * @param p_isNotHumanPlayer to check whether the player is Human or not
      */
     private void playerIteration(String p_commandString, boolean p_isNotHumanPlayer) {
         String[] l_validatestr = p_commandString.split("\\s");
-        boolean l_winner = false;
         if (p_isNotHumanPlayer || ((d_generalUtil.validateIOString(p_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(p_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(p_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || p_commandString.equalsIgnoreCase("done"))) {
             //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
@@ -285,7 +272,7 @@ public class GameEngine implements Initializable {
                     List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         d_FireCommandList.appendText(l_commandList.get(l_i).getD_responseString());
-                        //to check the winner
+                        //To check the winner
                         if (l_commandList.get(l_i).getD_responseString().contains("IS WINNER!!!")) {
                             l_winner = true;
                             d_CommandLine.setText(l_commandList.get(l_i).getD_responseString());
@@ -297,6 +284,7 @@ public class GameEngine implements Initializable {
                         }
                     }
                     if (!l_winner) {
+                        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData));
                         CommandResponse l_map = d_gameConfig.showPlayerMap(d_gameData);           //to show the map and player*country table
                         d_FireCommandList.appendText(l_map.getD_responseString());
                         for (Player l_player : d_gameData.getD_playerList()) {
@@ -311,24 +299,10 @@ public class GameEngine implements Initializable {
                         l_issueorder.assignReinforcements();                    //for reinforcement
                         d_gameData = l_issueorder.d_gameData;
                         d_FireCommandList.appendText("\n" + d_gameEngineSevice.showReinforcementArmies(d_gameData));
-                        d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData)+"\n");
-                        d_FireCommandList.appendText("------------ORDERS------------\n");
-                        int l_ind=0;
-                        while(l_ind<d_gameData.getD_playerList().size())
-                        {
-                            if(d_gameData.getD_playerList().get(l_ind).getD_stragey() instanceof HumanStartegy)
-                            {
-                                d_playerTurn.setText(d_gameData.getD_playerList().get(l_ind).getD_playerName() + "'s turn");  //shows whose turn now is
-                                d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
-                                d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
-                                break;
-                            }
-                            l_ind++;
-                        }
-                        if(!(d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy))
-                        {
-                         playerIteration("",true);
-                        }
+                        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s tsdurn");
+                        //label to show player's turn
+                        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+                        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
                         d_CommandLine.clear();
 
                     }
@@ -345,13 +319,17 @@ public class GameEngine implements Initializable {
                     continue;
                 } else if (d_playerFlag[d_playCounter] == 0) {
                     //break the loop if finds the next player available to issue an order
-                    if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy) {
-                        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
-                        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
-                        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
-                        d_CommandLine.clear();
-                    } else {
-                        playerIteration("", true);
+                    if (!l_winner) {
+                        if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy) {
+
+                            d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
+                            d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+                            d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+                            d_CommandLine.clear();
+
+                        } else {
+                            playerIteration("", true);
+                        }
                     }
                     break;
                 }
@@ -365,4 +343,592 @@ public class GameEngine implements Initializable {
         }
     }
 
+    /**
+     * This method is used to save game data in file
+     *
+     * @param p_gameData current game data
+     * @param p_fileName filename
+     */
+    public boolean saveGame(GameData p_gameData, String p_fileName) {
+        // for managing the .txt extension of the file
+        if (p_fileName.contains(".")) {
+            String l_fileNameSplit = p_fileName.split("\\.")[1];
+            if (!l_fileNameSplit.equals("txt")) {
+                p_fileName = p_fileName.concat(".txt");
+            }
+        } else {
+            p_fileName = p_fileName.concat(".txt");
+        }
+        boolean l_status;
+        try {
+            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(GAME_DEF_PATH + p_fileName), "utf-8")));) {
+                List<StringBuilder> l_stringBuilderList = new ArrayList<>();
+
+                l_stringBuilderList.addAll(writeMapData(p_gameData));
+                l_stringBuilderList.addAll(writePlayerData(p_gameData));
+
+                writer.println("Date: " + (new Date()).toString());
+                writer.println("Author: " + System.getProperty("user.name"));
+                writer.println();
+                writer.println("Game Data");
+                writer.println();
+                writer.println(MAP_NAME);
+                writer.println(p_gameData.getD_warMap().getD_mapName());
+                writer.println();
+                for (StringBuilder l_stringBuilder : l_stringBuilderList) {
+                    writer.println(l_stringBuilder.toString());
+                }
+                l_status = true;
+            }
+        } catch (Exception e) {
+            l_status = false;
+        }
+
+        return l_status;
+    }
+
+    /**
+     * This method is used to write map data
+     *
+     * @param p_gameData current game data object
+     * @return string of continents, countries, neighbours
+     */
+    public List<StringBuilder> writeMapData(GameData p_gameData)
+    {
+        List<StringBuilder> l_stringBuilderList = new ArrayList<>();
+
+        //creation of content to write into file
+        StringBuilder l_continentStringBuilder = new StringBuilder(CONTINENTS).append(System.lineSeparator());
+        StringBuilder l_countryStringBuilder = new StringBuilder(COUNTRIES).append(System.lineSeparator());
+        StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
+        Map<Integer, Continent> l_continentMap = p_gameData.getD_warMap().getD_continents();
+        //for storing continent of the map
+
+        for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
+            Continent l_currentContinent = l_entry.getValue();
+
+            //here all continents will store into the l_continentStringBuilder
+            l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
+            if (l_currentContinent.getD_countryList() != null) {
+                List<Country> l_countryList = l_currentContinent.getD_countryList();
+                for (Country l_country : l_countryList) {
+
+                    //here all countries will store into the l_countryStringBuilder
+                    l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " " + l_country.getD_noOfArmies())
+                            .append(System.lineSeparator());
+
+                    if (l_country.getD_neighbourCountries() != null) {
+                        List<String> l_neighborList = l_country.getD_neighbourCountries();
+                        if (!l_neighborList.isEmpty() && l_neighborList != null) {
+                            l_neighborStringBuilder.append(l_country.getD_countryIndex());
+                            for (String l_neighborName : l_neighborList) {
+                                //here all neighbors will store into the l_neighborStringBuilder
+                                l_neighborStringBuilder.append(" " + getCountryIndexByCountryName(p_gameData.getD_warMap(), l_neighborName));
+                            }
+                            l_neighborStringBuilder.append(System.lineSeparator());
+                        }
+                    }
+                }
+            }
+        }
+        l_stringBuilderList.add(l_continentStringBuilder);
+        l_stringBuilderList.add(l_countryStringBuilder);
+        l_stringBuilderList.add(l_neighborStringBuilder);
+
+        return l_stringBuilderList;
+    }
+
+    /**
+     * This method is used to write player information
+     *
+     * @param p_gameData current game data object
+     * @return list of player, countries owned by players and orders issued by player
+     */
+    public List<StringBuilder> writePlayerData(GameData p_gameData) {
+        List<StringBuilder> l_stringBuilderList = new ArrayList<>();
+        StringBuilder l_players = new StringBuilder(PLAYERS).append(System.lineSeparator());
+        StringBuilder l_ownedCountries = new StringBuilder(OWNED_COUNTRIES).append(System.lineSeparator());
+        StringBuilder l_orders = new StringBuilder(ORDERS).append(System.lineSeparator());
+        StringBuilder l_cards = new StringBuilder(CARDS).append(System.lineSeparator());
+        StringBuilder l_playerFlag = new StringBuilder(PLAYER_FLAG).append(System.lineSeparator());
+        StringBuilder l_gamePhase = new StringBuilder(GAME_PHASE).append(System.lineSeparator());
+
+        if (p_gameData.getD_playerList() != null) {
+            for (Player l_player : p_gameData.getD_playerList()) {
+                // prepare player data
+                l_players.append(l_player.getD_playerName() + " " + l_player.getD_noOfArmies() + " " + l_player.getD_stragey() + System.lineSeparator());
+
+                // prepare owned countries data
+                if (!l_player.getD_ownedCountries().isEmpty()) {
+                    l_ownedCountries.append(l_player.getD_playerName());
+                    for (Country l_country : l_player.getD_ownedCountries()) {
+                        l_ownedCountries.append(" " + l_country.getD_countryName());
+                    }
+                    l_ownedCountries.append(System.lineSeparator());
+                }
+
+                // prepare orders data
+                if (!l_player.getD_orders().isEmpty()) {
+                    l_orders.append(l_player.getD_playerName());
+                    for (Order l_order : l_player.getD_orders()) {
+                        l_orders.append(" " + l_order.toString().replace(" ", ""));
+                    }
+                    l_orders.append(System.lineSeparator());
+                }
+
+                // prepare cards data
+                if (!l_player.getD_cards().isEmpty()) {
+                    l_cards.append(l_player.getD_playerName());
+                    for (GameCard l_card : l_player.getD_cards()) {
+                        l_cards.append(" " + l_card.toString());
+                    }
+                    l_cards.append(System.lineSeparator());
+                }
+            }
+        }
+
+        // prepare player flag
+        if (d_playerFlag != null && d_playerFlag.length > 0) {
+            for (int l_i = 0; l_i < d_playerFlag.length; l_i++) {
+                l_playerFlag.append(d_playerFlag[l_i] + " ");
+            }
+            l_playerFlag.append(System.lineSeparator());
+        }
+
+
+        // prepare result response
+        l_stringBuilderList.add(l_players);
+        l_stringBuilderList.add(l_ownedCountries);
+        l_stringBuilderList.add(l_orders);
+        l_stringBuilderList.add(l_cards);
+        l_stringBuilderList.add(l_playerFlag);
+        l_stringBuilderList.add(l_gamePhase);
+
+        return l_stringBuilderList;
+    }
+
+    /**
+     * This method is used to load game from saved file
+     *
+     * @param p_fileName file name
+     * @return gamedata object
+     */
+    public GameData loadGame(String p_fileName) throws IOException {
+        String l_fileLine = "";
+        boolean l_mapName, l_isContinents, l_isCountries, l_isBorders, l_isPlayers, l_isOwnedCountries, l_isOrders, l_isCards, l_isPlayerFlag;
+        l_mapName = l_isContinents = l_isCountries = l_isBorders = l_isPlayers = l_isOwnedCountries = l_isOrders = l_isCards = l_isPlayerFlag = false;
+        WarMap l_warMap = new WarMap();
+        List<Player> l_players = new ArrayList<>();
+        GameData l_gameData = new GameData();
+
+        try (BufferedReader l_bufferedReader = new BufferedReader(new FileReader(GAME_DEF_PATH + p_fileName))) {
+
+            Map<Integer, Continent> l_continentMap = new HashMap();
+            Continent l_continent = null;
+            Country l_country = null;
+            int l_continentCounter = 1;
+
+            //while loop read each line from file and process accordingly
+            while ((l_fileLine = l_bufferedReader.readLine()) != null) {
+                if (l_fileLine != null && !l_fileLine.isEmpty()) {
+                    if (l_fileLine.equalsIgnoreCase(MAP_NAME)) {
+                        l_mapName = true;
+                        continue;
+                    }
+                    if (l_mapName && !l_fileLine.equalsIgnoreCase(CONTINENTS)) {
+                        l_warMap.setD_mapName(l_fileLine);
+                    }
+
+                    l_warMap.setD_status(true);
+
+                    if (l_fileLine.equalsIgnoreCase(CONTINENTS)) {
+                        l_mapName = false;
+                        l_isContinents = true;
+                        continue;
+                    }
+                    //this if condition read all the continents from file and set into continent model
+                    if (l_isContinents && !l_fileLine.equalsIgnoreCase(COUNTRIES)) {
+                        l_continent = new Continent();
+                        String[] l_continentArray = l_fileLine.split(" ");
+                        l_continent.setD_continentName(l_continentArray[0]);
+                        l_continent.setD_continentValue(Integer.parseInt(l_continentArray[1]));
+                        l_continent.setD_continentIndex(l_continentCounter);
+                        l_continentMap.put(l_continentCounter, l_continent);
+                        l_continentCounter++;
+                    }
+
+                    if (l_fileLine.equalsIgnoreCase(COUNTRIES)) {
+                        l_isContinents = false;
+                        l_isCountries = true;
+                        continue;
+                    }
+                    //this if condition read all the countries from file and set into country model
+                    if (l_isCountries && !l_fileLine.equalsIgnoreCase(BORDERS)) {
+
+                        String[] l_countries = l_fileLine.split(" ");
+
+                        int l_continentIndex = Integer.parseInt(l_countries[2]);
+                        Continent l_currentContinent = l_continentMap.get(l_continentIndex);
+
+                        l_country = new Country();
+                        l_country.setD_countryName(l_countries[1]);
+                        l_country.setD_countryIndex(Integer.parseInt(l_countries[0]));
+                        l_country.setD_continentIndex(l_continentIndex);
+                        l_country.setD_noOfArmies(Integer.parseInt(l_countries[3]));
+                        if (l_currentContinent.getD_countryList() == null) {
+                            List<Country> l_countryList = new ArrayList();
+                            l_countryList.add(l_country);
+                            l_currentContinent.setD_countryList(l_countryList);
+                        } else {
+                            l_currentContinent.getD_countryList().add(l_country);
+                        }
+                        l_continentMap.put(l_continentIndex, l_currentContinent);
+                    }
+
+                    if (l_fileLine.equalsIgnoreCase(BORDERS)) {
+                        l_isCountries = false;
+                        l_isBorders = true;
+                        continue;
+                    }
+
+                    //this if condition read neighbors of each country and set into neighbour list of country model
+                    if (l_isBorders && !l_fileLine.equalsIgnoreCase(PLAYERS)) {
+                        String[] l_neighbourArray = l_fileLine.split(" ");
+
+                        Continent l_currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
+
+                        List<String> l_neighbourName = new ArrayList<>();
+                        for (int l_i = 1; l_i < l_neighbourArray.length; l_i++) {
+                            l_neighbourName
+                                    .add(getCountryNameByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[l_i])));
+                        }
+
+                        for (int l_i = 0; l_i < l_currentContinent.getD_countryList().size(); l_i++) {
+                            Country l_currentCountry = l_currentContinent.getD_countryList().get(l_i);
+                            if (l_currentCountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
+                                l_currentCountry.setD_neighbourCountries(l_neighbourName);
+                                l_currentContinent.getD_countryList().set(l_i, l_currentCountry);
+                            }
+                        }
+                        l_continentMap.put(l_currentContinent.getD_continentIndex(), l_currentContinent);
+                    }
+
+                    // prepare player list data
+                    if (l_fileLine.equalsIgnoreCase(PLAYERS)) {
+                        l_isPlayers = true;
+                        l_isBorders = false;
+                        continue;
+                    }
+                    if (l_isPlayers && !l_fileLine.equalsIgnoreCase(OWNED_COUNTRIES)) {
+                        String[] l_playerArray = l_fileLine.split(" ");
+                        Player l_newPlayer = new Player();
+                        l_newPlayer.setD_playerName(l_playerArray[0]);
+                        l_newPlayer.setD_noOfArmies(Integer.parseInt(l_playerArray[1]));
+
+                        // TODO: store strategy in player object
+
+                        l_players.add(l_newPlayer);
+                    }
+
+                    // prepare owned countries list
+                    if (l_fileLine.equalsIgnoreCase(OWNED_COUNTRIES)) {
+                        l_isOwnedCountries = true;
+                        l_isPlayers = false;
+                        continue;
+                    }
+                    if (l_isOwnedCountries && !l_fileLine.equalsIgnoreCase(ORDERS)) {
+                        String[] l_playerArray = l_fileLine.split(" ");
+                        List<Country> l_ownedCountryList = new ArrayList<>();
+                        List<Integer> l_playerIndex = new ArrayList<>();
+                        for (int l_i = 0; l_i < l_players.size(); l_i++) {
+                            if (l_players.get(l_i).getD_playerName().equalsIgnoreCase(l_playerArray[0])) {
+                                for (int l_j = 1; l_j < l_playerArray.length; l_j++) {
+                                    if (l_warMap != null) {
+                                        Country l_newCountry = getCountryObjectByCountryName(l_continentMap, l_playerArray[l_j]);
+                                        l_ownedCountryList.add(l_newCountry);
+                                        l_playerIndex.add(l_i);
+                                    }
+                                }
+                            }
+                        }
+                        if (l_playerIndex != null && !l_playerIndex.isEmpty()) {
+                            l_players.get(l_playerIndex.get(0)).setD_ownedCountries(l_ownedCountryList);
+                        }
+                    }
+
+                    // prepare orders list
+                    if (l_fileLine.equalsIgnoreCase(ORDERS)) {
+                        l_isOwnedCountries = false;
+                        l_isOrders = true;
+                        continue;
+                    }
+
+                    // prepare card data
+                    if (l_fileLine.equalsIgnoreCase(CARDS)) {
+                        l_isOrders = false;
+                        l_isCards = true;
+                        continue;
+                    }
+                    if (l_isCards && !l_fileLine.equalsIgnoreCase(NEGOTIATE_PLAYERS)) {
+                        String[] l_cardArray = l_fileLine.split(" ");
+                        List<Integer> l_playerIndex = new ArrayList<>();
+                        List<GameCard> l_cards = new ArrayList<>();
+                        for (int l_i = 0; l_i < l_players.size(); l_i++) {
+                            if (l_players.get(l_i).getD_playerName().equalsIgnoreCase(l_cardArray[0])) {
+                                for (int l_j = 1; l_j < l_cardArray.length; l_j++) {
+                                    l_cards.add(GameCard.valueOf(l_cardArray[l_j]));
+                                    l_playerIndex.add(l_i);
+                                }
+                            }
+                        }
+                        if (l_playerIndex != null && !l_playerIndex.isEmpty()) {
+                            l_players.get(l_playerIndex.get(0)).setD_cards(l_cards);
+                        }
+                    }
+
+                    // prepare player flag data
+                    if (l_fileLine.equalsIgnoreCase(PLAYER_FLAG)) {
+                        l_isPlayerFlag = true;
+                        l_isCards = false;
+                        continue;
+                    }
+                    if (l_isPlayerFlag) {
+                        d_playerFlag = new int[l_players.size()];
+                        String[] l_playerFlagArray = l_fileLine.split(" ");
+                        for (int l_i = 0; l_i< l_playerFlagArray.length; l_i++){
+                            d_playerFlag[l_i] = Integer.parseInt(l_playerFlagArray[l_i]);
+                        }
+                    }
+                }
+            }
+            l_warMap.setD_continents(l_continentMap);
+
+            l_gameData.setD_warMap(l_warMap);
+            l_gameData.setD_playerList(l_players);
+        } catch (IOException e) {
+            throw e;
+        }
+
+        // prepare order data
+        try (BufferedReader l_bufferedReader = new BufferedReader(new FileReader(GAME_DEF_PATH + p_fileName))) {
+            //while loop read each line from file and process accordingly
+            while ((l_fileLine = l_bufferedReader.readLine()) != null) {
+                if (l_fileLine != null && !l_fileLine.isEmpty()) {
+                    if (l_fileLine.equalsIgnoreCase(ORDERS)) {
+                        l_isOrders = true;
+                        continue;
+                    }
+                    if (l_isOrders && !l_fileLine.equalsIgnoreCase(CARDS)) {
+                        String[] l_playerArray = l_fileLine.split(" ");
+                        List<Integer> l_playerIndex = new ArrayList<>();
+                        List<Order> l_orders = new ArrayList<>();
+                        for (int l_i = 0; l_i < l_gameData.getD_playerList().size(); l_i++) {
+                            if (l_gameData.getD_playerList().get(l_i).getD_playerName().equalsIgnoreCase(l_playerArray[0])) {
+                                for (int l_j = 1; l_j < l_playerArray.length; l_j++) {
+                                    String l_orderString = prepareOrderString(l_playerArray[l_j]);
+                                    if(!l_orderString.isEmpty()) {
+                                        CommandResponse l_commandResponse = d_orderProcessor.processOrder(l_orderString, l_gameData);
+                                        if (l_commandResponse.isD_isValid()) {
+                                            Order l_order = d_orderProcessor.getOrder();
+                                            l_order.setD_player(l_players.get(l_i));
+                                            l_orders.add(l_order);
+                                            l_playerIndex.add(l_i);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (l_playerIndex != null && !l_playerIndex.isEmpty()) {
+                            l_players.get(l_playerIndex.get(0)).setD_orders(l_orders);
+                        }
+                    }
+                }
+            }
+
+            l_gameData.setD_playerList(l_players);
+        } catch (IOException e) {
+            throw e;
+        }
+
+        return l_gameData;
+    }
+
+    /**
+     * This method prepare order string
+     *
+     * @param p_orderString : string of order
+     * @return return order string
+     */
+    public String prepareOrderString(String p_orderString) {
+        String[] l_order = p_orderString.split("\\(");
+        l_order[1] = l_order[1].replaceAll("\\)", "");
+        String[] l_fields = l_order[1].split(",");
+        String l_orderString = "";
+        switch (l_order[0]) {
+            case "DeployOrder":
+                l_orderString = "deploy";
+                l_orderString += getOrderString(l_fields);
+                break;
+            case "AdvanceOrder":
+                l_orderString = "advance";
+                l_orderString += getOrderString(l_fields);
+                break;
+            case "AirliftOrder":
+                l_orderString = "airlift";
+                l_orderString += getOrderString(l_fields);
+                break;
+            case "NegotiateOrder":
+                l_orderString = "negotiate";
+                l_orderString += getOrderString(l_fields);
+                break;
+            case "BombOrder":
+                l_orderString = "bomb";
+                l_orderString += getOrderString(l_fields);
+                break;
+            case "BlockadeOrder":
+                l_orderString = "blockade";
+                l_orderString += getOrderString(l_fields);
+                break;
+        }
+        return l_orderString;
+    }
+
+    /**
+     * This method prepare arguments for order command
+     *
+     * @param p_fields : list of arguments
+     * @return string of arguments
+     */
+    public String getOrderString(String[] p_fields) {
+        String l_orderString = "";
+        for (int l_j = 0; l_j < p_fields.length-1; l_j++) {
+            String[] l_filedArray = p_fields[l_j].split("=");
+            l_orderString += " " + l_filedArray[1];
+        }
+        return l_orderString;
+    }
+
+    /**
+     * This method return Country Object
+     *
+     * @param p_countryName : name of the country
+     * @param p_continent   : continent object
+     * @return Country object
+     */
+    public Country getCountryObjectByCountryName(Map<Integer, Continent> p_continent, String p_countryName) {
+        Country l_countryName = null;
+        if (p_continent != null) {
+            for (Map.Entry<Integer, Continent> l_entry : p_continent.entrySet()) {
+                if (l_entry.getValue().getD_countryList() != null) {
+                    for (Country l_country : l_entry.getValue().getD_countryList()) {
+                        if (p_countryName.equalsIgnoreCase(l_country.getD_countryName())) {
+                            l_countryName = l_country;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return l_countryName;
+    }
+
+    /**
+     * This method will return index from name
+     *
+     * @param p_warMap is object of WarMap model
+     * @param p_countryName is the name of
+     * @return index of
+     */
+    private int getCountryIndexByCountryName(WarMap p_warMap, String p_countryName) {
+        int l_countryIndex = 0;
+        Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
+
+        for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
+            Continent l_currentContinent = l_entry.getValue();
+            //getting the  list
+            if (l_currentContinent.getD_countryList() != null) {
+                List<Country> l_countryList = l_currentContinent.getD_countryList();
+                if (l_countryList != null) {
+                    for (Country l_country : l_countryList) {
+                        //Comparing  name with give  name
+                        if (l_country != null) {
+                            if (l_country.getD_countryName().equalsIgnoreCase(p_countryName)) {
+                                l_countryIndex = l_country.getD_countryIndex();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return l_countryIndex;
+    }
+
+    /**
+     * This method will return Continent model from given countryId
+     *
+     * @param p_continentMap is map of continents
+     * @param p_countryIndex is countryId for that you want to find continent
+     * @return Continent model
+     */
+    private Continent getContinentByCountryId(Map<Integer, Continent> p_continentMap, int p_countryIndex) {
+        Continent l_continent = null;
+        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
+
+            l_continent = entry.getValue();
+            //getting country list
+            List<Country> l_countryList = l_continent.getD_countryList();
+            if (l_countryList != null) {
+                for (Country l_country : l_countryList) {
+
+                    if (l_country != null) {
+                        //comparing index with country's which we want to find
+                        if (l_country.getD_countryIndex() == p_countryIndex) {
+
+                            return l_continent;
+                        }
+                    }
+                }
+            }
+        }
+
+        return l_continent;
+    }
+
+    /**
+     * This method will return neighbor name by given Index
+     *
+     * @param p_continentMap is a map of continents
+     * @param p_countryIndex is neighbor index
+     * @return neighbor name
+     */
+    private String getCountryNameByCountryId(Map<Integer, Continent> p_continentMap, int p_countryIndex) {
+
+        String l_neighbourName = "";
+
+        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
+            //getting country list
+            Continent l_continent = entry.getValue();
+
+            List<Country> l_countryList = l_continent.getD_countryList();
+            if (l_countryList != null) {
+                for (Country l_country : l_countryList) {
+
+                    if (l_country != null) {
+                        //comparing index with country's which we want to find
+                        if (p_countryIndex == l_country.getD_countryIndex()) {
+                            l_neighbourName = l_country.getD_countryName();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return l_neighbourName;
+    }
 }

@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class OrderProcessorImpl implements OrderProcessor {
 
     Order d_order;
-    
+
     String d_command;
 
     @Autowired
@@ -39,9 +39,9 @@ public class OrderProcessorImpl implements OrderProcessor {
     public CommandResponse processOrder(String p_orderCommand, GameData p_gameData) {
         d_command = p_orderCommand;
         CommandResponse l_commandResponse = new CommandResponse();
-        if(p_orderCommand.equalsIgnoreCase("done")){
-           d_order = null;
-           return l_commandResponse;
+        if (p_orderCommand.equalsIgnoreCase("done") || p_orderCommand.equalsIgnoreCase("cheater")) {
+            d_order = null;
+            return l_commandResponse;
         }
         List<String> l_commandData = Arrays.asList(p_orderCommand.split(" "));  //list the input according the formation
         String l_orderName = d_generalUtil.toTitleCase(l_commandData.get(0).toLowerCase());
@@ -102,7 +102,7 @@ public class OrderProcessorImpl implements OrderProcessor {
             l_gameData.set(l_orderObj, p_gameData);
             d_order = (Order) l_orderObj;
             l_commandResponse.setD_isValid(true);
-            l_commandResponse.setD_responseString("executed successfuly");
+            l_commandResponse.setD_responseString("executed successfully");
             return l_commandResponse;
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             // Invalid Command arguments
@@ -119,9 +119,9 @@ public class OrderProcessorImpl implements OrderProcessor {
     public Order getOrder() {
         return d_order;
     }
-    
+
     @Override
-    public String getOrderString(){
+    public String getOrderString() {
         return d_command;
     }
 
