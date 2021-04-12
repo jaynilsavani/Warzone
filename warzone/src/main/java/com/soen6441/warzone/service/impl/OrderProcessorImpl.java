@@ -102,7 +102,7 @@ public class OrderProcessorImpl implements OrderProcessor {
             l_gameData.set(l_orderObj, p_gameData);
             d_order = (Order) l_orderObj;
             l_commandResponse.setD_isValid(true);
-            l_commandResponse.setD_responseString("executed successfuly");
+            l_commandResponse.setD_responseString("executed successfully");
             return l_commandResponse;
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             // Invalid Command arguments

@@ -217,7 +217,7 @@ public class GameConfigController implements Initializable {
                 }
             }
 
-        } else {
+        }else {
             d_generalUtil.prepareResponse(false, "Please enter valid command");              //general command if none of the above condition matches
             l_gmConfigRes = d_generalUtil.getResponse();
 
