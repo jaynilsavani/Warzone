@@ -27,7 +27,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- *
+ * This file contains adapter pattern tests
+ * 
  * @author <a href="mailto:manthan.p.moradiya@gmail.com">Manthan Moradiya</a>
  */
 @SpringBootTest
