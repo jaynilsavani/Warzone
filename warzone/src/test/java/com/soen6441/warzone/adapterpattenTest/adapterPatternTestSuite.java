@@ -6,13 +6,14 @@ import org.junit.runners.Suite;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-@RunWith(Suite.class)
-@Suite.SuiteClasses({adapterPatrrernTest.class})
 /**
+ * This is the test suite for adapter pattern test
  *
  * @author <a href="mailto:manthan.p.moradiya@gmail.com">Manthan Moradiya</a>
  */
+@SpringBootTest
+@RunWith(Suite.class)
+@Suite.SuiteClasses({adapterPatrrernTest.class})
 public class adapterPatternTestSuite {
 
     /**
