@@ -17,7 +17,11 @@ import lombok.NoArgsConstructor;
 
 public class RandomStrategy extends Strategy {
 
-
+    /**
+     * This is a default constructor used to initializes a list to
+     * add specific orders which are allowed in this strategy
+     *
+     */
     public RandomStrategy() {
 
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
@@ -106,6 +110,11 @@ public class RandomStrategy extends Strategy {
         return d_player.getOrderProcessor().getOrder();
     }
 
+    /**
+     * This method is used to get list of random countries deploy or attack
+     *
+     * @return list of random countries
+     */
     private List<Country> getRandomCountries() {
         List<Country> l_randomCountries = new ArrayList<Country>();
         List<Country> l_getOpponentCountries = new ArrayList<>();
@@ -126,6 +135,11 @@ public class RandomStrategy extends Strategy {
         return l_randomCountries;
     }
 
+    /**
+     * This method is used to get list of opponent's country
+     *
+     * @return list of opponent country
+     */
     private List<Country> getOpponentCountries() {
         List<Country> l_getOpponentCountries = new ArrayList<>();
         for (Country l_countries : getAvailableCountries(d_gameData.getD_warMap())) {

@@ -25,7 +25,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CheaterStrategy extends Strategy {
-
+    /**
+     * maximum number of turn allowed
+     */
     public static int d_noOfTurns = 10;
 
     /**
@@ -91,6 +93,13 @@ public class CheaterStrategy extends Strategy {
         return null;
     }
 
+    /**
+     * This method is used to check whether given neighbour country is opponent's
+     * country or not.
+     *
+     * @param p_country owned country
+     * @return true or false based on checking the neighbour condition
+     */
     public boolean isEnemyNeighbour(Country p_country) {
         for (Country l_country : d_player.getD_ownedCountries()) {
             if (!l_country.getD_neighbourCountries().contains(p_country.getD_countryName())) {
@@ -101,11 +110,10 @@ public class CheaterStrategy extends Strategy {
     }
 
     /**
-     * This method is used for getting index by name
+     * This method is used get country by country name
      *
-     * @param p_continentMap
-     * @param p_countryName
-     * @return CountryIndex
+     * @param p_countryName string having the name of county
+     * @return gives the country object from the given name
      */
     private Country getCountryByCountryName(String p_countryName) {
         for (Map.Entry<Integer, Continent> entry : d_gameData.getD_warMap().getD_continents().entrySet()) {

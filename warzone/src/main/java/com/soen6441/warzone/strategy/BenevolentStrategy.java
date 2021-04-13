@@ -28,7 +28,11 @@ public class BenevolentStrategy extends Strategy {
         super(p_gameData, p_player);
     }
 
-
+    /**
+     * This is a default constructor used to initializes a list to
+     * add specific orders which are allowed in this strategy
+     *
+     */
     public BenevolentStrategy() {
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         l_allowedOrders.add(OrderTypes.DEPLOY);
@@ -92,7 +96,12 @@ public class BenevolentStrategy extends Strategy {
         }
         return d_player.getOrderProcessor().getOrder();
     }
-
+    /**
+     * This method is used get random owned country to move army from that country
+     *
+     * @param p_country weakest country
+     * @return randomly selected opponent's country
+     */
     public Country moveToCountry(Country p_country) {
         Country l_country=null;
         List<Country> l_countryToList=new ArrayList<>();
@@ -113,6 +122,11 @@ public class BenevolentStrategy extends Strategy {
         }
         return l_country;
     }
+    /**
+     * This method is used to get weakest Country of a Player
+     *
+     * @return weakest country
+     */
     public Country moveFromCountry() {
         Country l_country=null;
         if(d_player.getD_ownedCountries()!=null && d_player.getD_ownedCountries().size()!=0)
