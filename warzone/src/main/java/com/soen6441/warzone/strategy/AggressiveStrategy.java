@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
-public class AggressiveStategy extends Strategy {
+public class AggressiveStrategy extends Strategy {
 
     /**
      * This is a default constructor used to initializes a list to
      * add specific orders which are allowed in this strategy
      *
      */
-    public AggressiveStategy() {
+    public AggressiveStrategy() {
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         l_allowedOrders.add(OrderTypes.DEPLOY);
         l_allowedOrders.add(OrderTypes.ADVANCE);
@@ -37,7 +37,7 @@ public class AggressiveStategy extends Strategy {
      * @param p_gameData GameData Object needed for the player GameData
      * @param p_player Player Object on which Strategy being Applied
      */
-    public AggressiveStategy(GameData p_gameData, Player p_player) {
+    public AggressiveStrategy(GameData p_gameData, Player p_player) {
         super(p_gameData, p_player);
 
     }

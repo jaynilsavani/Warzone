@@ -15,9 +15,10 @@ import java.util.Locale;
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_DIVIDER;
 import static com.soen6441.warzone.config.WarzoneConstants.DEFAULT_ASSIGN_REINFORCEMENT_INITIAL;
 import com.soen6441.warzone.model.CommandResponse;
+
 import com.soen6441.warzone.service.MapHandlingInterface;
 import com.soen6441.warzone.service.impl.MapHandlingImpl;
-import com.soen6441.warzone.strategy.HumanStartegy;
+import com.soen6441.warzone.strategy.HumanStrategy;
 
 /**
  * ConcreteState of the State pattern.This Phase is used to take order from each
@@ -90,7 +91,7 @@ public class IssueOrderPhase extends GamePlay {
                 List<Order> l_order = new ArrayList<>();
                 d_gameData.getD_playerList().get(d_gameEngine.d_playCounter).setD_orders(l_order);
             }
-            if (l_player.getD_stragey() instanceof HumanStartegy) {
+            if (l_player.getD_stragey() instanceof HumanStrategy) {
                 d_issueResponse = d_gameEngine.d_orderProcessor.processOrder(p_command.trim(), d_gameData);
             }
             //These needs to Uncomment

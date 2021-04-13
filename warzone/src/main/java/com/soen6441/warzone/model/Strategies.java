@@ -4,10 +4,10 @@ import static com.soen6441.warzone.model.GameCard.AIRLIFT;
 import static com.soen6441.warzone.model.GameCard.BLOCKADE;
 import static com.soen6441.warzone.model.GameCard.BOMB;
 import static com.soen6441.warzone.model.GameCard.DIPLOMACY;
-import com.soen6441.warzone.strategy.AggressiveStategy;
-import com.soen6441.warzone.strategy.BenevolentStategy;
+import com.soen6441.warzone.strategy.AggressiveStrategy;
+import com.soen6441.warzone.strategy.BenevolentStrategy;
 import com.soen6441.warzone.strategy.CheaterStrategy;
-import com.soen6441.warzone.strategy.HumanStartegy;
+import com.soen6441.warzone.strategy.HumanStrategy;
 import com.soen6441.warzone.strategy.RandomStrategy;
 import com.soen6441.warzone.strategy.Strategy;
 
@@ -33,16 +33,16 @@ public enum Strategies {
         Strategy l_strategy = null;
         switch (p_strategy) {
             case AGGRESSIVE:
-                l_strategy = new AggressiveStategy();
+                l_strategy = new AggressiveStrategy();
                 break;
             case BENEVOLENT:
-                l_strategy = new BenevolentStategy();
+                l_strategy = new BenevolentStrategy();
                 break;
             case CHEATER:
                 l_strategy = new CheaterStrategy();
                 break;
             case HUMAN:
-                l_strategy = new HumanStartegy();
+                l_strategy = new HumanStrategy();
                 break;
             case RANDOM:
                 l_strategy = new RandomStrategy();

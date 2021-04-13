@@ -3,6 +3,7 @@ package com.soen6441.warzone.controller;
 import com.soen6441.warzone.config.StageManager;
 import static com.soen6441.warzone.config.WarzoneConstants.PHASE_GAME_START_UP;
 import static com.soen6441.warzone.config.WarzoneConstants.PHASE_MAP;
+import static com.soen6441.warzone.config.WarzoneConstants.GAME_DEF_PATH;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
@@ -29,10 +30,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * This Class is made to handle Game Config controller request
@@ -217,7 +216,62 @@ public class GameConfigController implements Initializable {
                 }
             }
 
-        }else {
+        } else if (d_generalUtil.validateIOString(l_command, "savegame\\s+[a-zA-Z]+.?[a-zA-Z]+") && l_commandSegments.size() == 2) {
+            if (d_gameData.getD_warMap() != null) {
+                d_gameEngine.saveGame(d_gameData, l_commandSegments.get(1));
+                d_generalUtil.prepareResponse(true, "Game saved successfully.");
+            } else {
+                d_generalUtil.prepareResponse(false, "Nothing to save.");
+            }
+            l_gmConfigRes = d_generalUtil.getResponse();
+        } else if (d_generalUtil.validateIOString(l_command, "loadgame\\s+[a-zA-Z]+.?[a-zA-Z]+") && l_commandSegments.size() == 2) {
+            try {
+                List<String> l_games = new ArrayList<>();
+
+                // get available files in games directory
+                l_games = d_generalUtil.getListOfAllFiles(Paths.get(GAME_DEF_PATH), ".txt");
+
+                // check file extension entered by user
+                String l_fullName;
+                int index = l_commandSegments.get(1).lastIndexOf('.');
+                l_fullName = index > 0
+                        ? l_commandSegments.get(1).toLowerCase() : l_commandSegments.get(1).toLowerCase() + ".txt";
+
+                // check if file exists
+                if (l_games.contains(l_fullName)) {
+                    d_gameData = d_gameEngine.loadGame(l_fullName);
+
+                    // check game data is null or not
+                    if (d_gameData != null) {
+                        // check player is added or not
+                        if (d_gameData.getD_playerList() != null) {
+                            // check countries are assigned or not
+                            if (d_gameData.getD_playerList().get(0).getD_ownedCountries().size() != 0) {
+                                d_StartGame.setDisable(false);
+                                AssignCountryFlag = 1;
+                                d_generalUtil.prepareResponse(true, "Game loaded successfully.");
+                            } else {
+                                d_StartGame.setDisable(true);
+                                AssignCountryFlag = 0;
+                                d_generalUtil.prepareResponse(true, "Game loaded successfully. Please run assigncountries command to play game!!");
+                            }
+                        } else {
+                            d_generalUtil.prepareResponse(false, "Game loaded successfully. Please add players\n and run assigncountries command to play game!!");
+                        }
+                    } else {
+                        d_generalUtil.prepareResponse(false, "File does not contains valid game data.");
+                    }
+                } else {
+                    d_generalUtil.prepareResponse(false, "File does not found.");
+                }
+
+                l_gmConfigRes = d_generalUtil.getResponse();
+            } catch (Exception e) {
+                d_generalUtil.prepareResponse(false, "Error in loadgame command");
+                l_gmConfigRes = d_generalUtil.getResponse();
+            }
+        }
+        else {
             d_generalUtil.prepareResponse(false, "Please enter valid command");              //general command if none of the above condition matches
             l_gmConfigRes = d_generalUtil.getResponse();
 

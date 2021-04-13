@@ -11,13 +11,13 @@ import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.OrderProcessor;
-import com.soen6441.warzone.service.impl.OrderProcessorImpl;
 import com.soen6441.warzone.state.GamePlay;
 import com.soen6441.warzone.state.IssueOrderPhase;
 import com.soen6441.warzone.state.MapPhase;
 import com.soen6441.warzone.state.Phase;
 import com.soen6441.warzone.state.StartUpPhase;
-import com.soen6441.warzone.strategy.HumanStartegy;
+import com.soen6441.warzone.strategy.HumanStrategy;
+import com.soen6441.warzone.strategy.Strategy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -198,7 +198,7 @@ public class GameEngine implements Initializable {
         int l_i=0;
         while(l_i<l_gamePlay.d_gameData.getD_playerList().size())
         {
-            if(l_gamePlay.d_gameData.getD_playerList().get(l_i).getD_stragey() instanceof HumanStartegy)
+            if(l_gamePlay.d_gameData.getD_playerList().get(l_i).getD_stragey() instanceof HumanStrategy)
             {
                 d_playerTurn.setText(d_gameData.getD_playerList().get(l_i).getD_playerName() + "'s turn");  //shows whose turn now is
                 break;
@@ -218,7 +218,7 @@ public class GameEngine implements Initializable {
         d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
         d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData)+"\n");
         d_FireCommandList.appendText("------------ORDERS------------\n");
-        if(!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStartegy))
+        if(!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStrategy))
         {
             playerIteration("", true);
         }
@@ -259,7 +259,15 @@ public class GameEngine implements Initializable {
      */
     private void playerIteration(String p_commandString, boolean p_isNotHumanPlayer) {
         String[] l_validatestr = p_commandString.split("\\s");
-        if (p_isNotHumanPlayer || ((d_generalUtil.validateIOString(p_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(p_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(p_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || p_commandString.equalsIgnoreCase("done"))) {
+        if (d_generalUtil.validateIOString(p_commandString, "savegame\\s+[a-zA-Z]+.?[a-zA-Z]+") && l_validatestr.length == 2) {
+            saveGame(d_gameData, l_validatestr[1]);
+            Alert l_alert = new Alert(AlertType.INFORMATION);
+            l_alert.setTitle("Success!!");
+            l_alert.setHeaderText(null);
+            l_alert.setContentText("Game saved successfully.");   //message shown in of alert
+            l_alert.showAndWait();
+        }
+        else if (p_isNotHumanPlayer || ((d_generalUtil.validateIOString(p_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(p_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(p_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || p_commandString.equalsIgnoreCase("done"))) {
             //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
             IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
@@ -318,7 +326,7 @@ public class GameEngine implements Initializable {
                         int l_ind=0;
                         while(l_ind<d_gameData.getD_playerList().size())
                         {
-                            if(d_gameData.getD_playerList().get(l_ind).getD_stragey() instanceof HumanStartegy)
+                            if(d_gameData.getD_playerList().get(l_ind).getD_stragey() instanceof HumanStrategy)
                             {
                                 d_playerTurn.setText(d_gameData.getD_playerList().get(l_ind).getD_playerName() + "'s turn");  //shows whose turn now is
                                 d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
@@ -327,7 +335,7 @@ public class GameEngine implements Initializable {
                             }
                             l_ind++;
                         }
-                        if(!(d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy))
+                        if(!(d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStrategy))
                         {
                             playerIteration("",true);
                         }
@@ -350,7 +358,7 @@ public class GameEngine implements Initializable {
                 } else if (d_playerFlag[d_playCounter] == 0) {
                     //break the loop if finds the next player available to issue an order
                     if (!l_winner) {
-                        if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStartegy) {
+                        if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStrategy) {
 
                             d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
                             d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
@@ -384,10 +392,10 @@ public class GameEngine implements Initializable {
         if (p_fileName.contains(".")) {
             String l_fileNameSplit = p_fileName.split("\\.")[1];
             if (!l_fileNameSplit.equals("txt")) {
-                p_fileName = p_fileName.concat(".txt");
+                p_fileName = p_fileName.split("\\.")[0].toLowerCase().concat(".txt");
             }
         } else {
-            p_fileName = p_fileName.concat(".txt");
+            p_fileName = p_fileName.toLowerCase().concat(".txt");
         }
         boolean l_status;
         try {
@@ -482,12 +490,12 @@ public class GameEngine implements Initializable {
         StringBuilder l_orders = new StringBuilder(ORDERS).append(System.lineSeparator());
         StringBuilder l_cards = new StringBuilder(CARDS).append(System.lineSeparator());
         StringBuilder l_playerFlag = new StringBuilder(PLAYER_FLAG).append(System.lineSeparator());
-        StringBuilder l_gamePhase = new StringBuilder(GAME_PHASE).append(System.lineSeparator());
 
         if (p_gameData.getD_playerList() != null) {
             for (Player l_player : p_gameData.getD_playerList()) {
+                String[] l_strategy = l_player.getD_stragey().getClass().getName().split("\\.");
                 // prepare player data
-                l_players.append(l_player.getD_playerName() + " " + l_player.getD_noOfArmies() + " " + l_player.getD_stragey() + System.lineSeparator());
+                l_players.append(l_player.getD_playerName() + " " + l_player.getD_noOfArmies() + " " + l_strategy[l_strategy.length - 1] + " " + System.lineSeparator());
 
                 // prepare owned countries data
                 if (!l_player.getD_ownedCountries().isEmpty()) {
@@ -533,7 +541,6 @@ public class GameEngine implements Initializable {
         l_stringBuilderList.add(l_orders);
         l_stringBuilderList.add(l_cards);
         l_stringBuilderList.add(l_playerFlag);
-        l_stringBuilderList.add(l_gamePhase);
 
         return l_stringBuilderList;
     }
@@ -544,7 +551,7 @@ public class GameEngine implements Initializable {
      * @param p_fileName file name
      * @return gamedata object
      */
-    public GameData loadGame(String p_fileName) throws IOException {
+    public GameData loadGame(String p_fileName) throws Exception {
         String l_fileLine = "";
         boolean l_mapName, l_isContinents, l_isCountries, l_isBorders, l_isPlayers, l_isOwnedCountries, l_isOrders, l_isCards, l_isPlayerFlag;
         l_mapName = l_isContinents = l_isCountries = l_isBorders = l_isPlayers = l_isOwnedCountries = l_isOrders = l_isCards = l_isPlayerFlag = false;
@@ -655,9 +662,6 @@ public class GameEngine implements Initializable {
                         Player l_newPlayer = new Player();
                         l_newPlayer.setD_playerName(l_playerArray[0]);
                         l_newPlayer.setD_noOfArmies(Integer.parseInt(l_playerArray[1]));
-
-                        // TODO: store strategy in player object
-
                         l_players.add(l_newPlayer);
                     }
 
@@ -700,7 +704,7 @@ public class GameEngine implements Initializable {
                         l_isCards = true;
                         continue;
                     }
-                    if (l_isCards && !l_fileLine.equalsIgnoreCase(NEGOTIATE_PLAYERS)) {
+                    if (l_isCards && !l_fileLine.equalsIgnoreCase(PLAYER_FLAG)) {
                         String[] l_cardArray = l_fileLine.split(" ");
                         List<Integer> l_playerIndex = new ArrayList<>();
                         List<GameCard> l_cards = new ArrayList<>();
@@ -735,18 +739,25 @@ public class GameEngine implements Initializable {
             l_warMap.setD_continents(l_continentMap);
 
             l_gameData.setD_warMap(l_warMap);
-            l_gameData.setD_playerList(l_players);
-        } catch (IOException e) {
+            if(l_players.size() != 0) {
+                l_gameData.setD_playerList(l_players);
+            }
+        } catch (Exception e) {
             throw e;
         }
 
-        // prepare order data
+        // prepare order and strategy data
         try (BufferedReader l_bufferedReader = new BufferedReader(new FileReader(GAME_DEF_PATH + p_fileName))) {
             //while loop read each line from file and process accordingly
             while ((l_fileLine = l_bufferedReader.readLine()) != null) {
+                // prepare order data
                 if (l_fileLine != null && !l_fileLine.isEmpty()) {
                     if (l_fileLine.equalsIgnoreCase(ORDERS)) {
                         l_isOrders = true;
+                        continue;
+                    }
+                    if (l_fileLine.equalsIgnoreCase(CARDS)) {
+                        l_isOrders = false;
                         continue;
                     }
                     if (l_isOrders && !l_fileLine.equalsIgnoreCase(CARDS)) {
@@ -774,11 +785,40 @@ public class GameEngine implements Initializable {
                             l_players.get(l_playerIndex.get(0)).setD_orders(l_orders);
                         }
                     }
+
+                    // prepare strategy data
+                    if (l_fileLine.equalsIgnoreCase(PLAYERS)) {
+                        l_isOrders = false;
+                        l_isPlayers = true;
+                        continue;
+                    }
+                    if (l_fileLine.equalsIgnoreCase(OWNED_COUNTRIES)) {
+                        l_isPlayers = false;
+                        continue;
+                    }
+                    if (l_isPlayers && !l_fileLine.equalsIgnoreCase(OWNED_COUNTRIES)) {
+                        String[] l_playerArray = l_fileLine.split(" ");
+                        List<Integer> l_playerIndex = new ArrayList<>();
+                        Strategy l_strategy = null;
+                        for (int l_i = 0; l_i < l_gameData.getD_playerList().size(); l_i++) {
+                            if (l_gameData.getD_playerList().get(l_i).getD_playerName().equalsIgnoreCase(l_playerArray[0])) {
+                                String l_strategyString = l_playerArray[2].replace("Strategy","");
+                                l_strategy = Strategies.strategyToObjectMapper(Strategies.stringToStrategyMapper(l_strategyString.toLowerCase()), l_gameData);
+                                l_playerIndex.add(l_i);
+                                break;
+                            }
+                        }
+                        if (l_playerIndex != null && !l_playerIndex.isEmpty() && l_strategy != null) {
+                            l_players.get(l_playerIndex.get(0)).setD_stragey(l_strategy);
+                        }
+                    }
                 }
             }
 
-            l_gameData.setD_playerList(l_players);
-        } catch (IOException e) {
+            if(l_players.size() != 0) {
+                l_gameData.setD_playerList(l_players);
+            }
+        } catch (Exception e) {
             throw e;
         }
 

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
-public class BenevolentStategy extends Strategy {
+public class BenevolentStrategy extends Strategy {
 
     /**
      * This is a parameterize constructor used to invoke Constructor of Strategy Class
@@ -24,12 +24,12 @@ public class BenevolentStategy extends Strategy {
      * @param p_gameData GameData Object needed for the player GameData
      * @param p_player Player Object on which Strategy being Applied
      */
-    public BenevolentStategy(GameData p_gameData, Player p_player) {
+    public BenevolentStrategy(GameData p_gameData, Player p_player) {
         super(p_gameData, p_player);
     }
 
 
-    public BenevolentStategy() {
+    public BenevolentStrategy() {
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         l_allowedOrders.add(OrderTypes.DEPLOY);
         l_allowedOrders.add(OrderTypes.ADVANCE);
