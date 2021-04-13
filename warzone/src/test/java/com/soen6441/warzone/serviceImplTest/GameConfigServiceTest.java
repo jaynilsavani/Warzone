@@ -3,6 +3,7 @@ package com.soen6441.warzone.serviceImplTest;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
+import com.soen6441.warzone.model.Tournament;
 import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GeneralUtil;
 import com.soen6441.warzone.service.MapHandlingInterface;
@@ -38,7 +39,7 @@ public class GameConfigServiceTest {
 
     @Autowired
     GameData d_gameData;
-    
+
     @Autowired
     GeneralUtil d_generalUtil;
 
@@ -81,7 +82,7 @@ public class GameConfigServiceTest {
         l_expectedPlayer.setD_playerName("user");
         Player l_actualPlayer = new Player();
 
-        Map.Entry<GameData, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gameData, "gameplayer -add " + l_expectedPlayer.getD_playerName()+" human");
+        Map.Entry<GameData, CommandResponse> l_gamePlayCommandResponseEntry = d_gameConfigService.updatePlayer(d_gameData, "gameplayer -add " + l_expectedPlayer.getD_playerName() + " human");
         if (l_gamePlayCommandResponseEntry.getValue().isD_isValid()) {
             GameData l_gameData = l_gamePlayCommandResponseEntry.getKey();
             if (!l_gameData.getD_playerList().isEmpty()) {
@@ -135,4 +136,16 @@ public class GameConfigServiceTest {
             assertTrue(l_p.getD_ownedCountries().size() > 0);
         }
     }
+
+    /**
+     * This method is used to test whether countries are assigned to player or
+     * not
+     *
+     */
+//    @Test
+//    public void testTournament() throws IOException {
+////        Tournament l_tournament = d_gameConfigService.createTournament("tournament -M asia.map,asia.map,asia.map,asia.map -P cheater,random -G 4 -D 11");
+////        System.out.println(l_tournament);
+////        assertEquals(true, true);
+//    }
 }
