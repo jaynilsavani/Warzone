@@ -11,17 +11,17 @@
                 <Font name="System Italic" size="14.0" />
             </font>
         </Button>
-        <Label layoutX="70.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Territory List">
+        <Label layoutX="405.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Country List">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>
         </Label>
-        <Label layoutX="770.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Continents">
+        <Label layoutX="140.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Continents">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>
         </Label>
-        <Label layoutX="345.0" layoutY="28.0" prefHeight="20.0" prefWidth="177.0" text="Adjacent Owned Territory">
+        <Label layoutX="690.0" layoutY="28.0" prefHeight="20.0" prefWidth="177.0" text="Neighbour List">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>
@@ -38,8 +38,8 @@
             </font>
         </Button>
         <TextArea fx:id="d_FireCommandList" layoutX="73.0" layoutY="283.0" prefHeight="355.0" prefWidth="900.0" />
-      <TextArea fx:id="d_countriesList" layoutX="10.0" layoutY="56.0" prefHeight="180.0" prefWidth="200.0" />
-      <TextArea fx:id="d_neighboursList" layoutX="220.0" layoutY="56.0" prefHeight="180.0" prefWidth="420.0" />
-        <TextArea fx:id="d_continentToCountry" layoutX="650.0" layoutY="56.0" prefHeight="180.0" prefWidth="320.0" />
+      <TextArea fx:id="d_countriesList" layoutX="335.0" layoutY="56.0" prefHeight="180.0" prefWidth="200.0" />
+      <TextArea fx:id="d_neighboursList" layoutX="540.0" layoutY="56.0" prefHeight="180.0" prefWidth="420.0" />
+        <TextArea fx:id="d_continentToCountry" layoutX="10.0" layoutY="56.0" prefHeight="180.0" prefWidth="320.0" />
     </children>
 </AnchorPane>

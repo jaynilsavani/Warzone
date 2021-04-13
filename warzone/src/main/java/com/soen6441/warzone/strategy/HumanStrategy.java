@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
 @NoArgsConstructor
-public class HumanStartegy extends Strategy {
+public class HumanStrategy extends Strategy {
 
     /**
      * This is a parameterize constructor used to invoke Constructor of Strategy Class
@@ -26,7 +26,7 @@ public class HumanStartegy extends Strategy {
      * @param p_gameData GameData Object needed for the player GameData
      * @param p_player Player Object on which Strategy being Applied
      */
-    public HumanStartegy(GameData p_gameData, Player p_player) {
+    public HumanStrategy(GameData p_gameData, Player p_player) {
         super(p_gameData, p_player);
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         this.setD_allowedOrders(l_allowedOrders);

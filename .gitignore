@@ -16,4 +16,5 @@
 warzone/nbactions.xml
 /warzone/nbproject/
 /warzone/src/main/resources/logs/
-warzone/logs/app.log
+/logs/app.log
+/games/*

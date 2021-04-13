@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.soen6441.warzone.model.*;
+import static com.soen6441.warzone.model.Strategies.strategyToObjectMapper;
+import static com.soen6441.warzone.model.Strategies.stringToStrategyMapper;
 
 import java.util.Arrays;
 import java.util.*;
@@ -59,10 +61,14 @@ public class GameConfigServiceImpl implements GameConfigService {
             int l_colSize = l_countryList.size() + 1;
             int l_rowSize = p_gameData.getD_playerList().size() + 1;
             String[][] l_playerToCountry = new String[l_rowSize][l_colSize];
+            String l_playerRowData = "";
             int l_maxLength = 0;
             //Iterate over player list
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 //Iterate over country list
+                if (l_i > 0) {
+                    l_playerRowData = l_playerRowData + p_gameData.getD_playerList().get(l_i - 1).getD_playerName().toUpperCase() + " : ";
+                }
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     if (l_i == 0 && l_j == 0) {
 
@@ -86,6 +92,9 @@ public class GameConfigServiceImpl implements GameConfigService {
                             while (l_same < p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().size()) {
                                 if (l_countryList.get(l_j - 1).getD_countryName().equalsIgnoreCase(p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().get(l_same).getD_countryName())) {
                                     l_playerToCountry[l_i][l_j] = String.valueOf(l_countryList.get(l_j - 1).getD_noOfArmies()); //get number of armies for country
+                                    if (l_countryList.get(l_j - 1).getD_noOfArmies() > 0) {
+                                        l_playerRowData = l_playerRowData + l_countryList.get(l_j - 1).getD_countryName() + "-" + l_countryList.get(l_j - 1).getD_noOfArmies() + ",";
+                                    }
                                     break;
                                 }
                                 l_same++;
@@ -94,18 +103,24 @@ public class GameConfigServiceImpl implements GameConfigService {
                             l_playerToCountry[l_i][l_j] = "0";
                         }
                     }
+
+                }
+                if (l_i > 0) {
+                    l_playerRowData = l_playerRowData + "\n";
                 }
             }
             String l_titleMessage = "\nList of country owned by each player with armies:: \n";
             l_showMapOfCountris = l_showMapOfCountris + l_titleMessage;
             //formatting matrix
-            for (int l_i = 0; l_i < l_rowSize; l_i++) {
+            /*for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_playerToCountry[l_i][l_j]);      //string formatting for matrix representation
                     l_showMapOfCountris = l_showMapOfCountris + l_stringFrmat + " ";
                 }
                 l_showMapOfCountris = l_showMapOfCountris + "\n";
-            }
+
+            }*/
+            l_showMapOfCountris = l_showMapOfCountris + l_playerRowData;
             l_showCountris.setD_isValid(true);
             l_showCountris.setD_responseString(l_showMapOfCountris);
 
@@ -133,7 +148,7 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Override
     public AbstractMap.Entry<GameData, CommandResponse> updatePlayer(GameData p_currentGameData, String p_command) {
         List<String> l_commandSegments = Arrays.asList(p_command.split(" "));
-        String l_playerName,l_strategy;
+        String l_playerName, l_strategy;
         GameData l_currentGameData = new GameData(p_currentGameData);
         //Iterate over command segmentation
         for (int i = 0; i < l_commandSegments.size(); i++) {
@@ -141,7 +156,7 @@ public class GameConfigServiceImpl implements GameConfigService {
             if (l_playerCommand.equalsIgnoreCase("-add") || l_playerCommand.equalsIgnoreCase("-remove")) {
                 if (l_playerCommand.equalsIgnoreCase("-add")) {
                     l_playerName = l_commandSegments.get(i + 1);
-                    l_strategy = l_commandSegments.get(i+2);
+                    l_strategy = l_commandSegments.get(i + 2);
                     //Validation of the player name
                     if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                         //To check if player Exist Or not 
@@ -292,6 +307,94 @@ public class GameConfigServiceImpl implements GameConfigService {
     }
 
     /**
+     *
+     * {@inheritDoc }
+     */
+    @Override
+    public Tournament createTournament(String p_command) throws IOException {
+        List<String> l_commandData = Arrays.asList(p_command.split(" "));
+        Tournament l_tournament = new Tournament();
+        CommandResponse l_commandResponse = new CommandResponse();
+
+        if (!l_commandData.isEmpty()) {
+            //Maps
+            if (!l_commandData.get(2).equalsIgnoreCase("")) {
+                List<String> l_mapNames = Arrays.asList(l_commandData.get(2).split(","));
+                List<WarMap> l_maps = new ArrayList<>();
+                for (String l_mapName : l_mapNames) {
+                    l_maps.add(d_generalUtil.readMapByType(l_mapName));
+                }
+                if (l_maps.size() <= 5 && l_maps.size() >= 1) {
+                    l_tournament.setD_maps(l_maps);
+                } else {
+                    l_commandResponse.setD_isValid(false);
+                    l_commandResponse.setD_responseString("No of Maps is not Valid");
+                    return null;
+                }
+            }
+            //Player 
+            if (!l_commandData.get(4).equalsIgnoreCase("")) {
+                List<String> l_playerNames = Arrays.asList(l_commandData.get(4).split(","));
+                List<Player> l_players = new ArrayList<Player>();
+                for (String l_playerName : l_playerNames) {
+                    Player l_player = new Player();
+                    l_player.setD_stragey(strategyToObjectMapper(stringToStrategyMapper(l_playerName), new GameData()));
+                    l_players.add(l_player);
+                }
+                if (l_players.size() >= 2 && l_players.size() <= 4) {
+                    l_tournament.setD_players(l_players);
+                } else {
+                    l_commandResponse.setD_isValid(false);
+                    l_commandResponse.setD_responseString("No of Players is not Valid");
+                    return null;
+                }
+            }
+            // no Of Game
+            if (!l_commandData.get(6).equalsIgnoreCase("")) {
+                int l_noOfGames = Integer.parseInt(l_commandData.get(6));
+                if (l_noOfGames >= 1 && l_noOfGames <= 5) {
+                    l_tournament.setD_noOfGames(l_noOfGames);
+                } else {
+                    l_commandResponse.setD_isValid(false);
+                    l_commandResponse.setD_responseString("No of Games is not Valid");
+                    return null;
+                }
+            }
+
+            //max No of Turns
+            if (!l_commandData.get(8).equalsIgnoreCase("")) {
+                int l_maxNoOfTurn = Integer.parseInt(l_commandData.get(8));
+                if (l_maxNoOfTurn >= 10 && l_maxNoOfTurn <= 50) {
+                    l_tournament.setD_maxnoOfTurns(l_maxNoOfTurn);
+                } else {
+                    l_commandResponse.setD_isValid(false);
+                    l_commandResponse.setD_responseString("No of Maximum Turn is not Valid");
+                    return null;
+                }
+            }
+            List<GameData> l_gameDatas = new ArrayList<>();
+            for (WarMap l_map : l_tournament.getD_maps()) {
+                GameData l_gameData = new GameData();
+                l_gameData.setD_fileName(l_map.getD_mapName());
+                l_gameData.setD_maxNumberOfTurns(l_tournament.getD_maxnoOfTurns());
+                l_gameData.setD_playerList(l_tournament.getD_players());
+                l_gameData.setD_warMap(l_map);
+                l_gameDatas.add(l_gameData);
+            }
+            if (l_gameDatas.size() == l_tournament.getD_maps().size()) {
+                l_tournament.setD_gamedatas(l_gameDatas);
+            } else {
+                l_commandResponse.setD_isValid(false);
+                l_commandResponse.setD_responseString("No of Maps is not Valid");
+                return null;
+            }
+
+        }
+        d_generalUtil.prepareResponse(l_commandResponse.isD_isValid(), l_commandResponse.getD_responseString());
+        return l_tournament;
+    }
+
+    /**
      * @param p_currentGameData Object Of current gameplay
      * @param p_playerName Player name
      * @return The List of player with given name
@@ -303,5 +406,14 @@ public class GameConfigServiceImpl implements GameConfigService {
         }
 
         return l_players;
+    }
+
+    /**
+     * 
+     * {@inheritDoc }
+     */
+    @Override
+    public CommandResponse getResponse() {
+        return d_generalUtil.getResponse();
     }
 }

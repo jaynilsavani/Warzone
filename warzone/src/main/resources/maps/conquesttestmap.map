@@ -1,0 +1,14 @@
+[Map]
+author=abc
+image=conquesttestmap.bmp
+wrap=yes
+scroll=horizontal
+warn=yes
+name conquesttestmap Map
+
+[Continents]
+asia=5
+
+[Territories]
+india,0,0,asia,china
+china,0,0,asia,india

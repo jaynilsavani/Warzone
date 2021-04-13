@@ -56,9 +56,11 @@ public class RandomStrategy extends Strategy {
         } else {
             a = generateUniqueRandomNumber(1, this.d_allowedOrders.size());
         }
-
-        System.out.println(a);
         List<Country> l_randomCountries = getRandomCountries();
+        if(l_randomCountries==null || l_randomCountries.size()==0 )
+        {
+            a=7;
+        }
         switch (a) {
             case 1:
                 l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_noOfArmies());
@@ -66,13 +68,17 @@ public class RandomStrategy extends Strategy {
                 //d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
                 break;
             case 2:
-                l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
-                d_player.getOrderProcessor().processOrder("advance " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
-                break;
+                if(l_randomCountries.size()==2) {
+                    l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
+                    d_player.getOrderProcessor().processOrder("advance " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
+                    break;
+                }
             case 3:
-                l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
-                d_player.getOrderProcessor().processOrder("airlift " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
-                break;
+                if(l_randomCountries.size()==2) {
+                    l_noOfArmies = generateUniqueRandomNumber(1, l_randomCountries.get(0).getD_noOfArmies());
+                    d_player.getOrderProcessor().processOrder("airlift " + l_randomCountries.get(0).getD_countryName() + " " + l_randomCountries.get(1).getD_countryName() + " " + l_noOfArmies, d_gameData);
+                    break;
+                }
             case 4:
                 List<Country> l_opponentCountries=getOpponentCountries();
                 l_index=generateUniqueRandomNumber(0,l_opponentCountries.size()-1);
@@ -101,23 +107,21 @@ public class RandomStrategy extends Strategy {
     }
 
     private List<Country> getRandomCountries() {
-        if(d_player.getD_ownedCountries()==null || d_player.getD_ownedCountries().size()==0)
-        {
-            return  null;
-        }
         List<Country> l_randomCountries = new ArrayList<Country>();
         List<Country> l_getOpponentCountries = new ArrayList<>();
-        int l_index = generateUniqueRandomNumber(0, d_player.getD_ownedCountries().size() - 1);
-        l_randomCountries.add(d_player.getD_ownedCountries().get(l_index));
-        Country l_moveFromCountry = l_randomCountries.get(0);
-        for (Country l_countries : getAvailableCountries(d_gameData.getD_warMap())) {
-            if ((d_player.getD_ownedCountries().contains(l_countries) || l_moveFromCountry.getD_neighbourCountries().contains(l_countries.getD_countryName())) && (l_countries != l_moveFromCountry)) {
-                l_getOpponentCountries.add(l_countries);
+        if(d_player.getD_ownedCountries()!=null && d_player.getD_ownedCountries().size()!=0) {
+            int l_index = generateUniqueRandomNumber(0, d_player.getD_ownedCountries().size() - 1);
+            l_randomCountries.add(d_player.getD_ownedCountries().get(l_index));
+            Country l_moveFromCountry = l_randomCountries.get(0);
+            for (Country l_countries : getAvailableCountries(d_gameData.getD_warMap())) {
+                if ((d_player.getD_ownedCountries().contains(l_countries) || l_moveFromCountry.getD_neighbourCountries().contains(l_countries.getD_countryName())) && (l_countries != l_moveFromCountry)) {
+                    l_getOpponentCountries.add(l_countries);
+                }
             }
-        }
-        if(l_getOpponentCountries.size()>1) {
-            l_index = generateUniqueRandomNumber(0, l_getOpponentCountries.size() - 1);
-            l_randomCountries.add(l_getOpponentCountries.get(l_index));
+            if (l_getOpponentCountries.size() > 1) {
+                l_index = generateUniqueRandomNumber(0, l_getOpponentCountries.size() - 1);
+                l_randomCountries.add(l_getOpponentCountries.get(l_index));
+            }
         }
         return l_randomCountries;
     }
