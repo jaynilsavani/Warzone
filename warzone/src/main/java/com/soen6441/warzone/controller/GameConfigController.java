@@ -3,6 +3,7 @@ package com.soen6441.warzone.controller;
 import com.soen6441.warzone.config.StageManager;
 import static com.soen6441.warzone.config.WarzoneConstants.PHASE_GAME_START_UP;
 import static com.soen6441.warzone.config.WarzoneConstants.PHASE_MAP;
+import static com.soen6441.warzone.config.WarzoneConstants.GAME_DEF_PATH;
 import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Player;
@@ -30,6 +31,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -252,9 +254,61 @@ public class GameConfigController implements Initializable {
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
             }
+        } else if (d_generalUtil.validateIOString(l_command, "savegame\\s+[a-zA-Z]+.?[a-zA-Z]+") && l_commandSegments.size() == 2) {
+            if (d_gameData.getD_warMap() != null) {
+                d_gameEngine.saveGame(d_gameData, l_commandSegments.get(1));
+                d_generalUtil.prepareResponse(true, "Game saved successfully.");
+            } else {
+                d_generalUtil.prepareResponse(false, "Nothing to save.");
+            }
+            l_gmConfigRes = d_generalUtil.getResponse();
+        } else if (d_generalUtil.validateIOString(l_command, "loadgame\\s+[a-zA-Z]+.?[a-zA-Z]+") && l_commandSegments.size() == 2) {
+            try {
+                List<String> l_games = new ArrayList<>();
 
-        }
-        else if(l_command.toLowerCase().startsWith(TOURNAMENT) && d_gameMode==1) {
+                // get available files in games directory
+                l_games = d_generalUtil.getListOfAllFiles(Paths.get(GAME_DEF_PATH), ".txt");
+
+                // check file extension entered by user
+                String l_fullName;
+                int l_index = l_commandSegments.get(1).lastIndexOf('.');
+                l_fullName = l_index > 0
+                        ? l_commandSegments.get(1).toLowerCase() : l_commandSegments.get(1).toLowerCase() + ".txt";
+
+                // check if file exists
+                if (l_games.contains(l_fullName)) {
+                    d_gameData = d_gameEngine.loadGame(l_fullName);
+
+                    // check game data is null or not
+                    if (d_gameData != null) {
+                        // check player is added or not
+                        if (d_gameData.getD_playerList() != null) {
+                            // check countries are assigned or not
+                            if (d_gameData.getD_playerList().get(0).getD_ownedCountries().size() != 0) {
+                                d_StartGame.setDisable(false);
+                                AssignCountryFlag = 1;
+                                d_generalUtil.prepareResponse(true, "Game loaded successfully.");
+                            } else {
+                                d_StartGame.setDisable(true);
+                                AssignCountryFlag = 0;
+                                d_generalUtil.prepareResponse(true, "Game loaded successfully. Please run assigncountries command to play game!!");
+                            }
+                        } else {
+                            d_generalUtil.prepareResponse(false, "Game loaded successfully. Please add players\n and run assigncountries command to play game!!");
+                        }
+                    } else {
+                        d_generalUtil.prepareResponse(false, "File does not contains valid game data.");
+                    }
+                } else {
+                    d_generalUtil.prepareResponse(false, "File does not found.");
+                }
+
+                l_gmConfigRes = d_generalUtil.getResponse();
+            } catch (Exception e) {
+                d_generalUtil.prepareResponse(false, "Error in loadgame command");
+                l_gmConfigRes = d_generalUtil.getResponse();
+            }
+        } else if(l_command.toLowerCase().startsWith(TOURNAMENT) && d_gameMode==1) {
             if (d_generalUtil.validateIOString(l_command, "tournament\\s-M\\s([a-zA-Z]+|([a-zA-Z]+\\.[a-zA-Z]+))((,[a-zA-Z]+\\.[a-zA-Z]+)|(,[a-zA-Z]+))+\\s-P\\s[a-zA-z]+(,[a-zA-z]+)+\\s-G\\s[1-5]\\s-D\\s[1-5][0-9]")) {
                 String l_s="";
                 List<String> l_strategy=new ArrayList<>();
@@ -292,8 +346,6 @@ public class GameConfigController implements Initializable {
                     d_generalUtil.prepareResponse(l_validate, "command is not valid with args");              //general command if none of the above condition matches
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
-
-
             }
         }
         else {
