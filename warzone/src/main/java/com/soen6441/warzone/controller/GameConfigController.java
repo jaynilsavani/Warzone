@@ -271,8 +271,8 @@ public class GameConfigController implements Initializable {
 
                 // check file extension entered by user
                 String l_fullName;
-                int index = l_commandSegments.get(1).lastIndexOf('.');
-                l_fullName = index > 0
+                int l_index = l_commandSegments.get(1).lastIndexOf('.');
+                l_fullName = l_index > 0
                         ? l_commandSegments.get(1).toLowerCase() : l_commandSegments.get(1).toLowerCase() + ".txt";
 
                 // check if file exists
