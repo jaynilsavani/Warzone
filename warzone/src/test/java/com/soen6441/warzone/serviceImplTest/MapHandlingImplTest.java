@@ -83,7 +83,7 @@ public class MapHandlingImplTest {
     public void testForWriteMapToFile() throws IOException {
         try {
             d_warMap = d_generalUtil.readMapByType("test.map");
-            d_warMap.setD_mapName("ftftf");
+            d_warMap.setD_mapName("test1");
         } catch (IOException ex) {
             Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
         }
