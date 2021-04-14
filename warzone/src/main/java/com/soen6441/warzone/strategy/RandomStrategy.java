@@ -5,8 +5,6 @@ import com.soen6441.warzone.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.NoArgsConstructor;
-
 /**
  * This Class is used for Implementing Random Strategy of a Player. A NoArgsConstructor
  * annotation top of the class is a lombok dependency to automatically generate default
@@ -17,7 +15,11 @@ import lombok.NoArgsConstructor;
 
 public class RandomStrategy extends Strategy {
 
-
+    /**
+     * This is a default constructor used to initializes a list to
+     * add specific orders which are allowed in this strategy
+     *
+     */
     public RandomStrategy() {
 
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
@@ -50,22 +52,21 @@ public class RandomStrategy extends Strategy {
     public Order createOrder() {
         Country l_fromCountry;
         int l_noOfArmies, l_index;
-        int a;
+        int l_orderChoice;
         if (d_player.getD_orders().size() > 3) {
-            a = generateUniqueRandomNumber(1, this.d_allowedOrders.size() + 1);
+            l_orderChoice = generateUniqueRandomNumber(1, this.d_allowedOrders.size() + 1);
         } else {
-            a = generateUniqueRandomNumber(1, this.d_allowedOrders.size());
+            l_orderChoice = generateUniqueRandomNumber(1, this.d_allowedOrders.size());
         }
         List<Country> l_randomCountries = getRandomCountries();
         if(l_randomCountries==null || l_randomCountries.size()==0 )
         {
-            a=7;
+            l_orderChoice =7;
         }
-        switch (a) {
+        switch (l_orderChoice) {
             case 1:
                 l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_noOfArmies());
                 d_player.getOrderProcessor().processOrder("deploy " + l_randomCountries.get(0).getD_countryName() + " " + l_noOfArmies, d_gameData);
-                //d_player.setD_issuedNoOfArmies(d_player.getD_issuedNoOfArmies() - l_noOfArmies);
                 break;
             case 2:
                 if(l_randomCountries.size()==2) {
@@ -106,6 +107,11 @@ public class RandomStrategy extends Strategy {
         return d_player.getOrderProcessor().getOrder();
     }
 
+    /**
+     * This method is used to get list of random countries deploy or attack
+     *
+     * @return list of random countries
+     */
     private List<Country> getRandomCountries() {
         List<Country> l_randomCountries = new ArrayList<Country>();
         List<Country> l_getOpponentCountries = new ArrayList<>();
@@ -126,6 +132,11 @@ public class RandomStrategy extends Strategy {
         return l_randomCountries;
     }
 
+    /**
+     * This method is used to get list of opponent's country
+     *
+     * @return list of opponent country
+     */
     private List<Country> getOpponentCountries() {
         List<Country> l_getOpponentCountries = new ArrayList<>();
         for (Country l_countries : getAvailableCountries(d_gameData.getD_warMap())) {
