@@ -20,7 +20,7 @@ import java.util.Map;
 import static org.junit.Assert.assertTrue;
 
 /**
- * This file contains adapter pattern tests
+ * This file contains strategy pattern tests
  *
  * @author <a href="mailto:manthan.p.moradiya@gmail.com">Manthan Moradiya</a>
  */
