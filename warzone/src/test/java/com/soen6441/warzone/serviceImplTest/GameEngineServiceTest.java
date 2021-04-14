@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -433,5 +436,68 @@ public class GameEngineServiceTest {
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertEquals(true, l_order.executeOrder());
         assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(), l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
+    }
+
+    /**
+     * This test will check save game command
+     */
+    @Test
+    public void testSaveGame(){
+        assertEquals(d_gameEngine.saveGame(d_gameData, "testGame"), true);
+    }
+
+    /**
+     * This test will check load game command
+     */
+    @Test
+    public void testLoadGame() throws Exception {
+        try {
+            GameData l_gameData = new GameData();
+            WarMap l_warMap = new WarMap();
+            List<Country> l_countryList = new ArrayList();
+
+            //creating a new country object
+            Country l_country = new Country();
+            l_country.setD_continentIndex(1);
+            l_country.setD_countryIndex(1);
+            l_country.setD_countryName("india");
+            List<String> l_neighborList = new ArrayList();
+            l_neighborList.add("china");
+
+            //added neighbour of country
+            l_country.setD_neighbourCountries(l_neighborList);
+            l_countryList.add(l_country);
+
+            //creating a new country object
+            Country l_country1 = new Country();
+            l_country1.setD_continentIndex(1);
+            l_country1.setD_countryIndex(2);
+            l_country1.setD_countryName("china");
+            List<String> l_neighborList1 = new ArrayList();
+            l_neighborList1.add("india");
+
+            //added neighbour of country
+            l_country1.setD_neighbourCountries(l_neighborList1);
+            l_countryList.add(l_country1);
+
+            //creating a new continent object
+            Continent l_continent = new Continent();
+            l_continent.setD_continentIndex(1);
+            l_continent.setD_continentName("asia");
+            l_continent.setD_continentValue(5);
+            l_continent.setD_countryList(l_countryList);
+
+            l_warMap.setD_mapName("test.map");
+            l_warMap.setD_status(true);
+            Map<Integer, Continent> l_continentMap = new HashMap<Integer, Continent>();
+            l_continentMap.put(1, l_continent);
+            l_warMap.setD_continents(l_continentMap);
+
+            l_gameData.setD_warMap(l_warMap);
+            assertEquals(d_gameEngine.saveGame(l_gameData, "testSaveGame"), true);
+            assertEquals(l_gameData, d_gameEngine.loadGame("testSaveGame"));
+        } catch (Exception ex) {
+            Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
