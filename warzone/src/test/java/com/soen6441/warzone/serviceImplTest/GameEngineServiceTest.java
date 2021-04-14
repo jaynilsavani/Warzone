@@ -490,7 +490,7 @@ public class GameEngineServiceTest {
         l_warMap.setD_continents(l_continentMap);
 
         l_gameData.setD_warMap(l_warMap);
-        d_gameEngine.saveGame(l_gameData, "testSaveGame");
+        assertEquals(d_gameEngine.saveGame(l_gameData, "testSaveGame"), true);
         assertEquals(l_gameData, d_gameEngine.loadGame("testSaveGame.txt"));
     }
 }
