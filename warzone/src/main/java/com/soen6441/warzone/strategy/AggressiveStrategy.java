@@ -68,7 +68,7 @@ public class AggressiveStrategy extends Strategy {
     @Override
     public Order createOrder() {
         Country l_fromCountry;
-        int l_noOfArmies, l_a;
+        int l_noOfArmies, l_orderChoice;
 
         if (d_player.getD_issuedNoOfArmies() > 0 && d_player.getD_ownedCountries() != null && d_player.getD_ownedCountries().size() != 0) {
             l_noOfArmies = generateUniqueRandomNumber( 1, d_player.getD_issuedNoOfArmies() );
@@ -77,11 +77,11 @@ public class AggressiveStrategy extends Strategy {
         } else {
 
             if (d_player.getD_ownedCountries() == null || d_player.getD_ownedCountries().size() == 0) {
-                l_a = 8;
+                l_orderChoice = 8;
             } else {
-                l_a = generateUniqueRandomNumber( 2, this.d_allowedOrders.size() + 1 );
+                l_orderChoice = generateUniqueRandomNumber( 2, this.d_allowedOrders.size() + 1 );
             }
-            switch (l_a) {
+            switch (l_orderChoice) {
                 case 2:
                     l_fromCountry = moveFrom();
                     l_noOfArmies = generateUniqueRandomNumber( 1, l_fromCountry.getD_noOfArmies() );
