@@ -30,6 +30,7 @@ public class WarzoneConstants {
     public static final String PLAYER_FLAG = "[player_flag]";
     public static final String GAME_PHASE = "[game_phase]";
     public static final String MAP_NAME = "[map_name]";
+    public static final String PLAYER_COUNTER = "[player_counter]";
 
     public static final String PHASE_MAP = "MAP";
     public static final String PHASE_GAME_START_UP = "GAMESTARTUP";
