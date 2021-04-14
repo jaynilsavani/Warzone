@@ -440,7 +440,7 @@ public class GameEngineServiceTest {
      */
     @Test
     public void testSaveGame(){
-        assertTrue(d_gameEngine.saveGame(d_gameData, "testSaveGame"));
+        assertTrue(d_gameEngine.saveGame(d_gameData, "testGame"));
     }
 
     /**
