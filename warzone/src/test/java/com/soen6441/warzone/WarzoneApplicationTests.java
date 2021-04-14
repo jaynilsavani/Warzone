@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.boot.test.context.SpringBootTest;
+import com.soen6441.warzone.strategyPatternTest.StrategyPatternTestSuite;
 
 /**
  * This is the main suite class for testcases. All testcases files for different
@@ -19,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @RunWith(Suite.class)
-@SuiteClasses({MapHandlingTestSuite.class, GameConfigTestSuite.class, GameEngineTestSuite.class, adapterPatternTestSuite.class})
+@SuiteClasses({MapHandlingTestSuite.class, GameConfigTestSuite.class, GameEngineTestSuite.class, adapterPatternTestSuite.class, StrategyPatternTestSuite.class})
 public class WarzoneApplicationTests {
 
     /**
