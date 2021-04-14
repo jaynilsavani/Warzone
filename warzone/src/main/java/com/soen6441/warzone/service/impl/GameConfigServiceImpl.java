@@ -109,7 +109,7 @@ public class GameConfigServiceImpl implements GameConfigService {
                     l_playerRowData = l_playerRowData + "\n";
                 }
             }
-            String l_titleMessage = "\nList of countries which contains atleast 1 army:: \n";
+            String l_titleMessage = "\nList of country owned by each player with armies:: \n";
             l_showMapOfCountris = l_showMapOfCountris + l_titleMessage;
             //formatting matrix
             /*for (int l_i = 0; l_i < l_rowSize; l_i++) {

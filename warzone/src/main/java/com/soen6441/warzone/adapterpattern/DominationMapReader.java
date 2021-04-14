@@ -79,7 +79,7 @@ public class DominationMapReader {
                         l_isContinents = true;
                         continue;
                     }
-                    //this if condition read all the contients from file and set into continent model
+                    //this if condition read all the continents from file and set into continent model
                     if (l_isContinents && !l_fileLine.equalsIgnoreCase(COUNTRIES)) {
                         l_continent = new Continent();
                         String[] l_continentArray = l_fileLine.split(" ");
@@ -94,7 +94,7 @@ public class DominationMapReader {
                         l_isCountries = true;
                         continue;
                     }
-                    //this if condtion read all the countries from file and set into country model
+                    //this if condition read all the countries from file and set into country model
                     if (l_isCountries && !l_fileLine.equalsIgnoreCase(BORDERS)) {
 
                         String[] l_countries = l_fileLine.split(" ");
@@ -128,16 +128,16 @@ public class DominationMapReader {
                         Continent l_currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
 
                         List<String> l_neighbourName = new ArrayList<String>();
-                        for (int i = 1; i < l_neighbourArray.length; i++) {
+                        for (int l_i = 1; l_i < l_neighbourArray.length; l_i++) {
                             l_neighbourName
-                                    .add(getCountryNamebyCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
+                                    .add(getCountryNamebyCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[l_i])));
                         }
 
-                        for (int i = 0; i < l_currentContinent.getD_countryList().size(); i++) {
-                            Country l_currentCountry = l_currentContinent.getD_countryList().get(i);
+                        for (int l_i = 0; l_i < l_currentContinent.getD_countryList().size(); l_i++) {
+                            Country l_currentCountry = l_currentContinent.getD_countryList().get( l_i );
                             if (l_currentCountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
                                 l_currentCountry.setD_neighbourCountries(l_neighbourName);
-                                l_currentContinent.getD_countryList().set(i, l_currentCountry);
+                                l_currentContinent.getD_countryList().set( l_i, l_currentCountry);
                             }
                         }
                         l_continentMap.put(l_currentContinent.getD_continentIndex(), l_currentContinent);
@@ -176,7 +176,7 @@ public class DominationMapReader {
             StringBuilder l_countryStringBuilder = new StringBuilder(COUNTRIES).append(System.lineSeparator());
             StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
 
-            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+            try (PrintWriter l_writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(MAP_DEF_PATH + l_fileName), "utf-8")));) {
 
                 Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
@@ -210,17 +210,17 @@ public class DominationMapReader {
                         }
                     }
                 }
-                writer.println("; map: " + p_warMap.getD_mapName());
-                writer.println("; map made with the map maker");
-                writer.println("; yura.net Risk 1.0.9.5\n");
-                writer.println("name " + p_warMap.getD_mapName());
-                writer.println();
-                writer.println(FILES);
-                writer.println("pic warzone_pic.png");
-                writer.println();
-                writer.println(l_continentStringBuilder.toString());
-                writer.println(l_countryStringBuilder.toString());
-                writer.println(l_neighborStringBuilder.toString());
+                l_writer.println("; map: " + p_warMap.getD_mapName());
+                l_writer.println("; map made with the map maker");
+                l_writer.println("; yura.net Risk 1.0.9.5\n");
+                l_writer.println("name " + p_warMap.getD_mapName());
+                l_writer.println();
+                l_writer.println(FILES);
+                l_writer.println("pic warzone_pic.png");
+                l_writer.println();
+                l_writer.println(l_continentStringBuilder.toString());
+                l_writer.println(l_countryStringBuilder.toString());
+                l_writer.println(l_neighborStringBuilder.toString());
                 l_status = true;
             }
         } catch (Exception e) {
@@ -234,7 +234,7 @@ public class DominationMapReader {
      *
      * @param p_warMap is object of WarMap model
      * @param p_countryName is the name of
-     * @return index of
+     * @return index of country
      */
     private int getCountryIndexByCountryName(WarMap p_warMap, String p_countryName) {
         int l_countryIndex = 0;
@@ -270,9 +270,9 @@ public class DominationMapReader {
      */
     private Continent getContinentByCountryId(Map<Integer, Continent> p_continentMap, int p_countryIndex) {
         Continent l_continent = null;
-        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
+        for (Map.Entry<Integer, Continent> l_entry : p_continentMap.entrySet()) {
 
-            l_continent = entry.getValue();
+            l_continent = l_entry.getValue();
             //getting country list 
             List<Country> l_countryList = l_continent.getD_countryList();
             if (l_countryList != null) {
@@ -303,9 +303,9 @@ public class DominationMapReader {
 
         String l_neighbourName = "";
 
-        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
+        for (Map.Entry<Integer, Continent> l_entry : p_continentMap.entrySet()) {
             //getting country list 
-            Continent l_continent = entry.getValue();
+            Continent l_continent = l_entry.getValue();
 
             List<Country> l_countryList = l_continent.getD_countryList();
             if (l_countryList != null) {
