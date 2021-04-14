@@ -434,4 +434,66 @@ public class GameEngineServiceTest {
         assertEquals(true, l_order.executeOrder());
         assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(), l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
     }
+
+    /**
+     * Test advance command from opponent country
+     */
+    @Test
+    public void testAdvanceCommandWithOpponentCountry() {
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+        d_orderProcessor.processOrder("advance china nepal 5".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test airlift command with player's own country as target country
+     *
+     */
+    @Test
+    public void testAirliftCommandWithOwnedCountries() {
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+
+        d_orderProcessor.processOrder("airlift india india 6".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test to check Deploy Command with opponent country
+     */
+    @Test
+    public void testDeployCommandInOpponentCountry() {
+        d_gameData.getD_playerList().get(0).setD_noOfArmies(10);
+        d_orderProcessor.processOrder("deploy nepal 6", d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test advance command with insufficient armies 
+     */
+    @Test
+    public void testAdvanceWithHighNumberOfArmies() {
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+        d_orderProcessor.processOrder("advance india nepal 15".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+
+    }
 }
