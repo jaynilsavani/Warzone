@@ -138,6 +138,31 @@ public class GameConfigServiceTest {
     }
 
     /**
+     * This method is used to test that user can not add player without loading
+     * map
+     *
+     */
+    @Test
+    public void testAddPlayerWithoutMap() throws IOException {
+        d_gameData.setD_warMap(null);
+        CommandResponse l_result = d_gameConfigService.assignCountries(d_gameData);
+        assertFalse(l_result.isD_isValid());
+    }
+
+    /**
+     * This method is used to test that user can not able to assign countries
+     * without adding player
+     *
+     */
+    @Test
+    public void testAssigncountriesWithoutPlayers() throws IOException {
+        d_gameData.setD_warMap(d_generalUtil.readMapByType("asia.map"));
+        CommandResponse l_result = d_gameConfigService.assignCountries(d_gameData);
+        assertFalse(l_result.isD_isValid());
+
+    }
+
+    /**
      * This method is used to test whether countries are assigned to player or
      * not
      *
