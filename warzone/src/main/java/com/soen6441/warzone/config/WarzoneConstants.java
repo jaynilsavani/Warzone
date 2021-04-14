@@ -14,7 +14,7 @@ public class WarzoneConstants {
     public static final int DEFAULT_ASSIGN_REINFORCEMENT_IN_TURN = 5;
     //Constants of Map Editor
     public static final String MAP_DEF_PATH = "./src/main/resources/maps/";
-    public static final String GAME_DEF_PATH = "./games/";
+    public static final String GAME_DEF_PATH = "./src/main/resources/games/";
     public static final String NAME = "name";
     public static final String FILES = "[files]";
     public static final String MAP = "[Map]";
@@ -30,6 +30,7 @@ public class WarzoneConstants {
     public static final String PLAYER_FLAG = "[player_flag]";
     public static final String GAME_PHASE = "[game_phase]";
     public static final String MAP_NAME = "[map_name]";
+    public static final String PLAYER_COUNTER = "[player_counter]";
 
     public static final String PHASE_MAP = "MAP";
     public static final String PHASE_GAME_START_UP = "GAMESTARTUP";

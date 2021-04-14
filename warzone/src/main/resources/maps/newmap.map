@@ -6,42 +6,42 @@ scroll=horizontal
 warn=yes
 
 [Continents]
-North America=7
-Central America=4
-South America=3
+NorthAmerica=7
+CentralAmerica=4
+SouthAmerica=3
 Africa=7
-Middle East=5
+MiddleEast=5
 Europe=4
 Asia=6
 Australia=3
 
 [Territories]
-AA,40,120,North America,AB,CA
-AB,105,155,North America,AA,AC,AF,AJ
-AC,130,130,North America,AB,AF,AG,AD
-AD,210,60,North America,AC,AG,AE,AI
-AE,305,80,North America,AD,AI,AY
-AF,140,165,North America,AB,AC,AG,AJ,AK
-AG,170,165,North America,AF,AC,AD,AH,AK,AL
-AH,200,175,North America,AG,AI,AL,AM
-AI,235,170,North America,AH,AD,AE,AM
-AJ,120,210,North America,AB,AF,AK,AO,AN
-AK,145,205,North America,AJ,AF,AG,AL,AO
-AL,175,215,North America,AK,AG,AH,AM,AO
-AM,205,215,North America,AL,AH,AI,AP
-AN,40,250,North America,AJ,AT,CQ
+AA,40,120,NorthAmerica,AB,CA
+AB,105,155,NorthAmerica,AA,AC,AF,AJ
+AC,130,130,NorthAmerica,AB,AF,AG,AD
+AD,210,60,NorthAmerica,AC,AG,AE,AI
+AE,305,80,NorthAmerica,AD,AI,AY
+AF,140,165,NorthAmerica,AB,AC,AG,AJ,AK
+AG,170,165,NorthAmerica,AF,AC,AD,AH,AK,AL
+AH,200,175,NorthAmerica,AG,AI,AL,AM
+AI,235,170,NorthAmerica,AH,AD,AE,AM
+AJ,120,210,NorthAmerica,AB,AF,AK,AO,AN
+AK,145,205,NorthAmerica,AJ,AF,AG,AL,AO
+AL,175,215,NorthAmerica,AK,AG,AH,AM,AO
+AM,205,215,NorthAmerica,AL,AH,AI,AP
+AN,40,250,NorthAmerica,AJ,AT,CQ
 
-AO,160,250,Central America,AJ,AK,AL,AQ
-AP,215,260,Central America,AM,AQ,AS
-AQ,185,270,Central America,AO,AP,AR
-AR,230,300,Central America,AQ,AS,AT
-AS,255,300,Central America,AR,AP,AU,AV
+AO,160,250,CentralAmerica,AJ,AK,AL,AQ
+AP,215,260,CentralAmerica,AM,AQ,AS
+AQ,185,270,CentralAmerica,AO,AP,AR
+AR,230,300,CentralAmerica,AQ,AS,AT
+AS,255,300,CentralAmerica,AR,AP,AU,AV
 
-AT,230,335,South America,AN,AR,AU,AW,AX
-AU,260,340,South America,AT,AS,AV,AX
-AV,300,335,South America,AU,AS,BK,AX
-AW,240,390,South America,AT,AX
-AX,260,395,South America,AW,AT,AU,AV
+AT,230,335,SouthAmerica,AN,AR,AU,AW,AX
+AU,260,340,SouthAmerica,AT,AS,AV,AX
+AV,300,335,SouthAmerica,AU,AS,BK,AX
+AW,240,390,SouthAmerica,AT,AX
+AX,260,395,SouthAmerica,AW,AT,AU,AV
 
 AY,370,140,Europe,AE,AZ,BB
 AZ,450,145,Europe,AY,BA,BC
