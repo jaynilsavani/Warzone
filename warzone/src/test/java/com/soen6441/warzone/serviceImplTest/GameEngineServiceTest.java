@@ -481,7 +481,7 @@ public class GameEngineServiceTest {
     }
 
     /**
-     * Test advance command with insufficient armies 
+     * Test advance command with insufficient armies
      */
     @Test
     public void testAdvanceWithHighNumberOfArmies() {
@@ -495,5 +495,46 @@ public class GameEngineServiceTest {
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertEquals(false, l_order.executeOrder());
 
+    }
+
+    /**
+     * Test that attack is not possible between negotiated players
+     */
+    @Test
+    public void testOrderInNegotiation() {
+        Player l_player = new Player();
+        l_player.setD_playerName("user2");
+        l_player.setD_negotiatePlayer(d_player.getD_playerName());
+
+        Country l_country2 = new Country();
+        l_country2.setD_continentIndex(1);
+        l_country2.setD_countryIndex(3);
+        l_country2.setD_countryName("nepal");
+        List<Country> l_countryList = new ArrayList();
+        l_countryList.add(l_country2);
+        l_player.setD_ownedCountries(l_countryList);
+
+        d_gameData.getD_playerList().add(l_player);
+
+        d_orderProcessor.processOrder("negotiate user2".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+
+        d_orderProcessor.processOrder("advance india nepal 5".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order1 = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order1.executeOrder());
+    }
+
+    /**
+     * Test to check Bomb Command when user enters country which is not a
+     * neighbour country or country not found
+     */
+    @Test
+    public void testNeighbourCountryInBombCommand() {
+        d_orderProcessor.processOrder("bomb southafrica".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertFalse(l_order.executeOrder());
     }
 }
