@@ -57,7 +57,7 @@ public class RandomStrategy extends Strategy {
             a = generateUniqueRandomNumber(1, this.d_allowedOrders.size());
         }
         List<Country> l_randomCountries = getRandomCountries();
-        if(l_randomCountries==null || l_randomCountries.size()==0 )
+        if(l_randomCountries==null || l_randomCountries.size()==0 || d_player.getD_ownedCountries().size()>3 )
         {
             a=7;
         }

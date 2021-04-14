@@ -11,17 +11,17 @@
                 <Font name="System Italic" size="14.0" />
             </font>
         </Button>
-        <Label layoutX="405.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Country List">
+        <Label fx:id="d_countryTitle" layoutX="405.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Country List">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>
         </Label>
-        <Label layoutX="140.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Continents">
+        <Label  fx:id="d_continentsTitle" layoutX="140.0" layoutY="28.0" prefHeight="20.0" prefWidth="99.0" text="Continents">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>
         </Label>
-        <Label layoutX="690.0" layoutY="28.0" prefHeight="20.0" prefWidth="177.0" text="Neighbour List">
+        <Label fx:id="d_neighboursTitle" layoutX="690.0" layoutY="28.0" prefHeight="20.0" prefWidth="177.0" text="Neighbour List">
             <font>
                 <Font name="System Bold Italic" size="14.0" />
             </font>

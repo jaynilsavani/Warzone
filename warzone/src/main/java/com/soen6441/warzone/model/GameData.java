@@ -62,6 +62,11 @@ public class GameData {
      */
     private String d_status;
 
+    /**
+     * mode of the game
+     */
+    private int d_gameMode;
+
     public GameData(GameData p_gameData) {
 
         this.d_gamePhase = p_gameData.d_gamePhase;

@@ -5,6 +5,8 @@ import static com.soen6441.warzone.model.Strategies.stringToStrategyMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.soen6441.warzone.state.IssueOrderPhase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +19,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@NoArgsConstructor
+
 public class Tournament {
     
     private List<WarMap> d_maps;
@@ -27,12 +29,27 @@ public class Tournament {
     private boolean d_status;
     private List<GameData> d_gamedatas;
     
-    private ArrayList<ArrayList<TournamentWinner>> d_winners = new ArrayList<ArrayList<TournamentWinner>>();
+    private ArrayList<ArrayList<String>> d_winners = new ArrayList<ArrayList<String>>();
     
    
-    
-    public boolean declareWinner(int p_mapNo, int p_gameNo) {
-        return false;
+    public void setWinnerList()
+    {
+        for(int l_map=0;l_map<d_maps.size();l_map++)
+        {
+            ArrayList<String> l_t=new ArrayList<String>();
+            for(int l_game=0;l_game<d_noOfGames;l_game++)
+            {
+                l_t.add(l_game,"DRAW");
+
+            }
+            d_winners.add(l_t);
+        }
+        System.out.println(d_winners);
+    }
+    public boolean declareWinner(int p_mapNo, int p_gameNo,String p_name) {
+        d_winners.get(p_mapNo).remove(p_gameNo);
+        d_winners.get(p_mapNo).add(p_gameNo,p_name);
+        return true;
     }
     
 }
