@@ -4,8 +4,10 @@ import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.model.Order;
 import com.soen6441.warzone.model.OrderTypes;
 import com.soen6441.warzone.model.Player;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.NoArgsConstructor;
 
 /**
@@ -24,12 +26,12 @@ public class HumanStrategy extends Strategy {
      * strategy
      *
      * @param p_gameData GameData Object needed for the player GameData
-     * @param p_player Player Object on which Strategy being Applied
+     * @param p_player   Player Object on which Strategy being Applied
      */
     public HumanStrategy(GameData p_gameData, Player p_player) {
-        super(p_gameData, p_player);
+        super( p_gameData, p_player );
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
-        this.setD_allowedOrders(l_allowedOrders);
+        this.setD_allowedOrders( l_allowedOrders );
     }
 
     /**
@@ -37,7 +39,7 @@ public class HumanStrategy extends Strategy {
      */
     @Override
     public Order createOrder() {
-       return d_player.getOrderProcessor().getOrder();
+        return d_player.getOrderProcessor().getOrder();
     }
 
 }

@@ -4,7 +4,6 @@ import com.soen6441.warzone.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NoArgsConstructor;
 
 /**
  *
@@ -28,7 +27,11 @@ public class BenevolentStrategy extends Strategy {
         super(p_gameData, p_player);
     }
 
-
+    /**
+     * This is a default constructor used to initializes a list to
+     * add specific orders which are allowed in this strategy
+     *
+     */
     public BenevolentStrategy() {
         List<OrderTypes> l_allowedOrders = new ArrayList<>();
         l_allowedOrders.add(OrderTypes.DEPLOY);
@@ -46,7 +49,7 @@ public class BenevolentStrategy extends Strategy {
     public Order createOrder() {
         Country l_fromCountry;
         int l_noOfArmies,l_index;
-        int a;
+        int l_orderChoice;
         if (d_player.getD_issuedNoOfArmies() > 0 && d_player.getD_ownedCountries()!=null && d_player.getD_ownedCountries().size()!=0) {
             l_noOfArmies = generateUniqueRandomNumber(1, d_player.getD_issuedNoOfArmies());
             d_player.getOrderProcessor().processOrder("deploy " + moveFromCountry().getD_countryName() + " " + l_noOfArmies, d_gameData);
@@ -54,12 +57,12 @@ public class BenevolentStrategy extends Strategy {
         } else {
             if(d_player.getD_ownedCountries()==null || d_player.getD_ownedCountries().size()==0)
             {
-                a=6;
+                l_orderChoice =6;
             }
             else {
-                a = generateUniqueRandomNumber(2, this.d_allowedOrders.size() + 1);
+                l_orderChoice = generateUniqueRandomNumber(2, this.d_allowedOrders.size() + 1);
             }
-            switch (a) {
+            switch (l_orderChoice) {
                 case 2:
                     l_fromCountry = moveFromCountry();
                     l_noOfArmies = generateUniqueRandomNumber(1, l_fromCountry.getD_noOfArmies());
@@ -92,7 +95,12 @@ public class BenevolentStrategy extends Strategy {
         }
         return d_player.getOrderProcessor().getOrder();
     }
-
+    /**
+     * This method is used get random owned country to move army from that country
+     *
+     * @param p_country weakest country
+     * @return randomly selected opponent's country
+     */
     public Country moveToCountry(Country p_country) {
         Country l_country=null;
         List<Country> l_countryToList=new ArrayList<>();
@@ -113,6 +121,11 @@ public class BenevolentStrategy extends Strategy {
         }
         return l_country;
     }
+    /**
+     * This method is used to get weakest Country of a Player
+     *
+     * @return weakest country
+     */
     public Country moveFromCountry() {
         Country l_country=null;
         if(d_player.getD_ownedCountries()!=null && d_player.getD_ownedCountries().size()!=0)
