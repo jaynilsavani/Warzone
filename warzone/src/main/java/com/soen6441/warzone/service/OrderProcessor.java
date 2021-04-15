@@ -27,14 +27,16 @@ public interface OrderProcessor {
      */
     public Order getOrder();
     /**
-     * 
-     * @return 
+     * returns order string
+     *
+     * @return order string
      */
     public String getOrderString();
     
      /**
-     * 
-     * @param p_order 
+     * set order string
+      *
+     * @param p_order order string
      */
     public void setOrderString(String p_order);
 

@@ -601,6 +601,11 @@ public class GameEngineServiceTest {
         assertFalse(l_order.executeOrder());
     }
 
+    /**
+     * test tournament command
+     *
+     * @throws IOException throws  IO exception
+     */
     @Test
     public void testTournament() throws IOException {
         boolean l_check=false;

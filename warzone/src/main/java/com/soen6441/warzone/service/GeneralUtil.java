@@ -85,12 +85,15 @@ public interface GeneralUtil {
     public List<String> getAvailableMapFiles() throws IOException;
 
     /**
+     * convert string into title case
+     *
      * @param p_input input String
      * @return TitleCase String
      */
     public String toTitleCase(String p_input);
 
     /**
+     * read map by type(conquest, domination)
      *
      * @param p_fileName Name of the file to read
      * @return Object of the WarMap that is read from the Given File
@@ -99,6 +102,7 @@ public interface GeneralUtil {
     public WarMap readMapByType(String p_fileName) throws IOException;
 
     /**
+     * write map from warmap object
      *
      * @param p_warMap WarMap object to write into file
      * @param p_isConquest Whether Given Object needs to save as Conquest Format
@@ -108,7 +112,8 @@ public interface GeneralUtil {
      */
     public boolean writeMapByType(WarMap p_warMap, boolean p_isConquest) throws IOException;
     /**
-     * 
+     * generate unique random number
+     *
      * @param p_startNumber starting number of the Series
      * @param p_endNumber Ending Number of the Series
      * @return Random Number
