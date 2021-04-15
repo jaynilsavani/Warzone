@@ -1,13 +1,11 @@
 package com.soen6441.warzone.model;
 
 import java.util.ArrayList;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import lombok.NoArgsConstructor;
 
 /**
  * This Class is used for String and manipulating Game Play Information Three
@@ -22,6 +20,7 @@ import lombok.NoArgsConstructor;
 @ToString
 @Component
 @NoArgsConstructor
+@EqualsAndHashCode
 public class GameData {
 
     /**
