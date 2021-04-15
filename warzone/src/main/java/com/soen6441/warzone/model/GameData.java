@@ -59,7 +59,7 @@ public class GameData {
     /**
      * current status of game
      */
-    private String d_status;
+    private boolean d_status=false;
 
     /**
      * mode of the game

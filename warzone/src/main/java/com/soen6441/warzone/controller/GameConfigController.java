@@ -216,7 +216,7 @@ public class GameConfigController implements Initializable {
                             String l_playerName = "\nPlayers : \n[";
                             if (d_gameData.getD_playerList() != null) {
                                 for (Player l_p : d_gameData.getD_playerList()) {           //stores players name and print
-                                    l_playerName = l_playerName + " " + l_p.getD_playerName() + ",";
+                                    l_playerName = l_playerName + " " + l_p.getD_playerName() + " :"+Strategies.strategyToStringMapper(l_p.getD_stragey())+" ,";
                                 }
                                 l_playerName = l_playerName + "]";
                             }

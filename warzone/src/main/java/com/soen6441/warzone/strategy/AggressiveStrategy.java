@@ -77,7 +77,7 @@ public class AggressiveStrategy extends Strategy {
         } else {
 
 
-            if (d_player.getD_ownedCountries() == null || d_player.getD_ownedCountries().size() == 0) {
+            if (d_player.getD_ownedCountries() == null || d_player.getD_ownedCountries().size() == 0 || d_player.getD_orders().size()>5) {
                 l_orderChoice = 8;
             } else {
                 l_orderChoice = generateUniqueRandomNumber( 2, this.d_allowedOrders.size() + 1 );

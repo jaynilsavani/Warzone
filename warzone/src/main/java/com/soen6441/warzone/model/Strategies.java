@@ -76,4 +76,26 @@ public enum Strategies {
         return null;
 
     }
+
+    /**
+     * used to add the mapping of card to command
+     *
+     * @param p_strategy name of the strategy
+     * @return returns the Strategies object with the card related to the order
+     */
+    public static String strategyToStringMapper(Strategy p_strategy) {
+        if (p_strategy instanceof AggressiveStrategy) {
+            return "aggressive";
+        } else if (p_strategy instanceof BenevolentStrategy) {
+            return "benevolent";
+        } else if (p_strategy instanceof CheaterStrategy) {
+            return "cheater";
+        } else if (p_strategy instanceof HumanStrategy) {
+            return "human";
+        } else if (p_strategy instanceof RandomStrategy) {
+            return "random";
+        }
+        return null;
+
+    }
 }

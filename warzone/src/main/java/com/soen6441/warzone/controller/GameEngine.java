@@ -224,13 +224,15 @@ public class GameEngine implements Initializable {
         if (l_i == l_gamePlay.d_gameData.getD_playerList().size() && d_gameData.getD_gameMode() == 0) {
             System.out.println("autonode");
             d_autoNode = true;
+            d_CommandLine.setDisable(true);
+            d_playerTurn.setDisable(true);
+            d_FireCommand.setDisable(true);
         }
         if (!d_autoNode) {
             d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
             d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
             d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         }
-        d_playerFlag = new int[d_gameData.getD_playerList().size()];
         if (!d_isLoadedGame) {
             d_playerFlag = new int[d_gameData.getD_playerList().size()];
             Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
@@ -285,7 +287,7 @@ public class GameEngine implements Initializable {
                 }
             }
         }
-        if (!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStrategy) && d_gameData.getD_gameMode() == 0 && !d_autoNode) {
+        if (!(l_gamePlay.d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStrategy) && d_gameData.getD_gameMode() == 0 && !d_autoNode) {
 
             playerIteration("", true);
         }
@@ -295,10 +297,14 @@ public class GameEngine implements Initializable {
             d_maxNoOfTurns = 50;
 
             playerIterationt("", true, d_gameData);
-            //d_CommandLine.setText(d_winner);
-            //d_CommandLine.setDisable(true);
-            //d_FireCommand.setDisable(true);
-            //d_playerTurn.setText(" ");
+            if(!d_gameData.isD_status())
+            {
+                d_commandList.append("----MATCH DRAW DUE TO AUTO PLAYER's NO. OF TURNS ARE COMPLETED----");
+            }
+            else
+            {
+                d_CommandLine.setText(l_winnerName+" IS WINNER!!!");
+            }
             d_FireCommandList.appendText(d_commandList.toString());
         }
     }
@@ -563,6 +569,7 @@ public class GameEngine implements Initializable {
                             d_commandList.append(l_commandList.get(l_i).getD_responseString());
                             if (l_commandList.get(l_i).getD_responseString().contains("IS WINNER!!!")) {
                                 String[] l_Name = l_commandList.get(l_i).getD_responseString().split(" ");
+                                p_gameData.setD_status(true);
                                 l_winnerName = l_Name[0].toLowerCase();
                                 l_winner = true;
                                 d_playCounter = 0;
