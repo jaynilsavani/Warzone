@@ -1,0 +1,27 @@
+[Map]
+image=india.bmp
+wrap=no
+scroll=vertical
+author=Neel
+warn=yes
+
+[Continents]
+southern states=3
+western states=8
+eastern states=5
+north east states=5
+
+[Territories]
+karnataka,175,508,southern states,mizoram,maharastra,kerala
+kerala,183,595,southern states,karnataka,rajasthan,bihar
+
+rajasthan,146,243,western states,gujarat,orissa
+gujarat,97,318,western states,maharastra,kerala,manipur
+maharastra,175,397,western states,mizoram,orissa,assam
+
+orissa,348,372,eastern states,bihar,gujarat,karnataka
+bihar,372,275,eastern states,assam,rajasthan,mizoram,kerala
+
+assam,513,251,north east states,mizoram,manipur,maharastra,bihar
+manipur,531,278,north east states,mizoram,assam,rajasthan
+mizoram,513,315,north east states,karnataka,bihar,kerala,gujarat

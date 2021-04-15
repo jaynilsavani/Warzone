@@ -1,0 +1,38 @@
+; map: europe.map
+; map made with the map maker
+; yura.net Risk 1.0.9.5
+
+name europe Map
+
+[files]
+pic europe_pic.png
+map europe_map.gif
+
+[continents]
+WesternStates 9
+CentralStates 10
+EasternStates 13
+
+[countries]
+1 Portugal 1 10 10
+2 Irland 1 11 11
+3 Finland 1 12 12
+4 Ukraine 2 13 13
+5 Estland 2 14 14
+6 italy 2 15 15
+7 Lettland 3 16 16
+8 kenya 3 17 17
+9 sydney 3 18 18
+10 france 3 19 19
+
+[borders]
+1 2 3
+2 1 3
+3 2 1 4
+4 5 2
+5 1 6 3
+6 7 8 9
+7 3 8
+8 9 10 2
+9 10 2
+10 5 3 1
