@@ -1,4 +1,4 @@
-Date: Wed Apr 14 19:53:35 IST 2021
+Date: Thu Apr 15 13:42:08 IST 2021
 Author: SAVANI
 
 Game Data
@@ -10,20 +10,16 @@ test.map
 asia 5
 
 [countries]
-0 india 1 0
-0 china 1 10
+1 india 1 0
+2 china 1 0
 
 [borders]
-0 0
-0 0
+1 2
+2 1
 
 [players]
-user 0 HumanStrategy 
-User2 0 HumanStrategy 
 
 [owned_countries]
-user india china
-User2 nepal
 
 [orders]
 
@@ -31,3 +27,5 @@ User2 nepal
 
 [player_flag]
 
+[player_counter]
+0
