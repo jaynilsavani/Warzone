@@ -737,6 +737,7 @@ public class GameEngine implements Initializable {
      *
      * @param p_gameData current game data
      * @param p_fileName filename
+     * @return  return true/false
      */
     public boolean saveGame(GameData p_gameData, String p_fileName) {
         // for managing the .txt extension of the file
@@ -904,6 +905,7 @@ public class GameEngine implements Initializable {
      *
      * @param p_fileName file name
      * @return gamedata object
+     * @throws Exception exception
      */
     public GameData loadGame(String p_fileName) throws Exception {
         String l_fileLine = "";
