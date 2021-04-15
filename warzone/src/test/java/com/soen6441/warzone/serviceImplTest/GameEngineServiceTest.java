@@ -15,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -601,5 +599,20 @@ public class GameEngineServiceTest {
         d_gameData.getD_playerList().get(0).issue_order();
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertFalse(l_order.executeOrder());
+    }
+
+    @Test
+    public void testTournament() throws IOException {
+        boolean l_check=false;
+        String l_command="tournament -M asia,us,world -P benevolent,aggressive,random,cheater -G 5 -D 50";
+        StartUpPhase.d_testPurpose=1;
+        StartUpPhase l_st=new StartUpPhase(d_gameEngine);
+        d_gameEngine.gamePhase=l_st;
+        Tournament l_t=d_gameEngine.createTournament(l_command);
+        if(l_t!=null)
+        {
+            l_check=true;
+        }
+        assertTrue(l_check);
     }
 }
