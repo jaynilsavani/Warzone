@@ -173,6 +173,10 @@ public class GeneralUtilImpl implements GeneralUtil {
 
     @Override
     public WarMap readMapByType(String p_fileName) throws IOException {
+        int index = p_fileName.lastIndexOf('.');
+        p_fileName = index > 0
+                ? p_fileName.toLowerCase() : p_fileName.toLowerCase() + ".map";
+
         boolean l_isConquestMap = false;
         DominationMapReader l_dominationMapReader;
 
