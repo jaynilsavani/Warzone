@@ -58,6 +58,9 @@ public class GameEngine implements Initializable {
      * counter that invokes after each order issued by player
      */
     public int d_playCounter = 0;
+    /**
+     * 
+     */
     public boolean l_winner = false;
     public boolean d_isLoadedGame = false;
     public String l_winnerName = "";
@@ -65,11 +68,19 @@ public class GameEngine implements Initializable {
     public StringBuilder d_commandList = new StringBuilder();
     public static boolean d_autoNode = false;
     public String d_winner = "";
-
+    /**
+     * FXML Component
+     */
     @FXML
     public TextArea d_TerritoryListText;
+    /**
+     * FXML Component
+     */
     @FXML
     public TextArea d_ContinentText;
+    /**
+     * FXML Component
+     */
     @FXML
     public TextArea d_TerritoryPlayerArmyText;
     @Autowired
@@ -80,36 +91,79 @@ public class GameEngine implements Initializable {
     public OrderProcessor d_orderProcessor;
     @Autowired
     public Player d_player;
+    /**
+     * FXML Component
+     */
     @FXML
     private Button d_BtnExit;
+    /**
+     * Stage Manager Object
+     */
     @Lazy
     @Autowired
     private StageManager d_stageManager;
     @Autowired
     private GameData d_gameData;
+    /**
+     * FXML Component
+     */
     @FXML
     public TextField d_CommandLine;
+    /**
+     * FXML Component
+     */
     @FXML
     public TextArea d_FireCommandList;
+    /**
+     * FXML Component
+     */
     @FXML
     public Button d_FireCommand;
+    /**
+     * FXML Component
+     */
     @FXML
     public Label d_playerTurn;
+    /**
+     * FXML Component
+     */
     @FXML
     public Label d_countryTitle;
+    /**
+     * FXML Component
+     */
     @FXML
     public Label d_continentsTitle;
+    /**
+     * FXML Component
+     */
     @FXML
     public Label d_neighboursTitle;
+    /**
+     * FXML Component
+     */
     @FXML
     private TextArea d_countriesList;
+    /**
+     * FXML Component
+     */
     @FXML
     private TextArea d_neighboursList;
+    /**
+     * FXML Component
+     */
     @FXML
     private TextArea d_continentToCountry;
     @Autowired
     private GameConfigService d_gameConfig;
+    /**
+     * *
+     * Log EntryBuffer(Observer)
+     */
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    /**
+     * WriteLog File Object(Observable)
+     */
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
     public CommandResponse l_tournamentResponse = new CommandResponse();
 
@@ -297,13 +351,10 @@ public class GameEngine implements Initializable {
             d_maxNoOfTurns = 50;
 
             playerIterationt("", true, d_gameData);
-            if(!d_gameData.isD_status())
-            {
+            if (!d_gameData.isD_status()) {
                 d_commandList.append("----MATCH DRAW DUE TO AUTO PLAYER's NO. OF TURNS ARE COMPLETED----");
-            }
-            else
-            {
-                d_CommandLine.setText(l_winnerName+" IS WINNER!!!");
+            } else {
+                d_CommandLine.setText(l_winnerName + " IS WINNER!!!");
             }
             d_FireCommandList.appendText(d_commandList.toString());
         }
@@ -1478,9 +1529,9 @@ public class GameEngine implements Initializable {
         }
         d_commandList.append(l_winnerList);
 
-        if(StartUpPhase.d_testPurpose==0) {
+        if (StartUpPhase.d_testPurpose == 0) {
             d_FireCommandList.appendText(d_commandList.toString());
-          d_logEntryBuffer.setLogEntryBuffer(l_winnerList);
+            d_logEntryBuffer.setLogEntryBuffer(l_winnerList);
         }
 
     }

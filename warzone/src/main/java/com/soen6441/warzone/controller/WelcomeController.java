@@ -29,15 +29,36 @@ import java.util.ResourceBundle;
 @Controller
 public class WelcomeController implements Initializable {
 
+    /**
+     * Print TimeStamp
+     */
     public boolean d_printTimeStamp = true;
+    /**
+     * FXML Component
+     */
     @FXML
     private Button d_BtnExit;
+    /**
+     * Stage Manager Object
+     */
     @Lazy
     @Autowired
     private StageManager d_stageManager;
+
+    /**
+     * Map handling Service
+     */
     @Autowired
     private MapHandlingInterface d_mapHandlingInterface;
+
+    /**
+     * *
+     * Log EntryBuffer(Observer)
+     */
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    /**
+     * WriteLog File Object(Observable)
+     */
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 
     /**
