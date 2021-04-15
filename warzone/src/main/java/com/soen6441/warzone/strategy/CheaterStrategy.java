@@ -29,7 +29,7 @@ public class CheaterStrategy extends Strategy {
     /**
      * maximum number of turn allowed
      */
-    public static int d_noOfTurns = 10;
+    public static int d_noOfTurns = 2;
 
     /**
      * This is a parameterize constructor used to invoke Constructor of Strategy

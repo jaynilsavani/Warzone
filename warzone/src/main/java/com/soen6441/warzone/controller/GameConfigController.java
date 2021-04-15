@@ -45,7 +45,7 @@ public class GameConfigController implements Initializable {
     public static final String SHOW_MAP = "showmap";
     public static final String GAME_PLAYER = "gameplayer";
     public static final String ASSIGN_COUNTRY = "assigncountries";
-    public static final String TOURNAMENT="tournament";
+    public static final String TOURNAMENT = "tournament";
     private static int AssignCountryFlag = 0;
 
     @FXML
@@ -85,7 +85,7 @@ public class GameConfigController implements Initializable {
     @Autowired
     private GameEngine d_gameEngine;
 
-    public static int d_gameModeConf=0;
+    public static int d_gameModeConf = 0;
 
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
@@ -111,8 +111,9 @@ public class GameConfigController implements Initializable {
      */
     @FXML
     void backToWelcome(ActionEvent p_event) {
-        d_stageManager.switchScene(FxmlView.HOME, null, "");
         d_gameData = new GameData();
+        AssignCountryFlag = 0;
+        d_stageManager.switchScene(FxmlView.HOME, null, "");
     }
 
     /**
@@ -128,32 +129,27 @@ public class GameConfigController implements Initializable {
         choices.add("Single Mode");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("Tournament Mode", choices);
-        //dialog.setTitle("Choice Dialog");
-        dialog.setHeaderText("Look, a Choice Dialog");
-        dialog.setContentText("Choose your letter:");
+//        dialog.setHeaderText("Look, a Choice Dialog");
+        dialog.setContentText("Choose your Mode:");
         dialog.getDialogPane().getButtonTypes().remove(1);
         dialog.initStyle(StageStyle.TRANSPARENT);
         dialog.getDialogPane().setStyle("-fx-background-color: #fff; -fx-border-color: #000; -fx-border-width: 3;");
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(letter -> {
-            if(letter.equalsIgnoreCase("Single Mode"))
-                {d_gameModeConf=0;}
-            else
-            {
-                d_gameModeConf=1;
+            if (letter.equalsIgnoreCase("Single Mode")) {
+                d_gameModeConf = 0;
+            } else {
+                d_gameModeConf = 1;
             }
         });
-        System.out.println("++"+d_gameModeConf);
-        if(d_gameModeConf==1)
-        {
-
-            String s="Tournament game play commands:\n" +
-                    "tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns";
+        System.out.println("++" + d_gameModeConf);
+        if (d_gameModeConf == 1) {
+            d_StartGame.setDisable(true);
+            String s = "Tournament game play commands:\n"
+                    + "tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns";
             d_userGuide.setText(s);
         }
-
-
 
     }
 
@@ -181,14 +177,14 @@ public class GameConfigController implements Initializable {
         List<String> l_commandSegments = Arrays.asList(l_command.split(" "));
         CommandResponse l_gmConfigRes = new CommandResponse();
 
-        if (l_command.toLowerCase().startsWith(SHOW_MAP) && d_gameModeConf==0) {                                                     //condition if user gives input to show the map
+        if (l_command.toLowerCase().startsWith(SHOW_MAP) && d_gameModeConf == 0) {                                                     //condition if user gives input to show the map
             if (d_gameData.getD_warMap() != null) {
                 l_gmConfigRes = d_gameConfigService.showPlayerMap(d_gameData);
             } else {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
             }
-        } else if (l_command.toLowerCase().startsWith(LOAD_MAP) && d_gameModeConf==0) {                                               //condition satisfies if user wants to load the map
+        } else if (l_command.toLowerCase().startsWith(LOAD_MAP) && d_gameModeConf == 0) {                                               //condition satisfies if user wants to load the map
             if (AssignCountryFlag == 1) {                                          //if countries are assigned already then ,this condition won't allow to load map again
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("countries are already assigned to each player");
@@ -206,7 +202,7 @@ public class GameConfigController implements Initializable {
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
             }
-        } else if (l_command.toLowerCase().startsWith(GAME_PLAYER) && d_gameModeConf==0) {                                  //if user wants to add or remove players
+        } else if (l_command.toLowerCase().startsWith(GAME_PLAYER) && d_gameModeConf == 0) {                                  //if user wants to add or remove players
             if (AssignCountryFlag == 1) {                                                  //if countries are assigned already then ,this condition won't allow to add player again
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Countries are already assigned to each player");
@@ -236,7 +232,7 @@ public class GameConfigController implements Initializable {
                     l_gmConfigRes.setD_responseString("Please load the map first");
                 }
             }
-        } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY) && d_gameModeConf==0) {                           //if user wants to assigncountries to players
+        } else if (l_command.toLowerCase().startsWith(ASSIGN_COUNTRY) && d_gameModeConf == 0) {                           //if user wants to assigncountries to players
             if (d_gameData.getD_warMap() == null) {
                 l_gmConfigRes.setD_isValid(false);
                 l_gmConfigRes.setD_responseString("Please load the map first");
@@ -292,7 +288,8 @@ public class GameConfigController implements Initializable {
                                 d_generalUtil.prepareResponse(true, "Game loaded successfully. Please run assigncountries command to play game!!");
                             }
                         } else {
-                            d_generalUtil.prepareResponse(false, "Game loaded successfully. Please add players and run assigncountries\n command to play game!!");                        }
+                            d_generalUtil.prepareResponse(false, "Game loaded successfully. Please add players and run assigncountries\n command to play game!!");
+                        }
                     } else {
                         d_generalUtil.prepareResponse(false, "File does not contains valid game data.");
                     }
@@ -305,58 +302,60 @@ public class GameConfigController implements Initializable {
                 d_generalUtil.prepareResponse(false, "Error in loadgame command");
                 l_gmConfigRes = d_generalUtil.getResponse();
             }
-        } else if(l_command.toLowerCase().startsWith(TOURNAMENT) && d_gameModeConf==1) {
+        } else if (l_command.toLowerCase().startsWith(TOURNAMENT) && d_gameModeConf == 1) {
             if (d_generalUtil.validateIOString(l_command, "tournament\\s-M\\s([a-zA-Z]+|([a-zA-Z]+\\.[a-zA-Z]+))((,[a-zA-Z]+\\.[a-zA-Z]+)|(,[a-zA-Z]+))*\\s-P\\s[a-zA-z]+(,[a-zA-z]+)*\\s-G\\s[1-5]\\s-D\\s[1-5][0-9]")) {
-                String l_s="";
-                List<String> l_strategy=new ArrayList<>();
-                boolean l_validate=false;
-                int l_vl=0;
+                String l_s = "";
+                List<String> l_strategy = new ArrayList<>();
+                boolean l_validate = false;
+                int l_vl = 0;
                 l_strategy.add("aggressive");
-                l_strategy.add("random");   l_strategy.add("benevolent");  l_strategy.add("cheater");
+                l_strategy.add("random");
+                l_strategy.add("benevolent");
+                l_strategy.add("cheater");
                 List<String> l_maps = Arrays.asList(l_commandSegments.get(2).split(","));
                 List<String> l_players = Arrays.asList(l_commandSegments.get(4).split(","));
-                int l_noOfGames=Integer.parseInt(l_commandSegments.get(6));
-                int l_noOfTurns=Integer.parseInt(l_commandSegments.get(8));
-                l_s=l_s+"maps are : "+l_maps+"\n Players are: "+l_players+"\nNo. of games is: "+l_noOfGames+"\nNo. of Turns is "+l_noOfTurns+"\n";
-                for(String l_p:l_players)
-                {
-                    if(!(l_strategy.contains(l_p.toLowerCase())))
-                    {
-                        l_vl=1;
+                int l_noOfGames = Integer.parseInt(l_commandSegments.get(6));
+                int l_noOfTurns = Integer.parseInt(l_commandSegments.get(8));
+                l_s = l_s + "maps are : " + l_maps + "\n Players are: " + l_players + "\nNo. of games is: " + l_noOfGames + "\nNo. of Turns is " + l_noOfTurns + "\n";
+                for (String l_p : l_players) {
+                    if (!(l_strategy.contains(l_p.toLowerCase()))) {
+                        l_vl = 1;
                     }
                 }
-                if(l_noOfGames>0 && l_noOfGames<6 && l_maps.size()>0 && l_maps.size()<6 && l_players.size()>0 &&
-                        l_players.size()<5 && l_noOfTurns>9 && l_noOfTurns<51 && l_vl==0)
-                {
-                    l_validate=true;
+                if (l_noOfGames > 0 && l_noOfGames < 6 && l_maps.size() > 0 && l_maps.size() < 6 && l_players.size() > 0
+                        && l_players.size() < 5 && l_noOfTurns > 9 && l_noOfTurns < 51 && l_vl == 0) {
+                    l_validate = true;
                 }
-                if(l_validate)
-                {
+                if (l_validate) {
                     d_generalUtil.prepareResponse(l_validate, l_s);              //general command if none of the above condition matches
                     l_gmConfigRes = d_generalUtil.getResponse();
-                    d_StartGame.setDisable(false);
+//                    d_StartGame.setDisable(false);
                     try {
-                        Tournament l_t=d_gameEngine.createTournament(l_command);
+                        Tournament l_t = d_gameEngine.createTournament(l_command);
+                        if (l_t == null) {
+                            l_gmConfigRes = d_gameEngine.l_tournamentResponse;
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
-                }
-                else
-                {
+                } else {
                     d_generalUtil.prepareResponse(l_validate, "command is not valid with args");              //general command if none of the above condition matches
                     l_gmConfigRes = d_generalUtil.getResponse();
                 }
-            }
-        }
-        else {
+            } else {
+                    d_generalUtil.prepareResponse(false, "command is not valid with args");       
+                    //general command if none of the above condition matches
+                    l_gmConfigRes = d_generalUtil.getResponse();
+                }
+            
+        } else {
             d_generalUtil.prepareResponse(false, "Please enter valid command");              //general command if none of the above condition matches
             l_gmConfigRes = d_generalUtil.getResponse();
 
         }
 
         d_showPlayPhase.setText(l_gmConfigRes.toString());
-        d_logEntryBuffer.setLogEntryBuffer("Response:: " + l_gmConfigRes.getD_responseString());
         d_CommandLine.clear();
     }
 
