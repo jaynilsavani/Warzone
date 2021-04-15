@@ -12,7 +12,7 @@ easternstates=5
 northeaststates=5
 
 [Territories]
-karnataka,175,508,southerstates,mizoram,maharastra,kerala
+karnataka,175,508,southernstates,mizoram,maharastra,kerala
 kerala,183,595,southernstates,karnataka,rajasthan,bihar
 
 rajasthan,146,243,westernstates,gujarat,orissa

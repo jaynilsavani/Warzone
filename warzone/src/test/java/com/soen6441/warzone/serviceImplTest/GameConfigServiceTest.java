@@ -162,15 +162,5 @@ public class GameConfigServiceTest {
 
     }
 
-    /**
-     * This method is used to test whether countries are assigned to player or
-     * not
-     *
-     */
-//    @Test
-//    public void testTournament() throws IOException {
-////        Tournament l_tournament = d_gameConfigService.createTournament("tournament -M asia.map,asia.map,asia.map,asia.map -P cheater,random -G 4 -D 11");
-////        System.out.println(l_tournament);
-////        assertEquals(true, true);
-//    }
+
 }
