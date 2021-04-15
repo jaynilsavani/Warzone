@@ -26,6 +26,11 @@ public class StartUpPhase extends GamePlay {
     }
 
     /**
+     * used for testing where fxml can not be used
+     */
+    public static int d_testPurpose=0;
+
+    /**
      * {@inheritDoc }
      */
     @Override
@@ -41,7 +46,9 @@ public class StartUpPhase extends GamePlay {
         IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase(d_gameEngine);
         l_isueOrderPhase.d_gameData = (GameData) p_nextObject;
         d_gameEngine.setPhase(l_isueOrderPhase);
-        d_gameEngine.getStageManager().switchScene(FxmlView.GAMEENGINE, null, "");
+        if(d_testPurpose==0) {
+            d_gameEngine.getStageManager().switchScene(FxmlView.GAMEENGINE, null, "");
+        }
 
     }
 

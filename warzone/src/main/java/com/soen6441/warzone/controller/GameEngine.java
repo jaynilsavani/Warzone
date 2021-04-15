@@ -499,7 +499,7 @@ public class GameEngine implements Initializable {
                 l_alert.showAndWait();
             } else if (p_isNotHumanPlayer || ((d_generalUtil.validateIOString(p_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(p_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(p_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || p_commandString.equalsIgnoreCase("done"))) {
                 //validating that user input should be in "deploy string int"
-                d_CommandLine.clear();
+
                 IssueOrderPhase l_issueorder;
                 if (( p_gameData.getD_maxNumberOfTurns() > 0) && !l_winner) {
 
@@ -602,9 +602,6 @@ public class GameEngine implements Initializable {
                             d_commandList.append("-------------ORDERS-------------\n");
                             if (!(p_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStrategy)) {
                                 playerIterationt("", true, p_gameData);
-                            }
-                            if (!l_winner) {
-                                d_CommandLine.clear();
                             }
 
                         }
@@ -1455,8 +1452,9 @@ public class GameEngine implements Initializable {
 
         }
         d_commandList.append(l_winnerList);
-
-        d_FireCommandList.appendText(d_commandList.toString());
+        if(StartUpPhase.d_testPurpose==0) {
+            d_FireCommandList.appendText(d_commandList.toString());
+        }
 //        System.out.println(d_commandList.toString());
 //
     }
