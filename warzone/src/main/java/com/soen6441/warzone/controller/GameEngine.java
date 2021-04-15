@@ -58,11 +58,13 @@ public class GameEngine implements Initializable {
      */
     public int d_playCounter = 0;
     public boolean l_winner = false;
+    public boolean d_isLoadedGame = false;
     public String l_winnerName="";
     public int l_noOfTurns=0;
     public StringBuilder d_commandList=new StringBuilder();
     public static boolean d_autoNode =false;
     public String d_winner="";
+
 
     @FXML
     public TextArea d_TerritoryListText;
@@ -227,7 +229,10 @@ public class GameEngine implements Initializable {
         d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
         d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         d_playerFlag = new int[d_gameData.getD_playerList().size()];
-        Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
+        if (!d_isLoadedGame) {
+            d_playerFlag = new int[d_gameData.getD_playerList().size()];
+            Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
+        }
         IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
         l_issueorder.d_gameData = d_gameData;
         l_issueorder.assignReinforcements();                    //for reinforcement
@@ -256,8 +261,19 @@ public class GameEngine implements Initializable {
             d_commandList.append("---------TURN 1---------\n");
         }
         d_FireCommandList.appendText("------------ORDERS------------\n");
-        if (!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStrategy) && d_gameData.getD_gameMode()==0 && !d_autoNode) {
-            System.out.println("###");
+        // print order list on click of start game
+        if (d_gameData.getD_playerList().get(0).getD_orders().size() != 0) {
+            int l_maxCounter = getMaxNumberOfOrders(d_gameData);
+            for (int l_j = 0; l_j < l_maxCounter; l_j++) {
+                for (Player l_playerList : d_gameData.getD_playerList()) {
+                    if (l_playerList.getD_orders().size() > l_j)
+                        d_FireCommandList.appendText(l_j + " | " +prepareOrderString(l_playerList.getD_orders().get(l_j).toString()) + " | " + l_playerList.getD_playerName() +"\n");
+                }
+            }
+        }
+        if(!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStrategy))
+        {
+
             playerIteration("", true);
         }
         if(d_autoNode)
@@ -270,6 +286,22 @@ public class GameEngine implements Initializable {
             //d_playerTurn.setText(" ");
             d_FireCommandList.appendText(d_commandList.toString());
         }
+    }
+
+    /**
+     * This method will return maximum number of order count
+     *
+     * @param p_gameData game data object
+     * @return return max number of orders
+     */
+    public int getMaxNumberOfOrders(GameData p_gameData) {
+        int l_count = 0;
+        for (Player l_player : p_gameData.getD_playerList()) {
+            if (l_count < l_player.getD_orders().size())
+                l_count = l_player.getD_orders().size();
+        }
+
+        return l_count;
     }
 
     /**
@@ -703,6 +735,7 @@ public class GameEngine implements Initializable {
         StringBuilder l_orders = new StringBuilder(ORDERS).append(System.lineSeparator());
         StringBuilder l_cards = new StringBuilder(CARDS).append(System.lineSeparator());
         StringBuilder l_playerFlag = new StringBuilder(PLAYER_FLAG).append(System.lineSeparator());
+        StringBuilder l_playerCounter = new StringBuilder(PLAYER_COUNTER).append(System.lineSeparator());
 
         if (p_gameData.getD_playerList() != null) {
             for (Player l_player : p_gameData.getD_playerList()) {
@@ -746,7 +779,7 @@ public class GameEngine implements Initializable {
             }
             l_playerFlag.append(System.lineSeparator());
         }
-
+        l_playerCounter.append(d_playCounter);
 
         // prepare result response
         l_stringBuilderList.add(l_players);
@@ -754,6 +787,7 @@ public class GameEngine implements Initializable {
         l_stringBuilderList.add(l_orders);
         l_stringBuilderList.add(l_cards);
         l_stringBuilderList.add(l_playerFlag);
+        l_stringBuilderList.add(l_playerCounter);
 
         return l_stringBuilderList;
     }
@@ -766,8 +800,8 @@ public class GameEngine implements Initializable {
      */
     public GameData loadGame(String p_fileName) throws Exception {
         String l_fileLine = "";
-        boolean l_mapName, l_isContinents, l_isCountries, l_isBorders, l_isPlayers, l_isOwnedCountries, l_isOrders, l_isCards, l_isPlayerFlag;
-        l_mapName = l_isContinents = l_isCountries = l_isBorders = l_isPlayers = l_isOwnedCountries = l_isOrders = l_isCards = l_isPlayerFlag = false;
+        boolean l_mapName, l_isContinents, l_isCountries, l_isBorders, l_isPlayers, l_isOwnedCountries, l_isOrders, l_isCards, l_isPlayerFlag, l_isPlayerCounter;
+        l_mapName = l_isContinents = l_isCountries = l_isBorders = l_isPlayers = l_isOwnedCountries = l_isOrders = l_isCards = l_isPlayerFlag = l_isPlayerCounter = false;
         WarMap l_warMap = new WarMap();
         List<Player> l_players = new ArrayList<>();
         GameData l_gameData = new GameData();
@@ -940,12 +974,22 @@ public class GameEngine implements Initializable {
                         l_isCards = false;
                         continue;
                     }
-                    if (l_isPlayerFlag) {
+                    if (l_isPlayerFlag && !l_fileLine.equalsIgnoreCase(PLAYER_COUNTER)) {
                         d_playerFlag = new int[l_players.size()];
                         String[] l_playerFlagArray = l_fileLine.split(" ");
                         for (int l_i = 0; l_i < l_playerFlagArray.length; l_i++) {
                             d_playerFlag[l_i] = Integer.parseInt(l_playerFlagArray[l_i]);
                         }
+                    }
+
+                    // prepare player counter data
+                    if (l_fileLine.equalsIgnoreCase(PLAYER_COUNTER)) {
+                        l_isPlayerCounter = true;
+                        l_isPlayerFlag = false;
+                        continue;
+                    }
+                    if (l_isPlayerCounter) {
+                        d_playCounter = Integer.parseInt(l_fileLine);
                     }
                 }
             }
@@ -988,14 +1032,13 @@ public class GameEngine implements Initializable {
                                             l_order.setD_player(l_players.get(l_i));
                                             l_orders.add(l_order);
                                             l_playerIndex.add(l_i);
-                                            break;
                                         }
                                     }
                                 }
                             }
-                        }
-                        if (l_playerIndex != null && !l_playerIndex.isEmpty()) {
-                            l_players.get(l_playerIndex.get(0)).setD_orders(l_orders);
+                            if (l_playerIndex != null && !l_playerIndex.isEmpty()) {
+                                l_players.get(l_playerIndex.get(0)).setD_orders(l_orders);
+                            }
                         }
                     }
 
@@ -1035,6 +1078,7 @@ public class GameEngine implements Initializable {
             throw e;
         }
 
+        d_isLoadedGame = true;
         return l_gameData;
     }
 

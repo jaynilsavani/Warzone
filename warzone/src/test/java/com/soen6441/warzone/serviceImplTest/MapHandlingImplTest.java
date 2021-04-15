@@ -42,8 +42,7 @@ public class MapHandlingImplTest {
 
     @Autowired
     MapHandlingImpl d_mapHandlingImpl;
-    
-    
+
     @Autowired
     GeneralUtil d_generalUtil;
 
@@ -77,6 +76,7 @@ public class MapHandlingImplTest {
 
     /**
      * Test to check WarMap object is successfully write to file
+     *
      * @throws java.io.IOException
      */
     @Test
@@ -87,7 +87,7 @@ public class MapHandlingImplTest {
         } catch (IOException ex) {
             Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertEquals(d_generalUtil.writeMapByType(d_warMap,false), true);
+        assertEquals(d_generalUtil.writeMapByType(d_warMap, false), true);
 
     }
 
@@ -205,6 +205,15 @@ public class MapHandlingImplTest {
     }
 
     /**
+     * This Test will check if neighbour is already present then it can't be
+     * added
+     */
+    @Test
+    public void testToSaveSameNeighbour() {
+        assertFalse(d_mapHandlingImpl.checkCommandEditNeighbours("editneighbour -add india china").isD_isValid());
+    }
+
+    /**
      * Test to check save country operation
      */
     @Test
@@ -224,6 +233,14 @@ public class MapHandlingImplTest {
     }
 
     /**
+     * Test to check if country is already present then country can't be added
+     */
+    @Test
+    public void testToSaveSameCountry() {
+        assertFalse(d_mapHandlingImpl.checkCommandEditCountry("editcountry -add india asia").isD_isValid());
+    }
+
+    /**
      * Test to check save continent operation
      */
     @Test
@@ -238,6 +255,15 @@ public class MapHandlingImplTest {
             }
         }
         assertEquals(true, l_status);
+    }
+
+    /**
+     * Test to check if continent is already present then continent can't be
+     * added
+     */
+    @Test
+    public void testToSaveSameContinent() {
+        assertFalse(d_mapHandlingImpl.checkCommandEditContinent("editcontinent -add asia 5").isD_isValid());
     }
 
 }

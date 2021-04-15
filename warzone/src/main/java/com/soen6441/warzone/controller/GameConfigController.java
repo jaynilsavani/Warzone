@@ -292,8 +292,7 @@ public class GameConfigController implements Initializable {
                                 d_generalUtil.prepareResponse(true, "Game loaded successfully. Please run assigncountries command to play game!!");
                             }
                         } else {
-                            d_generalUtil.prepareResponse(false, "Game loaded successfully. Please add players\n and run assigncountries command to play game!!");
-                        }
+                            d_generalUtil.prepareResponse(false, "Game loaded successfully. Please add players and run assigncountries\n command to play game!!");                        }
                     } else {
                         d_generalUtil.prepareResponse(false, "File does not contains valid game data.");
                     }
