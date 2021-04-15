@@ -67,6 +67,11 @@ public class GameData {
      */
     private int d_gameMode;
 
+    /**
+     * This is parametrized constructor of this model
+     *
+     * @param p_gameData gamedata object
+     */
     public GameData(GameData p_gameData) {
 
         this.d_gamePhase = p_gameData.d_gamePhase;

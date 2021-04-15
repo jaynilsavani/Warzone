@@ -1028,8 +1028,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method is used for getting index by name
      *
-     * @param p_continentMap
-     * @param p_countryName
+     * @param p_continentMap continent object
+     * @param p_countryName name of country
      * @return CountryIndex
      */
     private int getCountryIndexByCountryName(Map<Integer, Continent> p_continentMap, String p_countryName) {

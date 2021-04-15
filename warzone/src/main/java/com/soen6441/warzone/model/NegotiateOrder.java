@@ -88,6 +88,8 @@ public class NegotiateOrder extends Order {
     }
 
     /**
+     * This method is used to validate data
+     *
      * @param p_playerName County name in the Command
      * @return validity Of Command
      */
