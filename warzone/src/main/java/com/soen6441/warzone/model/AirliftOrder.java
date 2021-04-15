@@ -51,6 +51,8 @@ public class AirliftOrder extends Order {
         if (d_player.getD_negotiatePlayerList() != null) {
             for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {
                 if (l_negotiatedPlayer.getD_ownedCountries().contains(l_countryTo)) {
+                    d_orderResponse.setD_isValid(false);
+                    d_orderResponse.setD_responseString("Opponent's Player is negotiated");
                     return false;
                 }
             }
@@ -65,6 +67,8 @@ public class AirliftOrder extends Order {
             int l_fromArmies = l_countryfrom.getD_noOfArmies();
             //returns if given no. of armies are higher than country has
             if (l_fromArmies < d_noOfArmies) {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("given no. of armies are higher than country have");
                 return false;
             }
             //condition matches if both countries owned by same player and countryto is neighbour to countryfrom
@@ -89,6 +93,8 @@ public class AirliftOrder extends Order {
                 d_player.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
                 d_gameData.getD_playerList().remove(l_playerFromIndex);
                 d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
+                d_orderResponse.setD_isValid(true);
+                d_orderResponse.setD_responseString("advance command executed successfully");
                 return true;
             } else {
                 //checks for attack to intialize if country to is not owned by the same player or
@@ -156,14 +162,20 @@ public class AirliftOrder extends Order {
                             }
                         }
                     }
+                    d_orderResponse.setD_isValid(true);
+                    d_orderResponse.setD_responseString("advance command executed successfully");
                     return true;
                 }
 
             }
 
         } else {
+            d_orderResponse.setD_isValid(false);
+            d_orderResponse.setD_responseString("Given Country does not Owned By Player");
             return false;
         }
+        d_orderResponse.setD_isValid(false);
+        d_orderResponse.setD_responseString("Given Command is not Valid");
         return false;
     }
 

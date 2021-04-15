@@ -38,12 +38,14 @@ public class BombOrder extends Order {
         //checking that target country is opponent country
         for (Country l_country : d_player.getD_ownedCountries()) {
             if (l_country.getD_countryName().equalsIgnoreCase(d_countryName)) {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("Given Country is own Country");
                 return false;
             }
         }
         for (Country l_country : d_player.getD_ownedCountries()) {
 
-            //checkcing adjacency 
+            //checking adjacency
             for (String l_neighbour : l_country.getD_neighbourCountries()) {
                 if (d_countryName.equalsIgnoreCase(l_neighbour)) {
                     l_countryName = getCountryObjectByCountryName(d_countryName);
@@ -51,12 +53,16 @@ public class BombOrder extends Order {
                         int l_army = l_countryName.getD_noOfArmies();
                         l_army = l_army / 2;
                         l_countryName.setD_noOfArmies(l_army);
+                        d_orderResponse.setD_isValid(true);
+                        d_orderResponse.setD_responseString("bomb command is executed successfully");
                         return true;
                     }
                 }
 
             }
         }
+        d_orderResponse.setD_isValid(false);
+        d_orderResponse.setD_responseString("Given Country is not neighbour Country");
         return false;
     }
 

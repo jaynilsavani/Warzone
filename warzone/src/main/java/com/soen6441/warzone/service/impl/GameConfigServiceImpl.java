@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.soen6441.warzone.model.*;
+import static com.soen6441.warzone.model.Strategies.strategyToObjectMapper;
+import static com.soen6441.warzone.model.Strategies.stringToStrategyMapper;
 
 import java.util.Arrays;
 import java.util.*;
@@ -47,8 +49,8 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Override
     public CommandResponse showPlayerMap(GameData p_gameData) {
         WarMap l_warMap = p_gameData.getD_warMap();
-
-        CommandResponse l_showCountris = d_mapHandlingImpl.showMap(l_warMap);
+        String l_mapTitle = "\nMap of countries(1 indicates adjacency between two countries)::\n" + d_mapHandlingImpl.showMap(l_warMap).getD_responseString();
+        CommandResponse l_showCountris = new CommandResponse(true, l_mapTitle);
         if (p_gameData.getD_playerList() == null) {
             String l_showMapOfCountris = l_showCountris.getD_responseString();
             d_generalUtil.prepareResponse(true, l_showMapOfCountris);
@@ -59,10 +61,14 @@ public class GameConfigServiceImpl implements GameConfigService {
             int l_colSize = l_countryList.size() + 1;
             int l_rowSize = p_gameData.getD_playerList().size() + 1;
             String[][] l_playerToCountry = new String[l_rowSize][l_colSize];
+            String l_playerRowData = "";
             int l_maxLength = 0;
             //Iterate over player list
             for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 //Iterate over country list
+                if (l_i > 0) {
+                    l_playerRowData = l_playerRowData + p_gameData.getD_playerList().get(l_i - 1).getD_playerName().toUpperCase() + " : ";
+                }
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     if (l_i == 0 && l_j == 0) {
 
@@ -86,6 +92,9 @@ public class GameConfigServiceImpl implements GameConfigService {
                             while (l_same < p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().size()) {
                                 if (l_countryList.get(l_j - 1).getD_countryName().equalsIgnoreCase(p_gameData.getD_playerList().get(l_i - 1).getD_ownedCountries().get(l_same).getD_countryName())) {
                                     l_playerToCountry[l_i][l_j] = String.valueOf(l_countryList.get(l_j - 1).getD_noOfArmies()); //get number of armies for country
+                                    if (l_countryList.get(l_j - 1).getD_noOfArmies() > 0) {
+                                        l_playerRowData = l_playerRowData + l_countryList.get(l_j - 1).getD_countryName() + "-" + l_countryList.get(l_j - 1).getD_noOfArmies() + ",";
+                                    }
                                     break;
                                 }
                                 l_same++;
@@ -94,17 +103,24 @@ public class GameConfigServiceImpl implements GameConfigService {
                             l_playerToCountry[l_i][l_j] = "0";
                         }
                     }
+
+                }
+                if (l_i > 0) {
+                    l_playerRowData = l_playerRowData + "\n";
                 }
             }
-            l_showMapOfCountris = l_showMapOfCountris + "\n";
+            String l_titleMessage = "\nList of countries which contains atleast 1 army:: \n";
+            l_showMapOfCountris = l_showMapOfCountris + l_titleMessage;
             //formatting matrix
-            for (int l_i = 0; l_i < l_rowSize; l_i++) {
+            /*for (int l_i = 0; l_i < l_rowSize; l_i++) {
                 for (int l_j = 0; l_j < l_colSize; l_j++) {
                     String l_stringFrmat = String.format("%1$" + l_maxLength + "s", l_playerToCountry[l_i][l_j]);      //string formatting for matrix representation
                     l_showMapOfCountris = l_showMapOfCountris + l_stringFrmat + " ";
                 }
                 l_showMapOfCountris = l_showMapOfCountris + "\n";
-            }
+
+            }*/
+            l_showMapOfCountris = l_showMapOfCountris + l_playerRowData;
             l_showCountris.setD_isValid(true);
             l_showCountris.setD_responseString(l_showMapOfCountris);
 
@@ -119,7 +135,7 @@ public class GameConfigServiceImpl implements GameConfigService {
      */
     @Override
     public WarMap loadMap(String p_fileName) throws IOException {
-        return d_mapHandlingImpl.readMap(p_fileName);
+        return d_generalUtil.readMapByType(p_fileName);
     }
 
     /**
@@ -132,7 +148,7 @@ public class GameConfigServiceImpl implements GameConfigService {
     @Override
     public AbstractMap.Entry<GameData, CommandResponse> updatePlayer(GameData p_currentGameData, String p_command) {
         List<String> l_commandSegments = Arrays.asList(p_command.split(" "));
-        String l_playerName;
+        String l_playerName, l_strategy;
         GameData l_currentGameData = new GameData(p_currentGameData);
         //Iterate over command segmentation
         for (int i = 0; i < l_commandSegments.size(); i++) {
@@ -140,12 +156,14 @@ public class GameConfigServiceImpl implements GameConfigService {
             if (l_playerCommand.equalsIgnoreCase("-add") || l_playerCommand.equalsIgnoreCase("-remove")) {
                 if (l_playerCommand.equalsIgnoreCase("-add")) {
                     l_playerName = l_commandSegments.get(i + 1);
+                    l_strategy = l_commandSegments.get(i + 2);
                     //Validation of the player name
                     if (d_generalUtil.validateIOString(l_playerName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
                         //To check if player Exist Or not 
                         if (getPlayerByName(l_currentGameData, l_playerName).isEmpty()) {
                             Player l_player = new Player();
                             l_player.setD_playerName(l_playerName);     //set the player name
+                            l_player.setD_stragey(Strategies.strategyToObjectMapper(Strategies.stringToStrategyMapper(l_strategy), p_currentGameData));
                             if (l_currentGameData.getD_playerList() == null) {
                                 l_currentGameData.setD_playerList(new ArrayList<>());
                             }
@@ -288,7 +306,12 @@ public class GameConfigServiceImpl implements GameConfigService {
 
     }
 
+
+
+
     /**
+     * This method will return list of player
+     *
      * @param p_currentGameData Object Of current gameplay
      * @param p_playerName Player name
      * @return The List of player with given name
@@ -300,5 +323,14 @@ public class GameConfigServiceImpl implements GameConfigService {
         }
 
         return l_players;
+    }
+
+    /**
+     * 
+     * {@inheritDoc }
+     */
+    @Override
+    public CommandResponse getResponse() {
+        return d_generalUtil.getResponse();
     }
 }

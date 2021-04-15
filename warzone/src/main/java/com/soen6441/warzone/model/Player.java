@@ -1,6 +1,7 @@
 package com.soen6441.warzone.model;
 
 import com.soen6441.warzone.service.OrderProcessor;
+import com.soen6441.warzone.strategy.Strategy;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -58,6 +59,13 @@ public class Player {
     private int d_noOfArmies;
 
     /**
+     * This is the player strategy
+     */
+    private Strategy d_stragey;
+
+    private int d_issuedNoOfArmies;
+
+    /**
      * Name country for execution of the command for source Country
      */
     private String d_currentFromCountry;
@@ -95,9 +103,12 @@ public class Player {
      *
      */
     public void issue_order() {
-        Order l_orderObj = orderProcessor.getOrder();
-        l_orderObj.d_player = this;
-        d_orders.add(l_orderObj);
+        this.d_stragey.setD_player(this);
+        Order l_orderObj = this.d_stragey.createOrder();
+        if (l_orderObj != null) {
+            l_orderObj.d_player = this;
+            d_orders.add(l_orderObj);
+        }
     }
 
     /**
@@ -157,14 +168,14 @@ public class Player {
     }
 
     @Override
-    public boolean equals(Object l_obj) {
-        if (this == l_obj) {
+    public boolean equals(Object p_obj) {
+        if (this == p_obj) {
             return true;
         }
-        if (l_obj == null || getClass() != l_obj.getClass()) {
+        if (p_obj == null || getClass() != p_obj.getClass()) {
             return false;
         }
-        Player l_player = (Player) l_obj;
+        Player l_player = (Player) p_obj;
         return d_noOfArmies == l_player.d_noOfArmies && d_currentFromCountry == l_player.d_currentFromCountry && d_currentNoOfArmiesToMove == l_player.d_currentNoOfArmiesToMove && d_playerName.equals(l_player.d_playerName) && Objects.equals(d_ownedCountries, l_player.d_ownedCountries) && Objects.equals(d_orders, l_player.d_orders) && Objects.equals(d_currentToCountry, l_player.d_currentToCountry);
     }
 

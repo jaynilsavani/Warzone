@@ -47,11 +47,12 @@ public class AdvanceOrder extends Order {
     public boolean executeOrder() {
         Country l_countryfrom = getPlayerCountrybyName(d_CountryNameFrom);
         Country l_countryTo = getPlayerCountrybyName(d_CountryNameTo);
-        boolean l_flag = true;
         Player l_targetPlayer = null;
         if (d_player.getD_negotiatePlayerList() != null) {
             for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {
                 if (l_negotiatedPlayer.getD_ownedCountries().contains(l_countryTo)) {
+                    d_orderResponse.setD_isValid(false);
+                    d_orderResponse.setD_responseString("Opponent's Player is negotiated");
                     return false;
                 }
             }
@@ -66,6 +67,8 @@ public class AdvanceOrder extends Order {
             int l_fromArmies = l_countryfrom.getD_noOfArmies();
             //returns if given no. of armies are higher than country has
             if (l_fromArmies < d_noOfArmies) {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("given no. of armies are higher than country have");
                 return false;
             }
             //condition matches if both countries owned by same player and countryto is neighbour to countryfrom
@@ -92,69 +95,79 @@ public class AdvanceOrder extends Order {
                 d_gameData.getD_playerList().remove(l_playerFromIndex);
                 d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
 
+                d_orderResponse.setD_isValid(true);
+                d_orderResponse.setD_responseString("advance command executed successfully");
                 return true;
-            } else {
+            }
+            if (!d_player.getD_ownedCountries().contains(l_countryTo) && isneighbourCountry(d_CountryNameTo, l_countryfrom)) {
                 //checks for attack to intialize if country to is not owned by the same player or
                 //country has no player and should be neighbour
-                if (isneighbourCountry(d_CountryNameTo, l_countryfrom)) {
-                    for (Player l_player : d_gameData.getD_playerList()) {
-                        if (l_player.getD_ownedCountries().contains(l_countryTo)) {
-                            l_targetPlayer = l_player;
-                            l_countryToIndex = l_player.getD_ownedCountries().indexOf(l_countryTo);
-                            l_playerToIndex = d_gameData.getD_playerList().indexOf(l_player);
+                for (Player l_player : d_gameData.getD_playerList()) {
+                    if (l_player.getD_ownedCountries().contains(l_countryTo)) {
+                        l_targetPlayer = l_player;
+                        l_countryToIndex = l_player.getD_ownedCountries().indexOf(l_countryTo);
+                        l_playerToIndex = d_gameData.getD_playerList().indexOf(l_player);
 
-                        }
                     }
-                    int l_toArmies = l_countryTo.getD_noOfArmies();
-                    int l_attackArmiesFrom = (int) Math.round(d_noOfArmies * 0.6);
-                    int l_attackArmiesTo = (int) Math.round(l_toArmies * 0.7);
-                    //main condition for attack by checking the
-                    if (l_attackArmiesFrom >= l_toArmies) {
-                        l_toArmies = d_noOfArmies - l_attackArmiesTo;
-                        l_countryTo.setD_noOfArmies(l_toArmies);
-
-                        l_fromArmies = l_fromArmies - d_noOfArmies;
-                        l_countryfrom.setD_noOfArmies(l_fromArmies);
-                        d_player.getD_ownedCountries().add(l_countryTo);
-                        d_player.setD_isWinner(true);
-                        if (l_targetPlayer != null) {
-                            l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
-                        }
-                    } //when attack happens but could not win the country due to less attacking armies than opponent armies
-                    else {
-                        l_toArmies = l_toArmies - l_attackArmiesFrom;
-                        int l_remainingCountries;
-                        if (d_noOfArmies >= l_attackArmiesTo) {
-                            l_remainingCountries = d_noOfArmies - l_attackArmiesTo;
-                        } else {
-                            l_remainingCountries = 0;
-                        }
-                        l_fromArmies = l_fromArmies - d_noOfArmies + l_remainingCountries;
-                        l_countryfrom.setD_noOfArmies(l_fromArmies);
-                        l_countryTo.setD_noOfArmies(l_toArmies);
-                        d_player.getD_ownedCountries().remove(l_countryFromIndex);
-                        d_player.getD_ownedCountries().add(l_countryFromIndex, l_countryfrom);
-                        if (l_targetPlayer != null) {
-                            l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
-                            l_targetPlayer.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
-                        }
-                    }
-
-                    d_gameData.getD_playerList().remove(l_playerFromIndex);
-                    d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
-                    if (l_targetPlayer != null) {
-                        d_gameData.getD_playerList().remove(l_playerToIndex);
-                        d_gameData.getD_playerList().add(l_playerToIndex, l_targetPlayer);
-                    }
-                    return true;
                 }
+                int l_toArmies = l_countryTo.getD_noOfArmies();
+                int l_attackArmiesFrom = (int) Math.round(d_noOfArmies * 0.6);
+                int l_attackArmiesTo = (int) Math.round(l_toArmies * 0.7);
+                //main condition for attack by checking the
+                if (l_attackArmiesFrom >= l_toArmies) {
+                    l_toArmies = d_noOfArmies - l_attackArmiesTo;
+                    l_countryTo.setD_noOfArmies(l_toArmies);
+
+                    l_fromArmies = l_fromArmies - d_noOfArmies;
+                    l_countryfrom.setD_noOfArmies(l_fromArmies);
+                    d_player.getD_ownedCountries().add(l_countryTo);
+                    d_player.setD_isWinner(true);
+                    if (l_targetPlayer != null) {
+                        l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
+                    }
+                } //when attack happens but could not win the country due to less attacking armies than opponent armies
+                else {
+                    l_toArmies = l_toArmies - l_attackArmiesFrom;
+                    int l_remainingCountries;
+                    if (d_noOfArmies >= l_attackArmiesTo) {
+                        l_remainingCountries = d_noOfArmies - l_attackArmiesTo;
+                    } else {
+                        l_remainingCountries = 0;
+                    }
+                    l_fromArmies = l_fromArmies - d_noOfArmies + l_remainingCountries;
+                    l_countryfrom.setD_noOfArmies(l_fromArmies);
+                    l_countryTo.setD_noOfArmies(l_toArmies);
+                    d_player.getD_ownedCountries().remove(l_countryFromIndex);
+                    d_player.getD_ownedCountries().add(l_countryFromIndex, l_countryfrom);
+                    if (l_targetPlayer != null) {
+                        l_targetPlayer.getD_ownedCountries().remove(l_countryToIndex);
+                        l_targetPlayer.getD_ownedCountries().add(l_countryToIndex, l_countryTo);
+                    }
+                }
+
+                d_gameData.getD_playerList().remove(l_playerFromIndex);
+                d_gameData.getD_playerList().add(l_playerFromIndex, d_player);
+                if (l_targetPlayer != null) {
+                    d_gameData.getD_playerList().remove(l_playerToIndex);
+                    d_gameData.getD_playerList().add(l_playerToIndex, l_targetPlayer);
+                }
+                d_orderResponse.setD_responseString("advance command executed successfully");
+                return true;
+
+                //Check HEre If command response needed or nor
+            }
+            else
+            {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("Countries are not neighbouur to each other");
+                return false;
             }
 
         } else {
+            d_orderResponse.setD_isValid(false);
+            d_orderResponse.setD_responseString("Given Country does not Owned By Player");
             return false;
         }
-        return false;
-
     }
 
     /**
@@ -196,8 +209,8 @@ public class AdvanceOrder extends Order {
      * used to validate the data of this class
      *
      * @param p_countryFromName country name of players
-     * @param p_countryNameTo country name of opponent player or orphan country
-     * @param p_noOfArmies no. of armies given in issue orders
+     * @param p_countryNameTo   country name of opponent player or orphan country
+     * @param p_noOfArmies      no. of armies given in issue orders
      * @return gives the validation of all params
      */
     public boolean validateAndSetData(String p_countryFromName, String p_countryNameTo, int p_noOfArmies) {

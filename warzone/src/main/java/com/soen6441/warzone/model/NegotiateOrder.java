@@ -42,7 +42,13 @@ public class NegotiateOrder extends Order {
         if (l_player != null) {
             if (addPlayerToNegotiateList(d_player, l_player) && addPlayerToNegotiateList(l_player, d_player)) {
                 return true;
+            } else {
+                d_orderResponse.setD_isValid(false);
+                d_orderResponse.setD_responseString("Not able to negotiate given player");
             }
+        } else {
+            d_orderResponse.setD_isValid(false);
+            d_orderResponse.setD_responseString("Given Player name Does not exist");
         }
 
         return false;
@@ -56,7 +62,6 @@ public class NegotiateOrder extends Order {
      * @return return false if exception occurs otherwise true
      */
     public boolean addPlayerToNegotiateList(Player p_orderPlayer, Player p_negotiatePlayer) {
-        try {
             // set neighbour into player object
             if (p_orderPlayer.getD_negotiatePlayerList() != null) {
                 p_orderPlayer.getD_negotiatePlayerList().add(p_negotiatePlayer);
@@ -79,12 +84,12 @@ public class NegotiateOrder extends Order {
             }
 
             return true;
-        } catch (Exception exception) {
-            return false;
-        }
+
     }
 
     /**
+     * This method is used to validate data
+     *
      * @param p_playerName County name in the Command
      * @return validity Of Command
      */

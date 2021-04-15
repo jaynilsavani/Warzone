@@ -10,6 +10,7 @@ import com.soen6441.warzone.service.GameEngineService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -45,9 +46,9 @@ public class GameEngineServiceImpl implements GameEngineService {
      */
     @Override
     public String showReinforcementArmies(GameData p_gameData) {
-        String l_armies = "";
+        String l_armies = "\nArmies of each player:: \n";
         for (Player l_p : p_gameData.getD_playerList()) {
-            l_armies = l_armies + l_p.getD_playerName() + " : " + l_p.getD_noOfArmies() + "\n";
+            l_armies = l_armies + l_p.getD_playerName().toUpperCase() + " : " + l_p.getD_noOfArmies() + "\n";
         }
         return l_armies;
     }
@@ -57,13 +58,13 @@ public class GameEngineServiceImpl implements GameEngineService {
      */
     @Override
     public String playerOwnedCountries(GameData p_gameData) {
-        String l_responseString = "\n";
+        String l_responseString = "\nList of country owned by each player:: \n";
         for (Player l_player : p_gameData.getD_playerList()) {
-            l_responseString += l_player.getD_playerName() + " : [";
+            l_responseString += l_player.getD_playerName().toUpperCase() + " : [";
             for (Country l_cn : l_player.getD_ownedCountries()) {
                 l_responseString += l_cn.getD_countryName() + " , ";
             }
-            l_responseString += " ] \n ";
+            l_responseString += " ] \n";
         }
         return l_responseString;
     }

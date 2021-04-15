@@ -1,5 +1,8 @@
 package com.soen6441.warzone.service.impl;
 
+import com.soen6441.warzone.adapterpattern.ConquestMapReader;
+import com.soen6441.warzone.adapterpattern.DominationMapReader;
+import com.soen6441.warzone.adapterpattern.FileReaderAdapter;
 import static com.soen6441.warzone.config.WarzoneConstants.*;
 
 import java.io.BufferedReader;
@@ -38,6 +41,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
     private static int ContinentId = 1;
     private static int CountryId = 1;
     private static int NeighbourId = 1;
+
+    private static String StringRegex = "^([a-zA-Z]-+\\s)*[a-zA-Z-_]+$";  // regex to check continent and country name
 
     /**
      * {@inheritDoc }
@@ -108,7 +113,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_continetValue = "";
         List<String> l_commandString = Arrays.asList(p_editContinentCommand.split(" "));
         //validate the edit continent command
-        if (d_generalUtil.validateIOString(p_editContinentCommand, "editcontinent((\\s-add\\s[a-z|A-Z]+\\s[0-9]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
+        if (d_generalUtil.validateIOString(p_editContinentCommand, "editcontinent((\\s-add\\s[a-z|A-Z|_-]+\\s[0-9]+)|(\\s-remove\\s[a-z|A-Z|_-]+))+")) {
             List<String> l_continentNames = getAvailableContinentName(d_warMap);
             for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
                 //check for remove command
@@ -136,7 +141,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_continentName = l_commandString.get(l_i + 1);
                 l_continetValue = l_commandString.get(l_i + 2);
                 // match continent name exist or not
-                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && d_generalUtil.validateIOString(l_continetValue, "[1-9][0-9]*")) {
+                if (d_generalUtil.validateIOString(l_continentName, StringRegex) && d_generalUtil.validateIOString(l_continetValue, "[1-9][0-9]*")) {
                     boolean l_isValidName = true;
 
                     if (d_warMap.getD_continents() != null) {
@@ -162,7 +167,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             } //For removal of the continent
             else if (l_commandString.get(l_i).equalsIgnoreCase("-remove")) {
                 l_continentName = l_commandString.get(l_i + 1);
-                if (d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (d_generalUtil.validateIOString(l_continentName, StringRegex)) {
                     //to delete the continent
                     if (deleteContinent(l_continentName)) {
                         d_generalUtil.prepareResponse(true, "Continent deleted successfully");
@@ -194,7 +199,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_continentName = "";
         List<String> l_editCountryCommandString = Arrays.asList(p_editCountryCommand.split(" "));
         //validate the edit country command
-        if (d_generalUtil.validateIOString(p_editCountryCommand, "editcountry((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+))+")) {
+        if (d_generalUtil.validateIOString(p_editCountryCommand, "editcountry((\\s-add\\s[a-z|A-Z|_-]+\\s[a-z|A-Z|_-]+)|(\\s-remove\\s[a-z|A-Z|_-]+))+")) {
             List<String> l_continentNames = getAvailableContinentName(d_warMap);
             List<String> l_cName = getAvailableCountryName(d_warMap);
             for (int l_i = 0; l_i < l_editCountryCommandString.size(); l_i++) {
@@ -228,8 +233,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 l_countryName = l_editCountryCommandString.get(i + 1);
                 l_continentName = l_editCountryCommandString.get(i + 2);
                 //check whether entered country name and continent is valid or not
-                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")
-                        && d_generalUtil.validateIOString(l_continentName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (d_generalUtil.validateIOString(l_countryName, StringRegex)
+                        && d_generalUtil.validateIOString(l_continentName, StringRegex)) {
 
                     // prepare country list of continent entered by user
                     ArrayList<Country> l_countryList = getAvailableCountries(d_warMap);
@@ -276,7 +281,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
             else if (l_editCountryCommandString.get(i).equalsIgnoreCase("-remove")) {
                 l_countryName = l_editCountryCommandString.get(i + 1);
 
-                if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+                if (d_generalUtil.validateIOString(l_countryName, StringRegex)) {
                     CommandResponse l_resp = deleteCountry(l_countryName);
                     d_generalUtil.prepareResponse(l_resp.isD_isValid(), l_resp.getD_responseString());  //Response string for deleted country
 
@@ -308,7 +313,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         String l_neighbourCountryName = "";
         List<String> l_commandString = Arrays.asList(p_neighbour.split(" "));
         //validate the map command
-        if (d_generalUtil.validateIOString(p_neighbour, "editneighbour((\\s-add\\s[a-z|A-Z]+\\s[a-z|A-Z]+)|(\\s-remove\\s[a-z|A-Z]+\\s[a-z|A-Z]+))+")) {
+        if (d_generalUtil.validateIOString(p_neighbour, "editneighbour((\\s-add\\s[a-z|A-Z|_-]+\\s[a-z|A-Z|_-]+)|(\\s-remove\\s[a-z|A-Z|_-]+\\s[a-z|A-Z|_-]+))+")) {
             List<String> l_cName = getAvailableCountryName(d_warMap);
             //Iterate for add and remove command
             for (int l_i = 0; l_i < l_commandString.size(); l_i++) {
@@ -329,7 +334,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
         for (int l_i = 0; l_i < (l_commandString.size() - 2); l_i++) {
             l_countryName = l_commandString.get(l_i + 1);
             l_neighbourCountryName = l_commandString.get(l_i + 2);
-            if (d_generalUtil.validateIOString(l_countryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$") && d_generalUtil.validateIOString(l_neighbourCountryName, "^([a-zA-Z]-+\\s)*[a-zA-Z-]+$")) {
+            if (d_generalUtil.validateIOString(l_countryName, StringRegex) && d_generalUtil.validateIOString(l_neighbourCountryName, StringRegex)) {
                 //For addition of the neighbour
                 if (l_commandString.get(l_i).equalsIgnoreCase("-add")) {
                     if (d_warMap.getD_continents() != null) {
@@ -381,7 +386,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
                 if (l_mapFileNameList.contains(l_fullName)) {
                     try {
                         //read the map from the system and set to the cuurent warmap object
-                        d_warMap = readMap(l_fullName);
+                        d_warMap = d_generalUtil.readMapByType(l_fullName);
                         if (validateMap(d_warMap)) {
                             d_generalUtil.prepareResponse(true, "Map loaded successfully! Do not forget to save map file after editing");
                         } else {
@@ -422,11 +427,19 @@ public class MapHandlingImpl implements MapHandlingInterface {
             d_generalUtil.prepareResponse(false, "Map is empty");
             return d_generalUtil.getResponse();
         }
-        if (Arrays.asList(p_command.split(" ")).size() <= 1) {
+        if (Arrays.asList(p_command.split(" ")).size() <= 2) {
             d_generalUtil.prepareResponse(false, "Invalid Command");
             return d_generalUtil.getResponse();
         }
-        String l_fileName = Arrays.asList(p_command.split(" ")).get(1);
+        String l_fileName = Arrays.asList(p_command.split(" ")).get(2);
+        String l_fileType = Arrays.asList(p_command.split(" ")).get(1);
+        boolean l_isConquestMap = false;
+        if (l_fileType.equalsIgnoreCase("-conquest")) {
+            l_isConquestMap = true;
+        }
+        if (l_fileType.equalsIgnoreCase("-domination")) {
+            l_isConquestMap = false;
+        }
         boolean l_fileExtension = false;
         //For managing extension of .map in given name
         if (l_fileName.contains(".")) {
@@ -452,9 +465,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
                         if (!d_warMap.getD_mapName().equalsIgnoreCase(l_fileName)) {
                             d_warMap.setD_mapName(l_fileName.toLowerCase());
                         }
-                        //save the map in system
-                        writeMapToFile(d_warMap);
-                        d_generalUtil.prepareResponse(true, "Map file succesfully saved");
+                        d_generalUtil.writeMapByType(d_warMap, l_isConquestMap);
+                        d_generalUtil.prepareResponse(true, "Map file successfully saved");
                     } else {
                         d_generalUtil.prepareResponse(false, "Map is not valid");
                     }
@@ -918,189 +930,6 @@ public class MapHandlingImpl implements MapHandlingInterface {
     }
 
     /**
-     * {@inheritDoc }
-     */
-    @Override
-    public boolean writeMapToFile(WarMap p_warMap) {
-        String l_fileName = p_warMap.getD_mapName();
-        // for managing the .map extension of the file
-        if (l_fileName.contains(".")) {
-            String l_fileNameSplit = l_fileName.split("\\.")[1];
-            if (!l_fileNameSplit.equals("map")) {
-                l_fileName = l_fileName.concat(".map");
-            }
-        } else {
-            l_fileName = l_fileName.concat(".map");
-        }
-        boolean l_status;
-        try {
-            //creation of content to write into file
-            StringBuilder l_continentStringBuilder = new StringBuilder(CONTINENTS).append(System.lineSeparator());
-            StringBuilder l_countryStringBuilder = new StringBuilder(COUNTRIES).append(System.lineSeparator());
-            StringBuilder l_neighborStringBuilder = new StringBuilder(BORDERS).append(System.lineSeparator());
-
-            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(MAP_DEF_PATH + l_fileName), "utf-8")));) {
-
-                Map<Integer, Continent> l_continentMap = p_warMap.getD_continents();
-                //for storing continent of the map
-
-                for (Map.Entry<Integer, Continent> l_entry : l_continentMap.entrySet()) {
-                    Continent l_currentContinent = l_entry.getValue();
-
-                    //here all continets will store into the l_continentStringBuilder
-                    l_continentStringBuilder.append(l_currentContinent.getD_continentName() + " " + l_currentContinent.getD_continentValue()).append(System.lineSeparator());
-                    if (l_currentContinent.getD_countryList() != null) {
-                        List<Country> l_countryList = l_currentContinent.getD_countryList();
-                        for (Country l_country : l_countryList) {
-
-                            //here all countries will store into the l_countryStringBuilder
-                            l_countryStringBuilder.append(l_country.getD_countryIndex() + " " + l_country.getD_countryName() + " " + l_country.getD_continentIndex() + " 0 0")
-                                    .append(System.lineSeparator());
-
-                            if (l_country.getD_neighbourCountries() != null) {
-                                List<String> l_neighborList = l_country.getD_neighbourCountries();
-                                if (!l_neighborList.isEmpty() && l_neighborList != null) {
-                                    l_neighborStringBuilder.append(l_country.getD_countryIndex());
-                                    for (String l_neighborName : l_neighborList) {
-
-                                        //here all neighbors will store into the l_neighborStringBuilder
-                                        l_neighborStringBuilder.append(" " + getCountryIndexByCountryName(p_warMap, l_neighborName));
-                                    }
-                                    l_neighborStringBuilder.append(System.lineSeparator());
-                                }
-                            }
-                        }
-                    }
-                }
-                writer.println("name " + p_warMap.getD_mapName());
-                writer.println();
-                writer.println(FILES);
-                writer.println("pic warzone_pic.png");
-                writer.println();
-                writer.println(l_continentStringBuilder.toString());
-                writer.println(l_countryStringBuilder.toString());
-                writer.println(l_neighborStringBuilder.toString());
-                l_status = true;
-            }
-        } catch (Exception e) {
-            l_status = false;
-        }
-        return l_status;
-    }
-
-    @Override
-    public WarMap readMap(String p_fileName) throws IOException {
-
-        String l_fileLine = "";
-        boolean l_isFiles = false;
-        boolean l_isContinents = false;
-        boolean l_isCountries = false;
-        boolean l_isBorders = false;
-        WarMap l_warMap = new WarMap();
-
-        try (BufferedReader l_bufferedreader = new BufferedReader(new FileReader(MAP_DEF_PATH + p_fileName))) {
-
-            Map<Integer, Continent> l_continentMap = new HashMap();
-            Continent l_continent = null;
-            Country l_country = null;
-            int l_continentCounter = 1;
-
-            //while loop read each line from file and process accordingly
-            while ((l_fileLine = l_bufferedreader.readLine()) != null) {
-                if (l_fileLine != null && !l_fileLine.isEmpty()) {
-
-                    if (l_fileLine.startsWith(";")) {
-                        continue;
-                    }
-
-                    l_warMap.setD_mapName(p_fileName);
-                    l_warMap.setD_status(true);
-                    if (l_fileLine.equalsIgnoreCase(FILES)) {
-                        l_isFiles = true;
-                        continue;
-                    }
-                    if (l_isFiles) {
-                        //files of map
-                    }
-                    if (l_fileLine.equalsIgnoreCase(CONTINENTS)) {
-                        l_isFiles = false;
-                        l_isContinents = true;
-                        continue;
-                    }
-                    //this if condition read all the contients from file and set into continent model
-                    if (l_isContinents && !l_fileLine.equalsIgnoreCase(COUNTRIES)) {
-                        l_continent = new Continent();
-                        String[] l_continentArray = l_fileLine.split(" ");
-                        l_continent.setD_continentName(l_continentArray[0]);
-                        l_continent.setD_continentValue(Integer.parseInt(l_continentArray[1]));
-                        l_continent.setD_continentIndex(l_continentCounter);
-                        l_continentMap.put(l_continentCounter, l_continent);
-                        l_continentCounter++;
-                    }
-                    if (l_fileLine.equalsIgnoreCase(COUNTRIES)) {
-                        l_isContinents = false;
-                        l_isCountries = true;
-                        continue;
-                    }
-                    //this if condtion read all the countries from file and set into country model
-                    if (l_isCountries && !l_fileLine.equalsIgnoreCase(BORDERS)) {
-
-                        String[] l_countries = l_fileLine.split(" ");
-
-                        int l_continentIndex = Integer.parseInt(l_countries[2]);
-                        Continent l_currentcontinent = l_continentMap.get(l_continentIndex);
-
-                        l_country = new Country();
-                        l_country.setD_countryName(l_countries[1]);
-                        l_country.setD_countryIndex(Integer.parseInt(l_countries[0]));
-                        l_country.setD_continentIndex(l_continentIndex);
-                        if (l_currentcontinent.getD_countryList() == null) {
-                            List<Country> l_countryList = new ArrayList();
-                            l_countryList.add(l_country);
-                            l_currentcontinent.setD_countryList(l_countryList);
-                        } else {
-                            l_currentcontinent.getD_countryList().add(l_country);
-                        }
-                        l_continentMap.put(l_continentIndex, l_currentcontinent);
-                    }
-                    if (l_fileLine.equalsIgnoreCase(BORDERS)) {
-                        l_isCountries = false;
-                        l_isBorders = true;
-                        continue;
-                    }
-                    //this if condition read neighbors of each country and set into neighborlist of coutey model
-                    if (l_isBorders) {
-
-                        String[] l_neighbourArray = l_fileLine.split(" ");
-
-                        Continent l_currentContinent = getContinentByCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[0]));
-
-                        List<String> l_neighbourName = new ArrayList<String>();
-                        for (int i = 1; i < l_neighbourArray.length; i++) {
-                            l_neighbourName
-                                    .add(getCountryNamebyCountryId(l_continentMap, Integer.parseInt(l_neighbourArray[i])));
-                        }
-
-                        for (int i = 0; i < l_currentContinent.getD_countryList().size(); i++) {
-                            Country l_currentCountry = l_currentContinent.getD_countryList().get(i);
-                            if (l_currentCountry.getD_countryIndex() == Integer.parseInt(l_neighbourArray[0])) {
-                                l_currentCountry.setD_neighbourCountries(l_neighbourName);
-                                l_currentContinent.getD_countryList().set(i, l_currentCountry);
-                            }
-                        }
-                        l_continentMap.put(l_currentContinent.getD_continentIndex(), l_currentContinent);
-                    }
-                }
-            }
-            l_warMap.setD_continents(l_continentMap);
-        } catch (IOException e) {
-            throw e;
-        }
-        return l_warMap;
-    }
-
-    /**
      * This method will return Continent model from given countryId
      *
      * @param p_continentMap is map of continents
@@ -1199,8 +1028,8 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * This method is used for getting index by name
      *
-     * @param p_continentMap
-     * @param p_countryName
+     * @param p_continentMap continent object
+     * @param p_countryName name of country
      * @return CountryIndex
      */
     private int getCountryIndexByCountryName(Map<Integer, Continent> p_continentMap, String p_countryName) {
@@ -1226,6 +1055,7 @@ public class MapHandlingImpl implements MapHandlingInterface {
     /**
      * {@inheritDoc }
      */
+    @Override
     public ArrayList<Country> getAvailableCountries(WarMap p_continentMap) {
 
         List<Country> l_countries = new ArrayList<Country>();
@@ -1348,5 +1178,27 @@ public class MapHandlingImpl implements MapHandlingInterface {
             }
         }
         return l_maxLength;
+    }
+
+    /**
+     * This method return continent index by continent name
+     *
+     * @param p_continentMap : continent map
+     * @param p_continentName : name of the continent
+     * @return Index of the continent
+     */
+    public int getContinentIdByContinentName(Map<Integer, Continent> p_continentMap, String p_continentName) {
+        Continent l_continent = null;
+        int l_continentId = 0;
+        for (Map.Entry<Integer, Continent> entry : p_continentMap.entrySet()) {
+            l_continent = entry.getValue();
+            if (l_continent != null) {
+                if (l_continent.getD_continentName().equalsIgnoreCase(p_continentName)) {
+                    l_continentId = l_continent.getD_continentIndex();
+                }
+            }
+
+        }
+        return l_continentId;
     }
 }

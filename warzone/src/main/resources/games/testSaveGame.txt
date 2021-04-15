@@ -1,0 +1,31 @@
+Date: Thu Apr 15 13:42:08 IST 2021
+Author: SAVANI
+
+Game Data
+
+[map_name]
+test.map
+
+[continents]
+asia 5
+
+[countries]
+1 india 1 0
+2 china 1 0
+
+[borders]
+1 2
+2 1
+
+[players]
+
+[owned_countries]
+
+[orders]
+
+[cards]
+
+[player_flag]
+
+[player_counter]
+0

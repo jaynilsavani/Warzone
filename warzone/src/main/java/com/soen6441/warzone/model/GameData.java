@@ -1,13 +1,11 @@
 package com.soen6441.warzone.model;
 
 import java.util.ArrayList;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import lombok.NoArgsConstructor;
 
 /**
  * This Class is used for String and manipulating Game Play Information Three
@@ -22,6 +20,7 @@ import lombok.NoArgsConstructor;
 @ToString
 @Component
 @NoArgsConstructor
+@EqualsAndHashCode
 public class GameData {
 
     /**
@@ -60,8 +59,18 @@ public class GameData {
     /**
      * current status of game
      */
-    private String d_status;
+    private boolean d_status=false;
 
+    /**
+     * mode of the game
+     */
+    private int d_gameMode;
+
+    /**
+     * This is parametrized constructor of this model
+     *
+     * @param p_gameData gamedata object
+     */
     public GameData(GameData p_gameData) {
 
         this.d_gamePhase = p_gameData.d_gamePhase;

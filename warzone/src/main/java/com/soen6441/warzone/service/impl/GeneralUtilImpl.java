@@ -1,13 +1,20 @@
 package com.soen6441.warzone.service.impl;
 
+import com.soen6441.warzone.adapterpattern.ConquestMapReader;
+import com.soen6441.warzone.adapterpattern.DominationMapReader;
+import com.soen6441.warzone.adapterpattern.FileReaderAdapter;
 import static com.soen6441.warzone.config.WarzoneConstants.*;
 import com.soen6441.warzone.model.CommandResponse;
+import com.soen6441.warzone.model.WarMap;
 import com.soen6441.warzone.service.GeneralUtil;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -163,4 +170,61 @@ public class GeneralUtilImpl implements GeneralUtil {
 
         return l_titleCase.toString();
     }
+
+    @Override
+    public WarMap readMapByType(String p_fileName) throws IOException {
+        int index = p_fileName.lastIndexOf('.');
+        p_fileName = index > 0
+                ? p_fileName.toLowerCase() : p_fileName.toLowerCase() + ".map";
+
+        boolean l_isConquestMap = false;
+        DominationMapReader l_dominationMapReader;
+
+        String l_fileLine = "";
+        BufferedReader l_bufferedreader = new BufferedReader(new FileReader(MAP_DEF_PATH + p_fileName));
+        //while loop read each line from file and process accordingly
+        while ((l_fileLine = l_bufferedreader.readLine()) != null) {
+            if (l_fileLine != null && !l_fileLine.isEmpty()) {
+                if (l_fileLine.equalsIgnoreCase(MAP)) {
+                    l_isConquestMap = true;
+                    break;
+                }
+                if (l_fileLine.equalsIgnoreCase(FILES)) {
+                    l_isConquestMap = false;
+                    break;
+                }
+            }
+        }
+
+        if (l_isConquestMap) {
+            l_dominationMapReader = new FileReaderAdapter(new ConquestMapReader());
+        } else {
+            l_dominationMapReader = new DominationMapReader();
+        }
+
+        return l_dominationMapReader.readMap(p_fileName);
+    }
+
+    @Override
+    public boolean writeMapByType(WarMap p_warMap, boolean p_isConquest) throws IOException {
+        DominationMapReader l_dominationMapReader;
+        if (p_isConquest) {
+            l_dominationMapReader = new FileReaderAdapter(new ConquestMapReader());
+        } else {
+            l_dominationMapReader = new DominationMapReader();
+        }
+        //save the map in system
+        return l_dominationMapReader.writeMap(p_warMap);
+    }
+
+    @Override
+    public int uniqueRandomNumberGenerate(int p_startNumber, int p_endNumber) {
+        ArrayList<Integer> l_numbers = new ArrayList<Integer>();
+        for (int l_number = p_startNumber; l_number < p_endNumber; l_number++) {
+            l_numbers.add(l_number);
+        }
+        Collections.shuffle(l_numbers);
+        return l_numbers.get(0);
+    }
+
 }

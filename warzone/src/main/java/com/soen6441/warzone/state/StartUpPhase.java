@@ -1,7 +1,6 @@
 package com.soen6441.warzone.state;
 
 import com.soen6441.warzone.controller.GameEngine;
-import com.soen6441.warzone.model.CommandResponse;
 import com.soen6441.warzone.model.GameData;
 import com.soen6441.warzone.view.FxmlView;
 import javafx.scene.Parent;
@@ -26,6 +25,11 @@ public class StartUpPhase extends GamePlay {
     }
 
     /**
+     * used for testing where fxml can not be used
+     */
+    public static int TestPurpose =0;
+
+    /**
      * {@inheritDoc }
      */
     @Override
@@ -41,7 +45,9 @@ public class StartUpPhase extends GamePlay {
         IssueOrderPhase l_isueOrderPhase = new IssueOrderPhase(d_gameEngine);
         l_isueOrderPhase.d_gameData = (GameData) p_nextObject;
         d_gameEngine.setPhase(l_isueOrderPhase);
-        d_gameEngine.getStageManager().switchScene(FxmlView.GAMEENGINE, null, "");
+        if(TestPurpose ==0) {
+            d_gameEngine.getStageManager().switchScene(FxmlView.GAMEENGINE, null, "");
+        }
 
     }
 

@@ -26,5 +26,18 @@ public interface OrderProcessor {
      * @return return the order
      */
     public Order getOrder();
+    /**
+     * returns order string
+     *
+     * @return order string
+     */
+    public String getOrderString();
+    
+     /**
+     * set order string
+      *
+     * @param p_order order string
+     */
+    public void setOrderString(String p_order);
 
 }

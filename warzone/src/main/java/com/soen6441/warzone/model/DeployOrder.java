@@ -64,6 +64,8 @@ public class DeployOrder extends Order {
                         }
                     }
                 }
+                d_orderResponse.setD_isValid(true);
+                d_orderResponse.setD_responseString("deploy command is executed successfully");
                 return true;
             } else if (l_country.getD_countryName().equalsIgnoreCase(d_CountryName) && (d_player.getD_noOfArmies() < d_noOfArmies) && d_player.getD_noOfArmies() != 0) {   //checks the country,and no. of armies from player is lesser than armies in the command
 
@@ -74,7 +76,8 @@ public class DeployOrder extends Order {
                 d_player.setD_noOfArmies(0);
                 d_gameData.getD_playerList().remove(l_playerIndex);
                 d_gameData.getD_playerList().add(l_playerIndex, d_player);
-
+                d_orderResponse.setD_isValid(true);
+                d_orderResponse.setD_responseString("deploy command is executed successfully");
                 return true;
             }
         }
@@ -88,11 +91,14 @@ public class DeployOrder extends Order {
 
         d_gameData.getD_playerList().remove(l_playerIndex);
         d_gameData.getD_playerList().add(l_playerIndex, d_player);
+        d_orderResponse.setD_isValid(false);
+        d_orderResponse.setD_responseString("Armies are not sufficient.");
         return false;
 
     }
 
     /**
+     * This method is used to validate data
      *
      * @param p_countryName County name in the Command
      * @param p_noOfArmies No of armies

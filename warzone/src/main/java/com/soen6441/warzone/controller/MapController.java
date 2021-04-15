@@ -27,17 +27,36 @@ import java.util.ResourceBundle;
 @Controller
 public class MapController implements Initializable {
 
+    /**
+     * Stage Manager Object
+     */
     @Lazy
     @Autowired
     StageManager d_stageManager;
+    /**
+     * FXML Component
+     */
     @FXML
     private TextField d_ExecuteCommand;
+    /**
+     * FXML Component
+     */
     @FXML
     private TextArea d_commandResponse;
+    /**
+     * Map handling Service
+     */
     @Autowired
     private MapHandlingInterface d_maphandlinginterface;
 
+    /**
+     *
+     * Log EntryBuffer(Observer)
+     */
     private LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
+    /**
+     * WriteLog File Object(Observable)
+     */
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
 
     /**

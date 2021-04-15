@@ -2,7 +2,6 @@ package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.*;
-import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.OrderProcessor;
 import com.soen6441.warzone.state.IssueOrderPhase;
@@ -15,10 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -144,6 +144,8 @@ public class GameEngineServiceTest {
         l_player2.setD_playerName("User2");
         l_player2.setD_ownedCountries(l_countrylist2);
         d_gameData.getD_playerList().add(l_player2);
+        l_player2.setD_stragey(Strategies.strategyToObjectMapper(Strategies.stringToStrategyMapper("human"), d_gameData));
+        d_player.setD_stragey(Strategies.strategyToObjectMapper(Strategies.stringToStrategyMapper("human"), d_gameData));
 
     }
 
@@ -160,10 +162,8 @@ public class GameEngineServiceTest {
         l_issueOrder.d_gameData = d_gameData;
         l_issueOrder.assignReinforcements();
         d_gameData = l_issueOrder.d_gameData;
-        //GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
         int l_actualNoOfArmies = d_gameData.getD_playerList().get(0).getD_noOfArmies();
         int l_expectedNoOfArmies = 8;
-        //System.out.println(l_expectedNoOfArmies + " and " + l_actualNoOfArmies);
         assertEquals(l_expectedNoOfArmies, l_actualNoOfArmies);
     }
 
@@ -334,7 +334,7 @@ public class GameEngineServiceTest {
     @Test
     public void testStartUpPhase() {
         d_gameEngine.setPhase(new StartUpPhase(d_gameEngine));
-        assertEquals("StartUpPhase", d_gameEngine.gamePhase.getClass().getSimpleName());
+        assertEquals("StartUpPhase", d_gameEngine.d_gamePhase.getClass().getSimpleName());
     }
 
     /**
@@ -431,5 +431,190 @@ public class GameEngineServiceTest {
         Order l_order = d_gameData.getD_playerList().get(0).next_order();
         assertEquals(true, l_order.executeOrder());
         assertEquals(d_gameData.getD_playerList().get(0).getD_ownedCountries().size(), l_map.getAvailableCountries(d_gameData.getD_warMap()).size());
+    }
+
+    /**
+     * This test will check save game command
+     */
+    @Test
+    public void testSaveGame(){
+        assertEquals(d_gameEngine.saveGame(d_gameData, "testGame"), true);
+    }
+
+    /**
+     * This test will check load game command
+     */
+    @Test
+    public void testLoadGame() {
+        try {
+            GameData l_gameData = new GameData();
+            WarMap l_warMap = new WarMap();
+            List<Country> l_countryList = new ArrayList();
+
+            //creating a new country object
+            Country l_country = new Country();
+            l_country.setD_continentIndex(1);
+            l_country.setD_countryIndex(1);
+            l_country.setD_countryName("india");
+            List<String> l_neighborList = new ArrayList();
+            l_neighborList.add("china");
+
+            //added neighbour of country
+            l_country.setD_neighbourCountries(l_neighborList);
+            l_countryList.add(l_country);
+
+            //creating a new country object
+            Country l_country1 = new Country();
+            l_country1.setD_continentIndex(1);
+            l_country1.setD_countryIndex(2);
+            l_country1.setD_countryName("china");
+            List<String> l_neighborList1 = new ArrayList();
+            l_neighborList1.add("india");
+
+            //added neighbour of country
+            l_country1.setD_neighbourCountries(l_neighborList1);
+            l_countryList.add(l_country1);
+
+            //creating a new continent object
+            Continent l_continent = new Continent();
+            l_continent.setD_continentIndex(1);
+            l_continent.setD_continentName("asia");
+            l_continent.setD_continentValue(5);
+            l_continent.setD_countryList(l_countryList);
+
+            l_warMap.setD_mapName("test.map");
+            l_warMap.setD_status(true);
+            Map<Integer, Continent> l_continentMap = new HashMap<Integer, Continent>();
+            l_continentMap.put(1, l_continent);
+            l_warMap.setD_continents(l_continentMap);
+
+            l_gameData.setD_warMap(l_warMap);
+            assertEquals(d_gameEngine.saveGame(l_gameData, "testSaveGame"), true);
+            assertEquals(l_gameData, d_gameEngine.loadGame("testSaveGame.txt"));
+        } catch (Exception ex) {
+            Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Test advance command from opponent country
+     */
+    @Test
+    public void testAdvanceCommandWithOpponentCountry() {
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+        d_orderProcessor.processOrder("advance china nepal 5".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test airlift command with player's own country as target country
+     *
+     */
+    @Test
+    public void testAirliftCommandWithOwnedCountries() {
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+
+        d_orderProcessor.processOrder("airlift india india 6".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test to check Deploy Command with opponent country
+     */
+    @Test
+    public void testDeployCommandInOpponentCountry() {
+        d_gameData.getD_playerList().get(0).setD_noOfArmies(10);
+        d_orderProcessor.processOrder("deploy nepal 6", d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test advance command with insufficient armies
+     */
+    @Test
+    public void testAdvanceWithHighNumberOfArmies() {
+        List<Country> l_countryList = d_gameData.getD_warMap().getD_continents().get(1).getD_countryList();
+        l_countryList.add(d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0));
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).getD_neighbourCountries().add("nepal");
+        d_gameData.getD_playerList().get(0).getD_ownedCountries().get(0).setD_noOfArmies(7);
+        d_gameData.getD_playerList().get(1).getD_ownedCountries().get(0).setD_noOfArmies(3);
+        d_orderProcessor.processOrder("advance india nepal 15".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order.executeOrder());
+    }
+
+    /**
+     * Test that attack is not possible between negotiated players
+     */
+    @Test
+    public void testOrderInNegotiation() {
+        Player l_player = new Player();
+        l_player.setD_playerName("user2");
+        l_player.setD_negotiatePlayer(d_player.getD_playerName());
+
+        Country l_country2 = new Country();
+        l_country2.setD_continentIndex(1);
+        l_country2.setD_countryIndex(3);
+        l_country2.setD_countryName("nepal");
+        List<Country> l_countryList = new ArrayList();
+        l_countryList.add(l_country2);
+        l_player.setD_ownedCountries(l_countryList);
+
+        d_gameData.getD_playerList().add(l_player);
+
+        d_orderProcessor.processOrder("negotiate user2".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+
+        d_orderProcessor.processOrder("advance india nepal 5".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order1 = d_gameData.getD_playerList().get(0).next_order();
+        assertEquals(false, l_order1.executeOrder());
+    }
+
+    /**
+     * Test to check Bomb Command when user enters country which is not a
+     * neighbour country or country not found
+     */
+    @Test
+    public void testNeighbourCountryInBombCommand() {
+        d_orderProcessor.processOrder("bomb southafrica".trim(), d_gameData);
+        d_gameData.getD_playerList().get(0).issue_order();
+        Order l_order = d_gameData.getD_playerList().get(0).next_order();
+        assertFalse(l_order.executeOrder());
+    }
+
+    /**
+     * test tournament command
+     *
+     * @throws IOException throws  IO exception
+     */
+    @Test
+    public void testTournament() throws IOException {
+        boolean l_check=false;
+        String l_command="tournament -M asia,us,world -P benevolent,aggressive,random,cheater -G 5 -D 50";
+        StartUpPhase.TestPurpose =1;
+        StartUpPhase l_st=new StartUpPhase(d_gameEngine);
+        d_gameEngine.d_gamePhase =l_st;
+        Tournament l_t=d_gameEngine.createTournament(l_command);
+        if(l_t!=null)
+        {
+            l_check=true;
+        }
+        assertTrue(l_check);
     }
 }
