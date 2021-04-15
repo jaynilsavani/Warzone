@@ -225,9 +225,11 @@ public class GameEngine implements Initializable {
             System.out.println("autonode");
             d_autoNode =true;
         }
-        d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
-        d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
-        d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+        if(!d_autoNode) {
+            d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");  //shows whose turn now is
+            d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
+            d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
+        }
         d_playerFlag = new int[d_gameData.getD_playerList().size()];
         if (!d_isLoadedGame) {
             d_playerFlag = new int[d_gameData.getD_playerList().size()];
@@ -260,9 +262,15 @@ public class GameEngine implements Initializable {
             d_commandList.append("---------GAME NO :: 1---------\n");
             d_commandList.append("---------TURN 1---------\n");
         }
-        d_FireCommandList.appendText("------------ORDERS------------\n");
+        if(d_gameData.getD_gameMode()==0 && !d_autoNode) {
+            d_FireCommandList.appendText("------------ORDERS------------\n");
+        }
+        else
+        {
+            d_commandList.append("------------ORDERS------------\n");
+        }
         // print order list on click of start game
-        if (d_gameData.getD_playerList().get(0).getD_orders().size() != 0) {
+        if (d_gameData.getD_playerList().get(0).getD_orders().size() != 0 && !d_autoNode) {
             int l_maxCounter = getMaxNumberOfOrders(d_gameData);
             for (int l_j = 0; l_j < l_maxCounter; l_j++) {
                 for (Player l_playerList : d_gameData.getD_playerList()) {
@@ -271,7 +279,7 @@ public class GameEngine implements Initializable {
                 }
             }
         }
-        if(!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStrategy))
+        if(!(l_gamePlay.d_gameData.getD_playerList().get(0).getD_stragey() instanceof HumanStrategy) && d_gameData.getD_gameMode()==0 && !d_autoNode)
         {
 
             playerIteration("", true);
@@ -279,6 +287,9 @@ public class GameEngine implements Initializable {
         if(d_autoNode)
         {
             System.out.println("hrhrhr");
+            d_gameData.setD_maxNumberOfTurns(1000);
+            d_maxNoOfTurns=1000;
+
             playerIterationt("",true,d_gameData);
             //d_CommandLine.setText(d_winner);
             //d_CommandLine.setDisable(true);
@@ -490,7 +501,8 @@ public class GameEngine implements Initializable {
                 //validating that user input should be in "deploy string int"
                 d_CommandLine.clear();
                 IssueOrderPhase l_issueorder;
-                if (((p_gameData.getD_gameMode() == 1 && p_gameData.getD_maxNumberOfTurns() > 0) || p_gameData.getD_gameMode() == 0) && !l_winner) {
+                if (( p_gameData.getD_maxNumberOfTurns() > 0) && !l_winner) {
+
 
                     l_issueorder = (IssueOrderPhase) gamePhase;
                     l_issueorder.d_gameData = p_gameData;
@@ -498,16 +510,17 @@ public class GameEngine implements Initializable {
                     //to invoke the issue order after player gives the command
                     CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
                     p_gameData = l_issueorder.d_gameData;
-                    if (l_winner && p_gameData.getD_gameMode() == 1) {
+
+                    if (l_winner) {
                         l_winnerName = "cheater";
                         d_playCounter = 0;
                         l_noOfTurns = 0;
                         Arrays.fill(d_playerFlag, 0);
+                        d_commandList.append(l_commandResponse.getD_responseString()).append("\n");
+
                         return;
                     }
-//                    if (p_gameData.getD_gameMode() != 1) {  //            yyy
-//                        d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");
-//                    }
+
                     d_commandList.append(l_commandResponse.getD_responseString()).append("\n");
 
                 } else {
@@ -524,7 +537,8 @@ public class GameEngine implements Initializable {
                     }
 
                     if (l_j == d_playerFlag.length) {
-                        if (p_gameData.getD_gameMode() == 1 && p_gameData.getD_maxNumberOfTurns() > 0) {
+                        if (p_gameData.getD_maxNumberOfTurns() > 0) {
+
                             int l_turns = p_gameData.getD_maxNumberOfTurns();
                             p_gameData.setD_maxNumberOfTurns(l_turns - 1);
 
@@ -552,7 +566,8 @@ public class GameEngine implements Initializable {
 
                             }
                         }
-                        if (p_gameData.getD_gameMode() == 1 && p_gameData.getD_maxNumberOfTurns() == 0) {
+                        if (p_gameData.getD_maxNumberOfTurns() == 0) {
+
                             d_playCounter = 0;
                             l_noOfTurns = 0;
                             Arrays.fill(d_playerFlag, 0);
@@ -578,16 +593,12 @@ public class GameEngine implements Initializable {
                             d_commandList.append("\n").append(d_gameEngineSevice.showReinforcementArmies(p_gameData));
                             d_commandList.append(d_gameEngineSevice.playerOwnedCountries(p_gameData) + "\n");
 
-                            if (p_gameData.getD_gameMode() == 1 && p_gameData.getD_maxNumberOfTurns() > 0 && l_noOfTurns == 0 && d_playCounter == 0) {
+                            if (p_gameData.getD_maxNumberOfTurns() > 0 && l_noOfTurns == 0 && d_playCounter == 0) {
                                 int l_turn = d_maxNoOfTurns - p_gameData.getD_maxNumberOfTurns() + 1;
                                 //            yyy                  d_FireCommandList.appendText("---------TURN " + (l_turn) + "---------\n");
                                 d_commandList.append("---------TURN " + (l_turn) + "---------\n");
-
                             }
 
-//                            if (p_gameData.getD_gameMode() != 1) {  //            yyy
-//                                d_FireCommandList.appendText("-------------ORDERS-------------\n");
-//                            }
                             d_commandList.append("-------------ORDERS-------------\n");
                             if (!(p_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStrategy)) {
                                 playerIterationt("", true, p_gameData);
@@ -1351,25 +1362,27 @@ public class GameEngine implements Initializable {
             int l_i = 0;
 
             for (GameData l_g : l_tournament.getD_gamedatas()) {
-//yyy                d_FireCommandList.appendText("---------GAME NO :: " + l_gameCounter + "---------\n");
+
                 if (l_gameCounter > 1) {
-                    d_commandList.append("---------GAME NO :: " + l_gameCounter + "---------\n");
+                    d_commandList.append("\n------------------------------------GAME NO :: " + l_gameCounter + "------------------------------------\n");
                 }
-                l_gameCounter++;
+
                 GamePlay l_gamePlay = (GamePlay) gamePhase;
                 l_gamePlay.d_gameData = l_g;
                 CommandResponse l_s = d_gameConfig.assignCountries(l_g);
-//                System.out.println(l_s.getD_responseString());
+
                 gamePhase.next(l_g);
                 IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
                 l_issueorder.d_gameData = l_g;
                 l_issueorder.assignReinforcements();                    //for reinforcement
                 l_g = l_issueorder.d_gameData;
-                if ((!l_winner) && l_g.getD_maxNumberOfTurns() == d_maxNoOfTurns) {
-//          yyyy          d_FireCommandList.appendText("---------TURN 1---------\n");
+
+                if ((!l_winner) && l_g.getD_maxNumberOfTurns() == d_maxNoOfTurns && l_gameCounter > 1) {
                     d_commandList.append("---------TURN 1---------\n");
+                    d_commandList.append("------------ORDERS------------\n");
 
                 }
+                l_gameCounter++;
 
                 d_playerFlag = new int[l_g.getD_playerList().size()];
                 Arrays.fill(d_playerFlag, 0);
@@ -1389,6 +1402,12 @@ public class GameEngine implements Initializable {
                     l_p.setD_ownedCountries(l_coun);
                     l_p.setD_orders(new ArrayList<Order>());
                     l_p.setD_isWinner(false);
+
+                    l_p.setD_issuedNoOfArmies(0);
+                    l_p.setD_cards(new ArrayList<GameCard>());
+                    l_p.setD_negotiatePlayerList(new ArrayList<Player>());
+                    l_p.setD_negotiatePlayer("");
+
 
                 }
                 l_g.setD_maxNumberOfTurns(l_maxNoOfTurn);

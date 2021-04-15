@@ -116,6 +116,8 @@ public class IssueOrderPhase extends GamePlay {
                 l_player.setD_isWinner(true);
                 if (d_gameData.getD_gameMode() != 1) {
                     d_gameEngine.d_CommandLine.setText(l_player.getD_playerName().toUpperCase() + "  IS WINNER!!!\n");
+                    d_gameEngine.d_generalUtil.prepareResponse(true, l_player.getD_playerName().toUpperCase() + "  IS WINNER!!!\n");
+                    d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
                     d_gameEngine.d_FireCommand.setDisable(true);
                     d_gameEngine.d_CommandLine.setDisable(true);
                     d_gameEngine.d_playerTurn.setText("");
