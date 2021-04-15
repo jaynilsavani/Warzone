@@ -6,6 +6,8 @@ import com.soen6441.warzone.model.Order;
 import com.soen6441.warzone.model.Player;
 import com.soen6441.warzone.observerpattern.LogEntryBuffer;
 import com.soen6441.warzone.observerpattern.WriteLogFile;
+import com.soen6441.warzone.service.OrderProcessor;
+import com.soen6441.warzone.service.impl.OrderProcessorImpl;
 import javafx.scene.Parent;
 
 import java.util.ArrayList;
@@ -76,8 +78,8 @@ public class IssueOrderPhase extends GamePlay {
     @Override
     public void issueOrder(String p_command) {
         Player l_player = d_gameData.getD_playerList().get(d_gameEngine.d_playCounter);              //assigns the current player using the playcounter
-        if (d_gameData.getD_maxNumberOfTurns() < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
-            d_gameData.setD_maxNumberOfTurns(l_player.getD_orders().size());
+        if (d_gameEngine.l_noOfTurns < l_player.getD_orders().size()) {                         //update the roundcounter if the one round completes
+            d_gameEngine.l_noOfTurns=l_player.getD_orders().size();
         }
         if (p_command.equalsIgnoreCase("done")) {                        //stops the player to get further chance to issue an order
             d_gameEngine.d_playerFlag[d_gameEngine.d_playCounter] = 1;
@@ -107,15 +109,17 @@ public class IssueOrderPhase extends GamePlay {
                 d_gameEngine.d_generalUtil.prepareResponse(true, l_response);
                 d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
             } else {
-                d_gameEngine.d_generalUtil.prepareResponse(true, d_gameData.getD_maxNumberOfTurns() + " | " + l_player.getOrderProcessor().getOrderString() + " | " + l_player.getD_playerName());
+                d_gameEngine.d_generalUtil.prepareResponse(true, d_gameEngine.l_noOfTurns + " | " + l_player.getOrderProcessor().getOrderString() + " | " + l_player.getD_playerName());
                 d_issueResponse = d_gameEngine.d_generalUtil.getResponse();
             }
             if (l_player.getD_ownedCountries().size() == l_map.getAvailableCountries(d_gameData.getD_warMap()).size()) {
                 l_player.setD_isWinner(true);
-                d_gameEngine.d_CommandLine.setText(l_player.getD_playerName().toUpperCase()+"  IS WINNER!!!\n");
-                d_gameEngine.d_FireCommand.setDisable(true);
-                d_gameEngine.d_CommandLine.setDisable(true);
-                d_gameEngine.d_playerTurn.setText("");
+                if (d_gameData.getD_gameMode() != 1) {
+                    d_gameEngine.d_CommandLine.setText(l_player.getD_playerName().toUpperCase() + "  IS WINNER!!!\n");
+                    d_gameEngine.d_FireCommand.setDisable(true);
+                    d_gameEngine.d_CommandLine.setDisable(true);
+                    d_gameEngine.d_playerTurn.setText("");
+                }
                 d_gameEngine.l_winner = true;
             }
 

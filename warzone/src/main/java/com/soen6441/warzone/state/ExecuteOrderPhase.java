@@ -60,7 +60,7 @@ public class ExecuteOrderPhase extends GamePlay {
     @Override
     public void executeOrder() {
         List<CommandResponse> l_orderStatus = new ArrayList<>();
-        for (int l_i = 0; l_i < d_gameData.getD_maxNumberOfTurns(); l_i++) {                       //main loop for giving the turn to player in round-robin
+        for (int l_i = 0; l_i < d_gameEngine.l_noOfTurns; l_i++) {                       //main loop for giving the turn to player in round-robin
             for (int l_j = 0; l_j < d_gameData.getD_playerList().size(); l_j++) {
                 if (d_gameData.getD_playerList().get(l_j).hasOrder()) {             //checks if the player has an order or not
                     Order l_order = d_gameData.getD_playerList().get(l_j).next_order();
@@ -85,6 +85,7 @@ public class ExecuteOrderPhase extends GamePlay {
                     }
 
                     if (l_executeOrder && d_gameData.getD_playerList().get(l_j).getD_ownedCountries().size() == l_map.getAvailableCountries(d_gameData.getD_warMap()).size()) {
+                        //d_gameData.getD_playerList().get(l_j).setD_isWinner(true);
                         l_orderStatus.add(new CommandResponse(l_executeOrder, "" + d_gameData.getD_playerList().get(l_j).getD_playerName().toUpperCase() + " IS WINNER!!!\n"));
                         d_logEntryBuffer.setLogEntryBuffer("Winner Declared: " + d_gameData.getD_playerList().get(l_j).getD_playerName().toUpperCase() + " IS WINNER!!!\n");
                         break;

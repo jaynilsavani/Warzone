@@ -76,6 +76,7 @@ public class AggressiveStrategy extends Strategy {
             d_player.setD_issuedNoOfArmies( d_player.getD_issuedNoOfArmies() - l_noOfArmies );
         } else {
 
+
             if (d_player.getD_ownedCountries() == null || d_player.getD_ownedCountries().size() == 0) {
                 l_orderChoice = 8;
             } else {
