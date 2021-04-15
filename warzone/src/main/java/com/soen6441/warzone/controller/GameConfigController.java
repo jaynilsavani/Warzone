@@ -385,7 +385,7 @@ public class GameConfigController implements Initializable {
                     try {
                         Tournament l_t = d_gameEngine.createTournament(l_command);
                         if (l_t == null) {
-                            l_gmConfigRes = d_gameEngine.l_tournamentResponse;
+                            l_gmConfigRes = d_gameEngine.d_tournamentResponse;
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -47,7 +47,7 @@ public class GameEngine implements Initializable {
     /**
      * phase of the game
      */
-    public Phase gamePhase;
+    public Phase d_gamePhase;
     /**
      * array of flag that shows that whether player is done with issuing order
      * or not for particular round
@@ -59,15 +59,33 @@ public class GameEngine implements Initializable {
      */
     public int d_playCounter = 0;
     /**
-     * 
+     * winner flag
      */
-    public boolean l_winner = false;
+    public boolean d_winnerFlag = false;
+    /**
+     * loadgame flag
+     */
     public boolean d_isLoadedGame = false;
-    public String l_winnerName = "";
-    public int l_noOfTurns = 0;
+    /**
+     * winner name
+     */
+    public String d_winnerName = "";
+    /**
+     * no. of turns
+     */
+    public int d_noOfTurns = 0;
+    /**
+     * command list
+     */
     public StringBuilder d_commandList = new StringBuilder();
+    /**
+     * auto player flag
+     */
     public static boolean d_autoNode = false;
-    public String d_winner = "";
+    /**
+     * winner string
+     */
+    public String d_winnerString = "";
     /**
      * FXML Component
      */
@@ -102,6 +120,9 @@ public class GameEngine implements Initializable {
     @Lazy
     @Autowired
     private StageManager d_stageManager;
+    /**
+     * gamedata
+     */
     @Autowired
     private GameData d_gameData;
     /**
@@ -154,6 +175,9 @@ public class GameEngine implements Initializable {
      */
     @FXML
     private TextArea d_continentToCountry;
+    /**
+     * game config service
+     */
     @Autowired
     private GameConfigService d_gameConfig;
     /**
@@ -165,10 +189,18 @@ public class GameEngine implements Initializable {
      * WriteLog File Object(Observable)
      */
     private WriteLogFile d_writeLogFile = new WriteLogFile(d_logEntryBuffer);
-    public CommandResponse l_tournamentResponse = new CommandResponse();
-
+    /**
+     * command response
+     */
+    public CommandResponse d_tournamentResponse = new CommandResponse();
+    /**
+     * max no. of turns
+     */
     private int d_maxNoOfTurns;
 
+    /**
+     * game config service
+     */
     @Autowired
     private GameConfigService d_gameconfig;
 
@@ -190,8 +222,8 @@ public class GameEngine implements Initializable {
      * @return represent current game phase of the game
      */
     public Phase getPhase() {
-        if (gamePhase != null) {
-            return gamePhase;
+        if (d_gamePhase != null) {
+            return d_gamePhase;
         }
         return null;
 
@@ -203,7 +235,7 @@ public class GameEngine implements Initializable {
      * @param p_phase value sent from the State
      */
     public void setPhase(Phase p_phase) {
-        gamePhase = p_phase;
+        d_gamePhase = p_phase;
         d_logEntryBuffer.setLogEntryBuffer("-------------" + p_phase.getClass().getSimpleName() + "-------------");
     }
 
@@ -226,14 +258,14 @@ public class GameEngine implements Initializable {
     public Parent setInitialPhase(String p_phaseName) {
         switch (p_phaseName) {
             case PHASE_MAP:
-                gamePhase = new MapPhase(this);
+                d_gamePhase = new MapPhase(this);
                 break;
             case PHASE_GAME_START_UP:
-                gamePhase = new StartUpPhase(this);
+                d_gamePhase = new StartUpPhase(this);
 
         }
-        this.setPhase(gamePhase);
-        return gamePhase.execute();
+        this.setPhase(d_gamePhase);
+        return d_gamePhase.execute();
     }
 
     /**
@@ -264,7 +296,7 @@ public class GameEngine implements Initializable {
      * This is used for setting GameConfig for GameEngine
      */
     public void setGamePlay() {
-        GamePlay l_gamePlay = (GamePlay) gamePhase;
+        GamePlay l_gamePlay = (GamePlay) d_gamePhase;
         d_gameData = l_gamePlay.d_gameData;
         showMapContents(l_gamePlay);
         int l_i = 0;
@@ -275,8 +307,8 @@ public class GameEngine implements Initializable {
             }
             l_i++;
         }
+        //checks for the auto player node
         if (l_i == l_gamePlay.d_gameData.getD_playerList().size() && d_gameData.getD_gameMode() == 0) {
-            System.out.println("autonode");
             d_autoNode = true;
             d_CommandLine.setDisable(true);
             d_playerTurn.setDisable(true);
@@ -287,19 +319,22 @@ public class GameEngine implements Initializable {
             d_playerTurn.setFont(Font.font(Font.getFontNames().get(0)));
             d_playerTurn.setFont(Font.font("Times New Roman", FontPosture.REGULAR, 20));
         }
+        //for load game
         if (!d_isLoadedGame) {
             d_playerFlag = new int[d_gameData.getD_playerList().size()];
             Arrays.fill(d_playerFlag, 0);       //flag that resets the issue order
         }
-        IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
+        IssueOrderPhase l_issueorder = (IssueOrderPhase) d_gamePhase;     //take issue order form user
         l_issueorder.d_gameData = d_gameData;
         l_issueorder.assignReinforcements();                    //for reinforcement
         d_gameData = l_issueorder.d_gameData;
+        //for single mode config
         if (d_gameData.getD_gameMode() != 1) {
             d_FireCommandList.appendText(d_gameConfig.showPlayerMap(d_gameData).getD_responseString());           //to show the map and player*country table
             d_FireCommandList.appendText(d_gameEngineSevice.showReinforcementArmies(d_gameData));
             d_FireCommandList.appendText(d_gameEngineSevice.playerOwnedCountries(d_gameData) + "\n");
         } else {
+            //for tournament mode config
             d_CommandLine.setDisable(true);
             d_FireCommand.setDisable(true);
             d_playerTurn.setText("");
@@ -318,16 +353,13 @@ public class GameEngine implements Initializable {
             d_logEntryBuffer.setLogEntryBuffer("---------GAME NO :: 1---------\n");
 
             d_commandList.append("---------TURN 1---------\n");
-//            d_logEntryBuffer.setLogEntryBuffer("---------TURN 1---------\n");
 
         }
         if (d_gameData.getD_gameMode() == 0 && !d_autoNode) {
             d_FireCommandList.appendText("------------ORDERS------------\n");
-//            d_logEntryBuffer.setLogEntryBuffer("------------ORDERS------------\n");
 
         } else {
             d_commandList.append("------------ORDERS------------\n");
-//            d_logEntryBuffer.setLogEntryBuffer("------------ORDERS------------\n");
 
         }
         // print order list on click of start game
@@ -346,7 +378,6 @@ public class GameEngine implements Initializable {
             playerIteration("", true);
         }
         if (d_autoNode) {
-            System.out.println("hrhrhr");
             d_gameData.setD_maxNumberOfTurns(50);
             d_maxNoOfTurns = 50;
 
@@ -354,7 +385,7 @@ public class GameEngine implements Initializable {
             if (!d_gameData.isD_status()) {
                 d_commandList.append("----MATCH DRAW DUE TO AUTO PLAYER's NO. OF TURNS ARE COMPLETED----");
             } else {
-                d_CommandLine.setText(l_winnerName + " IS WINNER!!!");
+                d_CommandLine.setText(d_winnerName.toUpperCase() + " IS WINNER!!!");
             }
             d_FireCommandList.appendText(d_commandList.toString());
         }
@@ -424,13 +455,12 @@ public class GameEngine implements Initializable {
         } else if (p_isNotHumanPlayer || ((d_generalUtil.validateIOString(p_commandString, "(advance|airlift)\\s+[a-zA-Z-_]+\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 4) || (d_generalUtil.validateIOString(p_commandString, "(bomb|blockade|negotiate)\\s+[a-zA-Z-_]+") && l_validatestr.length == 2) || (d_generalUtil.validateIOString(p_commandString, "deploy\\s+[a-zA-Z-_]+\\s+[1-9][0-9]*") && l_validatestr.length == 3) || p_commandString.equalsIgnoreCase("done"))) {
             //validating that user input should be in "deploy string int"
             d_CommandLine.clear();
-            IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;
+            IssueOrderPhase l_issueorder = (IssueOrderPhase) d_gamePhase;
             l_issueorder.d_gameData = d_gameData;
             l_issueorder.issueOrder(p_commandString);
             //to invoke the issue order after player gives the command
             CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
             d_gameData = l_issueorder.d_gameData;
-//yash             d_FireCommandList.appendText(l_commandResponse.getD_responseString() + "\n");
             readData(l_commandResponse.getD_responseString() + "\n");
             while (true) {
                 //loop to check for which player gets a turn
@@ -442,22 +472,22 @@ public class GameEngine implements Initializable {
                 }
                 if (l_j == d_playerFlag.length) {
                     //to reset the round after each player is done with issuing orders
-                    l_issueorder = (IssueOrderPhase) gamePhase;
+                    l_issueorder = (IssueOrderPhase) d_gamePhase;
                     l_issueorder.d_gameData = d_gameData;
                     l_issueorder.next("");
-                    IssueOrderPhase l_issuephase = (IssueOrderPhase) gamePhase;
+                    IssueOrderPhase l_issuephase = (IssueOrderPhase) d_gamePhase;
                     d_gameData = l_issueorder.d_gameData;
                     List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
                     for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                         readData(l_commandList.get(l_i).getD_responseString());
                         //To check the winner
                         if (l_commandList.get(l_i).getD_responseString().contains("IS WINNER!!!")) {
-                            l_winner = true;
-                            d_winner = l_commandList.get(l_i).getD_responseString();
+                            d_winnerFlag = true;
+                            d_winnerString = l_commandList.get(l_i).getD_responseString();
                             break;
                         }
                     }
-                    if (!l_winner) {
+                    if (!d_winnerFlag) {
                         CommandResponse l_map = d_gameConfig.showPlayerMap(d_gameData);           //to show the map and player*country table
                         readData(l_map.getD_responseString());
                         for (Player l_player : d_gameData.getD_playerList()) {
@@ -466,7 +496,7 @@ public class GameEngine implements Initializable {
                             l_player.setD_negotiatePlayer("");
                         }
                         d_playCounter = 0;
-                        l_noOfTurns = 0;
+                        d_noOfTurns = 0;
                         Arrays.fill(d_playerFlag, 0);                                   //flag that resets the issue counter
                         l_issueorder.d_gameData = d_gameData;
                         l_issueorder.assignReinforcements();                    //for reinforcement
@@ -474,7 +504,6 @@ public class GameEngine implements Initializable {
                         readData("\n" + d_gameEngineSevice.showReinforcementArmies(d_gameData));
                         readData(d_gameEngineSevice.playerOwnedCountries(d_gameData) + "\n");
                         readData("------------ORDERS------------\n");
-//                        d_logEntryBuffer.setLogEntryBuffer("---------ORDERS---------\n");
 
                         int l_ind = 0;
                         while (l_ind < d_gameData.getD_playerList().size()) {
@@ -490,7 +519,7 @@ public class GameEngine implements Initializable {
                             playerIteration("", true);
                             break;
                         }
-                        if (!l_winner) {
+                        if (!d_winnerFlag) {
                             d_CommandLine.clear();
                         }
 
@@ -508,7 +537,7 @@ public class GameEngine implements Initializable {
                     continue;
                 } else if (d_playerFlag[d_playCounter] == 0) {
                     //break the loop if finds the next player available to issue an order
-                    if (!l_winner) {
+                    if (!d_winnerFlag) {
                         if (d_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStrategy && !d_autoNode) {
 
                             d_playerTurn.setText(d_gameData.getD_playerList().get(d_playCounter).getD_playerName() + "'s turn");
@@ -532,6 +561,10 @@ public class GameEngine implements Initializable {
         }
     }
 
+    /**
+     * checking for auto player | player having human strategy
+     * @param p_s string to append in list
+     */
     private void readData(String p_s) {
         if (d_autoNode) {
             d_commandList.append(p_s);
@@ -548,7 +581,7 @@ public class GameEngine implements Initializable {
      */
     private void playerIterationt(String p_commandString, boolean p_isNotHumanPlayer, GameData p_gameData) {
         String[] l_validatestr = p_commandString.split(" ");
-        if (!l_winner) {
+        if (!d_winnerFlag) {
             if (d_generalUtil.validateIOString(p_commandString, "savegame\\s+[a-zA-Z]+.?[a-zA-Z]+") && l_validatestr.length == 2) {
                 saveGame(p_gameData, l_validatestr[1]);
                 Alert l_alert = new Alert(AlertType.INFORMATION);
@@ -562,19 +595,19 @@ public class GameEngine implements Initializable {
                 //validating that user input should be in "deploy string int"
 
                 IssueOrderPhase l_issueorder;
-                if ((p_gameData.getD_maxNumberOfTurns() > 0) && !l_winner) {
+                if ((p_gameData.getD_maxNumberOfTurns() > 0) && !d_winnerFlag) {
 
-                    l_issueorder = (IssueOrderPhase) gamePhase;
+                    l_issueorder = (IssueOrderPhase) d_gamePhase;
                     l_issueorder.d_gameData = p_gameData;
                     l_issueorder.issueOrder(p_commandString);
                     //to invoke the issue order after player gives the command
                     CommandResponse l_commandResponse = l_issueorder.d_issueResponse;
                     p_gameData = l_issueorder.d_gameData;
 
-                    if (l_winner) {
-                        l_winnerName = "cheater";
+                    if (d_winnerFlag) {
+                        d_winnerName = "cheater";
                         d_playCounter = 0;
-                        l_noOfTurns = 0;
+                        d_noOfTurns = 0;
                         Arrays.fill(d_playerFlag, 0);
                         d_commandList.append(l_commandResponse.getD_responseString()).append("\n");
                         d_logEntryBuffer.setLogEntryBuffer(l_commandResponse.getD_responseString());
@@ -607,24 +640,23 @@ public class GameEngine implements Initializable {
                         }
 
                         //to reset the round after each player is done with issuing orders
-                        l_issueorder = (IssueOrderPhase) gamePhase;
+                        l_issueorder = (IssueOrderPhase) d_gamePhase;
                         l_issueorder.d_gameData = p_gameData;
                         l_issueorder.next("");
-                        IssueOrderPhase l_issuephase = (IssueOrderPhase) gamePhase;
+                        IssueOrderPhase l_issuephase = (IssueOrderPhase) d_gamePhase;
                         p_gameData = l_issueorder.d_gameData;
                         List<CommandResponse> l_commandList = l_issuephase.d_commandResponses;
                         d_commandList.append("\n--------Execution results--------\n");
-//                        d_logEntryBuffer.setLogEntryBuffer("\n--------Execution results--------\n");
 
                         for (int l_i = 0; l_i < l_commandList.size(); l_i++) {        //to add the result of each command that was issued to textarea
                             d_commandList.append(l_commandList.get(l_i).getD_responseString());
                             if (l_commandList.get(l_i).getD_responseString().contains("IS WINNER!!!")) {
                                 String[] l_Name = l_commandList.get(l_i).getD_responseString().split(" ");
                                 p_gameData.setD_status(true);
-                                l_winnerName = l_Name[0].toLowerCase();
-                                l_winner = true;
+                                d_winnerName = l_Name[0].toLowerCase();
+                                d_winnerFlag = true;
                                 d_playCounter = 0;
-                                l_noOfTurns = 0;
+                                d_noOfTurns = 0;
                                 Arrays.fill(d_playerFlag, 0);
                                 break;
 
@@ -633,11 +665,11 @@ public class GameEngine implements Initializable {
                         if (p_gameData.getD_maxNumberOfTurns() == 0) {
 
                             d_playCounter = 0;
-                            l_noOfTurns = 0;
+                            d_noOfTurns = 0;
                             Arrays.fill(d_playerFlag, 0);
                             break;
                         }
-                        if (!l_winner) {
+                        if (!d_winnerFlag) {
                             CommandResponse l_map = d_gameConfig.showPlayerMap(p_gameData);           //to show the map and player*country table
 
                             d_commandList.append(l_map.getD_responseString());
@@ -648,7 +680,7 @@ public class GameEngine implements Initializable {
                                 l_player.setD_negotiatePlayer("");
                             }
                             d_playCounter = 0;
-                            l_noOfTurns = 0;
+                            d_noOfTurns = 0;
                             Arrays.fill(d_playerFlag, 0);                                   //flag that resets the issue counter
                             l_issueorder.d_gameData = p_gameData;
                             l_issueorder.assignReinforcements();                    //for reinforcement
@@ -657,15 +689,13 @@ public class GameEngine implements Initializable {
                             d_commandList.append("\n").append(d_gameEngineSevice.showReinforcementArmies(p_gameData));
                             d_commandList.append(d_gameEngineSevice.playerOwnedCountries(p_gameData) + "\n");
 
-                            if (p_gameData.getD_maxNumberOfTurns() > 0 && l_noOfTurns == 0 && d_playCounter == 0) {
+                            if (p_gameData.getD_maxNumberOfTurns() > 0 && d_noOfTurns == 0 && d_playCounter == 0) {
                                 int l_turn = d_maxNoOfTurns - p_gameData.getD_maxNumberOfTurns() + 1;
-                                //            yyy                  d_FireCommandList.appendText("---------TURN " + (l_turn) + "---------\n");
                                 d_commandList.append("---------TURN " + (l_turn) + "---------\n");
-//                                d_logEntryBuffer.setLogEntryBuffer("---------TURN " + (l_turn) + "---------");
+
                             }
 
                             d_commandList.append("-------------ORDERS-------------\n");
-//                            d_logEntryBuffer.setLogEntryBuffer("-------------ORDERS-------------");
 
                             if (!(p_gameData.getD_playerList().get(d_playCounter).getD_stragey() instanceof HumanStrategy)) {
                                 playerIterationt("", true, p_gameData);
@@ -685,7 +715,7 @@ public class GameEngine implements Initializable {
                         continue;
                     } else if (d_playerFlag[d_playCounter] == 0) {
                         //break the loop if finds the next player available to issue an order
-                        if (!l_winner) {
+                        if (!d_winnerFlag) {
                             playerIterationt("", true, p_gameData);
 
                         }
@@ -720,23 +750,24 @@ public class GameEngine implements Initializable {
         }
         boolean l_status;
         try {
-            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+            //for reading the lines from the gamedata
+            try (PrintWriter l_writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(GAME_DEF_PATH + p_fileName), "utf-8")));) {
                 List<StringBuilder> l_stringBuilderList = new ArrayList<>();
 
                 l_stringBuilderList.addAll(writeMapData(p_gameData));
                 l_stringBuilderList.addAll(writePlayerData(p_gameData));
 
-                writer.println("Date: " + (new Date()).toString());
-                writer.println("Author: " + System.getProperty("user.name"));
-                writer.println();
-                writer.println("Game Data");
-                writer.println();
-                writer.println(MAP_NAME);
-                writer.println(p_gameData.getD_warMap().getD_mapName());
-                writer.println();
+                l_writer.println("Date: " + (new Date()).toString());
+                l_writer.println("Author: " + System.getProperty("user.name"));
+                l_writer.println();
+                l_writer.println("Game Data");
+                l_writer.println();
+                l_writer.println(MAP_NAME);
+                l_writer.println(p_gameData.getD_warMap().getD_mapName());
+                l_writer.println();
                 for (StringBuilder l_stringBuilder : l_stringBuilderList) {
-                    writer.println(l_stringBuilder.toString());
+                    l_writer.println(l_stringBuilder.toString());
                 }
                 l_status = true;
             }
@@ -1169,6 +1200,7 @@ public class GameEngine implements Initializable {
         l_order[1] = l_order[1].replaceAll("\\)", "");
         String[] l_fields = l_order[1].split(",");
         String l_orderString = "";
+        //cases to check for the order type
         switch (l_order[0]) {
             case "DeployOrder":
                 l_orderString = "deploy";
@@ -1351,8 +1383,8 @@ public class GameEngine implements Initializable {
                 if (l_maps.size() <= 5 && l_maps.size() >= 1) {
                     l_tournament.setD_maps(l_maps);
                 } else {
-                    l_tournamentResponse.setD_isValid(false);
-                    l_tournamentResponse.setD_responseString("No of Maps is not Valid");
+                    d_tournamentResponse.setD_isValid(false);
+                    d_tournamentResponse.setD_responseString("No of Maps is not Valid");
                     return null;
                 }
             }
@@ -1361,8 +1393,8 @@ public class GameEngine implements Initializable {
                 List<String> l_playerNames = Arrays.asList(l_commandData.get(4).split(","));
                 Set<String> l_playerSet = new HashSet<>(l_playerNames);
                 if (l_playerSet.size() != l_playerNames.size()) {
-                    l_tournamentResponse.setD_isValid(false);
-                    l_tournamentResponse.setD_responseString("Players are not Valid");
+                    d_tournamentResponse.setD_isValid(false);
+                    d_tournamentResponse.setD_responseString("Players are not Valid");
                     return null;
                 }
                 List<Player> l_players = new ArrayList<Player>();
@@ -1376,8 +1408,8 @@ public class GameEngine implements Initializable {
                 if (l_players.size() >= 2 && l_players.size() <= 4) {
                     l_tournament.setD_players(l_players);
                 } else {
-                    l_tournamentResponse.setD_isValid(false);
-                    l_tournamentResponse.setD_responseString("No of Players is not Valid");
+                    d_tournamentResponse.setD_isValid(false);
+                    d_tournamentResponse.setD_responseString("No of Players is not Valid");
                     return null;
                 }
             }
@@ -1387,8 +1419,8 @@ public class GameEngine implements Initializable {
                 if (l_noOfGames >= 1 && l_noOfGames <= 5) {
                     l_tournament.setD_noOfGames(l_noOfGames);
                 } else {
-                    l_tournamentResponse.setD_isValid(false);
-                    l_tournamentResponse.setD_responseString("No of Games is not Valid");
+                    d_tournamentResponse.setD_isValid(false);
+                    d_tournamentResponse.setD_responseString("No of Games is not Valid");
                     return null;
                 }
             }
@@ -1399,15 +1431,14 @@ public class GameEngine implements Initializable {
                 if (l_maxNoOfTurn >= 10 && l_maxNoOfTurn <= 50) {
                     l_tournament.setD_maxnoOfTurns(l_maxNoOfTurn);
                 } else {
-                    l_tournamentResponse.setD_isValid(false);
-                    l_tournamentResponse.setD_responseString("No of Maximum Turn is not Valid");
+                    d_tournamentResponse.setD_isValid(false);
+                    d_tournamentResponse.setD_responseString("No of Maximum Turn is not Valid");
                     return null;
                 }
             }
             List<GameData> l_gameDatas = new ArrayList<>();
-
+            // adding the gamedata to tournaments gamedata list
             for (WarMap l_map : l_tournament.getD_maps()) {
-                //for(int i=0;i<l_tournament.getD_noOfGames();i++) {
                 GameData l_gameData = new GameData();
                 l_gameData.setD_fileName(l_map.getD_mapName());
                 l_gameData.setD_maxNumberOfTurns(l_tournament.getD_maxnoOfTurns());
@@ -1415,22 +1446,23 @@ public class GameEngine implements Initializable {
                 l_gameData.setD_warMap(l_map);
                 l_gameData.setD_gameMode(1);
                 l_gameDatas.add(l_gameData);
-                //}
+
             }
             if (l_gameDatas.size() == l_tournament.getD_maps().size()) {
                 l_tournament.setD_gamedatas(l_gameDatas);
             } else {
-                l_tournamentResponse.setD_isValid(false);
-                l_tournamentResponse.setD_responseString("No of Maps is not Valid");
+                d_tournamentResponse.setD_isValid(false);
+                d_tournamentResponse.setD_responseString("No of Maps is not Valid");
                 return null;
             }
             d_maxNoOfTurns = l_tournament.getD_maxnoOfTurns();
             l_tournament.setWinnerList();
         }
         int l_gameCounter = 1;
-        for (int i = 0; i < l_tournament.getD_noOfGames(); i++) {
+        //loop for game
+        for (int l_game = 0; l_game < l_tournament.getD_noOfGames(); l_game++) {
             int l_i = 0;
-
+        //loop for gamedata
             for (GameData l_g : l_tournament.getD_gamedatas()) {
 
                 if (l_gameCounter > 1) {
@@ -1439,21 +1471,19 @@ public class GameEngine implements Initializable {
 
                 }
 
-                GamePlay l_gamePlay = (GamePlay) gamePhase;
+                GamePlay l_gamePlay = (GamePlay) d_gamePhase;
                 l_gamePlay.d_gameData = l_g;
                 CommandResponse l_s = d_gameConfig.assignCountries(l_g);
 
-                gamePhase.next(l_g);
-                IssueOrderPhase l_issueorder = (IssueOrderPhase) gamePhase;     //take issue order form user
+                d_gamePhase.next(l_g);
+                IssueOrderPhase l_issueorder = (IssueOrderPhase) d_gamePhase;     //take issue order form user
                 l_issueorder.d_gameData = l_g;
                 l_issueorder.assignReinforcements();                    //for reinforcement
                 l_g = l_issueorder.d_gameData;
 
-                if ((!l_winner) && l_g.getD_maxNumberOfTurns() == d_maxNoOfTurns && l_gameCounter > 1) {
+                if ((!d_winnerFlag) && l_g.getD_maxNumberOfTurns() == d_maxNoOfTurns && l_gameCounter > 1) {
                     d_commandList.append("---------TURN 1---------\n");
                     d_commandList.append("------------ORDERS------------\n");
-//                    d_logEntryBuffer.setLogEntryBuffer("---------TURN 1---------\n");
-//                    d_logEntryBuffer.setLogEntryBuffer("------------ORDERS------------\n");
 
                 }
                 l_gameCounter++;
@@ -1462,14 +1492,13 @@ public class GameEngine implements Initializable {
                 Arrays.fill(d_playerFlag, 0);
 
                 playerIterationt("", true, l_g);
-                if (l_winner) {
-                    l_tournament.declareWinner(l_i, i, l_winnerName);
-                    System.out.println(l_i + "|" + i + "|" + l_winnerName);
+                if (d_winnerFlag) {
+                    l_tournament.declareWinner(l_i, l_game, d_winnerName);
                 }
-                l_winner = false;
+                d_winnerFlag = false;
 
                 l_g.setD_maxNumberOfTurns(l_maxNoOfTurn);
-
+                //resetting the player data
                 for (Player l_p : l_tournament.getD_players()) {
                     l_p.setD_noOfArmies(0);
                     List<Country> l_coun = new ArrayList<>();
@@ -1484,8 +1513,9 @@ public class GameEngine implements Initializable {
                     CheaterStrategy.d_noOfTurns = 2;
                 }
                 l_g.setD_maxNumberOfTurns(l_maxNoOfTurn);
+                //resetting loop
                 d_playCounter = 0;
-                l_noOfTurns = 0;
+                d_noOfTurns = 0;
                 Arrays.fill(d_playerFlag, 0);
                 WarMap l_map = l_tournament.getD_maps().get(l_i);
                 l_tournament.getD_maps().remove(l_i);
@@ -1495,18 +1525,19 @@ public class GameEngine implements Initializable {
 
             }
         }
-
-//        System.out.println(l_tournament.getD_winners());
         displayTournament(l_tournament);
-        d_generalUtil.prepareResponse(l_tournamentResponse.isD_isValid(), l_tournamentResponse.getD_responseString());
+        d_generalUtil.prepareResponse(d_tournamentResponse.isD_isValid(), d_tournamentResponse.getD_responseString());
         return l_tournament;
     }
 
+    /**
+     * to display tournament result
+     * @param l_tournament tournament object
+     */
     private void displayTournament(Tournament l_tournament) {
         String l_winnerList = "\n\n Winners of the Tournament\n";
         String l_stringFrmat = "";
         //formatting matrix
-        System.out.println(l_tournament.getD_maps().size() + " } " + l_tournament.getD_noOfGames());
         for (int p_mapNo = 0; p_mapNo < l_tournament.getD_maps().size() + 1; p_mapNo++) {
             for (int p_gameNo = 0; p_gameNo < l_tournament.getD_noOfGames() + 1; p_gameNo++) {
                 if (p_mapNo == 0 && p_gameNo == 0) {
@@ -1528,8 +1559,8 @@ public class GameEngine implements Initializable {
 
         }
         d_commandList.append(l_winnerList);
-
-        if (StartUpPhase.d_testPurpose == 0) {
+        if (StartUpPhase.TestPurpose == 0) {
+            //appending the result to tetxtarea
             d_FireCommandList.appendText(d_commandList.toString());
             d_logEntryBuffer.setLogEntryBuffer(l_winnerList);
         }

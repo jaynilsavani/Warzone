@@ -2,7 +2,6 @@ package com.soen6441.warzone.serviceImplTest;
 
 import com.soen6441.warzone.controller.GameEngine;
 import com.soen6441.warzone.model.*;
-import com.soen6441.warzone.service.GameConfigService;
 import com.soen6441.warzone.service.GameEngineService;
 import com.soen6441.warzone.service.OrderProcessor;
 import com.soen6441.warzone.state.IssueOrderPhase;
@@ -163,10 +162,8 @@ public class GameEngineServiceTest {
         l_issueOrder.d_gameData = d_gameData;
         l_issueOrder.assignReinforcements();
         d_gameData = l_issueOrder.d_gameData;
-        //GameData l_gameData = d_gameEngineService.assignReinforcements(d_gameData);
         int l_actualNoOfArmies = d_gameData.getD_playerList().get(0).getD_noOfArmies();
         int l_expectedNoOfArmies = 8;
-        //System.out.println(l_expectedNoOfArmies + " and " + l_actualNoOfArmies);
         assertEquals(l_expectedNoOfArmies, l_actualNoOfArmies);
     }
 
@@ -337,7 +334,7 @@ public class GameEngineServiceTest {
     @Test
     public void testStartUpPhase() {
         d_gameEngine.setPhase(new StartUpPhase(d_gameEngine));
-        assertEquals("StartUpPhase", d_gameEngine.gamePhase.getClass().getSimpleName());
+        assertEquals("StartUpPhase", d_gameEngine.d_gamePhase.getClass().getSimpleName());
     }
 
     /**
@@ -610,9 +607,9 @@ public class GameEngineServiceTest {
     public void testTournament() throws IOException {
         boolean l_check=false;
         String l_command="tournament -M asia,us,world -P benevolent,aggressive,random,cheater -G 5 -D 50";
-        StartUpPhase.d_testPurpose=1;
+        StartUpPhase.TestPurpose =1;
         StartUpPhase l_st=new StartUpPhase(d_gameEngine);
-        d_gameEngine.gamePhase=l_st;
+        d_gameEngine.d_gamePhase =l_st;
         Tournament l_t=d_gameEngine.createTournament(l_command);
         if(l_t!=null)
         {
