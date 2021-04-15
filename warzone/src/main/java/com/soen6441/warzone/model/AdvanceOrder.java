@@ -47,7 +47,6 @@ public class AdvanceOrder extends Order {
     public boolean executeOrder() {
         Country l_countryfrom = getPlayerCountrybyName(d_CountryNameFrom);
         Country l_countryTo = getPlayerCountrybyName(d_CountryNameTo);
-        boolean l_flag = true;
         Player l_targetPlayer = null;
         if (d_player.getD_negotiatePlayerList() != null) {
             for (Player l_negotiatedPlayer : d_player.getD_negotiatePlayerList()) {

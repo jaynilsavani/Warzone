@@ -77,8 +77,6 @@ public class StrategyPatternTest {
         assertTrue(l_aggressiveStrategy.d_allowedOrders.contains(OrderTypes.ADVANCE));
         assertTrue(l_aggressiveStrategy.d_allowedOrders.contains(OrderTypes.BOMB));
         assertTrue(l_aggressiveStrategy.d_allowedOrders.contains(OrderTypes.AIRLIFT));
-
-      //  System.out.println(l_aggressiveStrategy.createOrder());
     }
 
     /**
@@ -95,8 +93,6 @@ public class StrategyPatternTest {
         assertTrue(l_randomStrategy.d_allowedOrders.contains(OrderTypes.AIRLIFT));
         assertTrue(l_randomStrategy.d_allowedOrders.contains(OrderTypes.BLOCKADE));
         assertTrue(l_randomStrategy.d_allowedOrders.contains(OrderTypes.DIPLOMACY));
-
-        //  System.out.println(l_aggressiveStrategy.createOrder());
     }
 
     /**
@@ -112,8 +108,6 @@ public class StrategyPatternTest {
         assertTrue(l_benevolentStrategy.d_allowedOrders.contains(OrderTypes.AIRLIFT));
         assertTrue(l_benevolentStrategy.d_allowedOrders.contains(OrderTypes.BLOCKADE));
         assertTrue(l_benevolentStrategy.d_allowedOrders.contains(OrderTypes.DIPLOMACY));
-
-        //  System.out.println(l_aggressiveStrategy.createOrder());
     }
 
     /**
@@ -128,8 +122,5 @@ public class StrategyPatternTest {
         assertTrue(l_cheaterStrategy.d_allowedOrders.contains(OrderTypes.ADVANCE));
         assertTrue(l_cheaterStrategy.d_allowedOrders.contains(OrderTypes.AIRLIFT));
         assertTrue(l_cheaterStrategy.d_allowedOrders.contains(OrderTypes.BOMB));
-
-
-        //  System.out.println(l_aggressiveStrategy.createOrder());
     }
 }

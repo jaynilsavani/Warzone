@@ -12,7 +12,7 @@ import com.soen6441.warzone.strategy.RandomStrategy;
 import com.soen6441.warzone.strategy.Strategy;
 
 /**
- * This Enum is used for All Types O"f strategies
+ * This Enum is used for All Types of strategies
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */
@@ -26,7 +26,7 @@ public enum Strategies {
      * used to add the mapping of card to command
      *
      * @param p_strategy order from the players order list
-     * @param p_gameData GameDataof the Strategy
+     * @param p_gameData GameData of the Strategy
      * @return returns the gamecard object with the card related to the order
      */
     public static Strategy strategyToObjectMapper(Strategies p_strategy, GameData p_gameData) {
@@ -57,7 +57,7 @@ public enum Strategies {
     /**
      * used to add the mapping of card to command
      *
-     * @param p_strategyName
+     * @param p_strategyName name of the strategy
      * @return returns the Strategies object with the card related to the order
      */
     public static Strategies stringToStrategyMapper(String p_strategyName) {

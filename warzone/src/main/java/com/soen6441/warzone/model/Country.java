@@ -70,6 +70,11 @@ public class Country {
         return Objects.hash(d_countryName, d_continentIndex);
     }
 
+    /**
+     * parametrized constructor of country model
+     *
+     * @param p_country country object
+     */
     public Country(Country p_country) {
         this.d_countryIndex = p_country.d_countryIndex;
         this.d_countryName = p_country.d_countryName;

@@ -1,7 +1,7 @@
 package com.soen6441.warzone.model;
 
 /**
- * This Enum is used for
+ * This Enum is used to declare result of the game
  *
  * @author <a href="mailto:g_dobari@encs.concordia.ca">Gaurang Dobariya</a>
  */

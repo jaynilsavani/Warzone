@@ -495,7 +495,7 @@ public class GameEngineServiceTest {
 
             l_gameData.setD_warMap(l_warMap);
             assertEquals(d_gameEngine.saveGame(l_gameData, "testSaveGame"), true);
-            assertEquals(l_gameData, d_gameEngine.loadGame("testSaveGame"));
+            assertEquals(l_gameData, d_gameEngine.loadGame("testSaveGame.txt"));
         } catch (Exception ex) {
             Logger.getLogger(MapHandlingImplTest.class.getName()).log(Level.SEVERE, null, ex);
         }
