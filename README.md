@@ -1,8 +1,7 @@
-# SOEN 6441 - Warzone Game
+# Warzone Game
 
-Here, Warzone game is implemented,where all players try to win the countries and continents by attacking with the armies they have.
-
-With the representation of unique maps that they will have and get options to choose or update the maps,this game is quite attractive with the GUI implementation as well as with Command line interface(In GUI).
+A Warzone game setup consists of a connected graph map representing a world map with GUI, where each node is a country and each edge represents adjacency between
+countries. Two or more players can play by placing armies on countries they own, from which they can attack adjacent countries to conquer them. The objective of the game is to conquer all countries on the map.
 
 ## Getting Started
 
@@ -69,4 +68,9 @@ Go to Build-02-documents Directory
 
 ```
 cd Build-02-documents 
+```
+Go to Build-03-documents Directory
+
+```
+cd Build-03-documents 
 ```
